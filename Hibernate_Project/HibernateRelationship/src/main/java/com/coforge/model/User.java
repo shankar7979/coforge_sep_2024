@@ -1,10 +1,9 @@
 package com.coforge.model;
 
 import lombok.Data;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -15,8 +14,13 @@ public class User {
     private String name;
 
 
-    @OneToOne
+    //@PrimaryKeyJoinColumn
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "addressId")
     private Address address;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Book> bookSet;
 }
 /*
 
