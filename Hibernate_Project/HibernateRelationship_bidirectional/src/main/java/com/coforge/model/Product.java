@@ -17,6 +17,6 @@ public class Product {
     private  String prdName;
     private  float  prdCost;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "productSet", cascade = CascadeType.ALL)
     private Set<Order>  orderSet;
 }

@@ -10,6 +10,8 @@ import org.hibernate.Transaction;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ProductMain {
     public static void main(String[] args) {
@@ -32,14 +34,17 @@ public class ProductMain {
         order1[1] = Order.builder().orderName("Shirt Order2").orderLocation("lucknow").build();
         order1[2] = Order.builder().orderName("Shirt Order3").orderLocation("aagra").build();
 
-        Set<Order> orderSet1 = new HashSet<>();
-        Set<Order> orderSet2 = new HashSet<>();
+        Set<Order> orderSet1= Stream.of(order).collect(Collectors.toSet());
+        Set<Order> orderSet2= Stream.of(order1).collect(Collectors.toSet());
 
-        for (Order o1 : order)
-            orderSet1.add(o1);
-
-        for (Order o1 : order1)
-            orderSet2.add(o1);
+//        Set<Order> orderSet1 = new HashSet<>();
+//        Set<Order> orderSet2 = new HashSet<>();
+//
+//        for (Order o1 : order)
+//            orderSet1.add(o1);
+//
+//        for (Order o1 : order1)
+//            orderSet2.add(o1);
 
         product[0].setOrderSet(orderSet1);
         product[1].setOrderSet(orderSet2);
@@ -50,6 +55,7 @@ public class ProductMain {
             transaction.commit();
         }
 
+        session.createQuery("from Product").list().forEach(System.out::println);
 
 
     }
