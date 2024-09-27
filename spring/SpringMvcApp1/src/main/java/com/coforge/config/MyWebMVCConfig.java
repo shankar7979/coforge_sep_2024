@@ -40,30 +40,30 @@ public class MyWebMVCConfig extends WebMvcConfigurationSupport {
         return viewResolver;
 
     }
-    @Bean
-
-    public MessageSource messageSource() {
-
-        ResourceBundleMessageSource source = new ResourceBundleMessageSource();
-
-        source.setBasename("message");
-
-        return source;
-
-    }
-
-
-
-
-    @Override
-    public Validator getValidator() {
-
-        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
-
-        validator.setValidationMessageSource(messageSource());
-
-        return validator;
-
-    }
+//    @Bean
+//
+//    public MessageSource messageSource() {
+//
+//        ResourceBundleMessageSource source = new ResourceBundleMessageSource();
+//
+//        source.setBasename("message");
+//
+//        return source;
+//
+//    }
+//
+//
+//
+//
+//    @Override
+//    public Validator getValidator() {
+//
+//        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+//
+//        validator.setValidationMessageSource(messageSource());
+//
+//        return validator;
+//
+//    }
 
 }

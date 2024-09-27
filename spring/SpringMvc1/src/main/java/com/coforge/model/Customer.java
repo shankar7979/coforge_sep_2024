@@ -3,6 +3,7 @@ package com.coforge.model;
 import lombok.*;
 import org.hibernate.validator.constraints.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 @Data
@@ -22,7 +23,10 @@ public class Customer {
     @Max(message = "salary must of maximum 500000" ,value = 500000)
     private Float salary;
 
+
     private String gender[];
+
     private String hobby[];
+
     private String cities[];
 }
