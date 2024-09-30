@@ -15,7 +15,7 @@ import java.util.Scanner;
 
         public static void main(String[] args) {
 
-            SpringApplication.run(com.abc.EmployeeMain.class,args);
+            SpringApplication.run(com.abc.EmployeeMain1.class,args);
         }
 
         @Autowired
@@ -45,13 +45,24 @@ import java.util.Scanner;
 
                         employeeService.addEmployee(employee);
                         break;
-
+                    case 2:
+                        System.out.println("enter id to search ");
+                        System.out.println(employeeService.searchEmployee(scanner.nextInt()));
+                        break;
+                    case 3:
+                        employeeService.getEmployeeList().forEach(System.out::println);
+                        break;
+                    default:
+                        System.out.println("wrong choice");
+                        break;
                 }
 
             }
             catch (EmployeeExeption e){
                 System.err.println(e.getMessage());
                 }
+                System.out.println("continue y\\n");
+                ch= scanner.next();
             }
 
 
