@@ -24,3 +24,23 @@ Spring container creates object using
         com.example.SpringApp1Application
         com.example.main.SpringApp1Application
 
+
+
+
+
+dao---   repository
+    -- used by client main method
+
+
+layered architecture
+
+  dao  ----    model/doamin
+   |           /
+  service     /
+   \
+   client\view
+
+
+    service  will get data from dao layer  and handle the exception
+
+

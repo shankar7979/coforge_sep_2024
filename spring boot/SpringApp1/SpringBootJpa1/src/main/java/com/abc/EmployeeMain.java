@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.Optional;
+
 @SpringBootApplication
 public class EmployeeMain  implements CommandLineRunner {
 
@@ -26,5 +28,16 @@ public class EmployeeMain  implements CommandLineRunner {
         repository.save(employee);
 
         repository.findAll().forEach(System.out::println);
+        Optional<Employee> byId = repository.findById(1);
+        if(byId.isPresent())
+        {
+            Employee employee1 = byId.get();
+            repository.delete(employee1);
+        }
+        else
+            System.out.println("id not present");
+
+        repository.findAll().forEach(System.out::println);
+
     }
 }
