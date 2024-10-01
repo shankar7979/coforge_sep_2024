@@ -23,6 +23,8 @@
 
 div {
 	margin-bottom: 10px;
+	clear:both;
+	display:block;
 }
 </style>
 </head>

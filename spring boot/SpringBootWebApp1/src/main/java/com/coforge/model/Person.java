@@ -11,18 +11,18 @@ import lombok.Data;
 public class Person {
 	
 	@NotNull(message = "id is bank")
-	@Min(value = 5, message = "id must of minimum 10000 digit")
-	@Max(value = 7, message = "id must of maximum 9999999 digit")
+	@Min(value = 10000, message = "id must of minimum 10000 ")
+	@Max(value = 100000, message = "id must of maximum 100000 ")
 	private Integer id;
 	
 
 	@NotBlank(message = "name is blank")
-	@Size(max = 20, min = 5, message = "name must of 5 - 20 character  ")
+	@Size(max = 20, min = 5, message = "name must of 5 - 20 character")
 	private String name;
 	
 	@NotNull(message = "age is bank")
-	@Min(value = 1, message = "age must of minimum 1 digit")
-	@Max(value = 5, message = "age must of maximum 20 digit")
+	@Min(value = 1, message = "age must of minimum 1 year")
+	@Max(value = 99, message = "age must of maximum 99 digit")
 	private Integer age;	
 	
 }
