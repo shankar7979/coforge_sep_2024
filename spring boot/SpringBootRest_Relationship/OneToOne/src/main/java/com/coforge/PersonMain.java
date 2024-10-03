@@ -11,6 +11,7 @@ public class PersonMain {
     }
 }
 /*
+uni direction
 POST method
 http://localhost:8080/person
  {
@@ -19,4 +20,29 @@ http://localhost:8080/person
     "model":"samsung"
  }
 }
+http://localhost:8080/phone
+bidirectional
+{
+ "model":"samsung",
+"person":{
+  "name":"lalan kumar"
+}
+}
+
+POST method
+http://localhost:8080/person
+{
+ "name":"lalan kumar",
+  "phone":{
+  "model":"samsung"
+   },
+   "carSet":[
+       {"carModel":"maruti swift"},
+       {"carModel":"maruti zen"},
+       {"carModel":"bolero"},
+       {"carModel":"thar"}
+   ]
+
+}
+
  */

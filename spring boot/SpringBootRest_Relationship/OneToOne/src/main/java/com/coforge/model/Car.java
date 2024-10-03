@@ -13,16 +13,13 @@ import lombok.*;
 @Getter
 @ToString(exclude = {"person"})
 @EqualsAndHashCode(exclude ={"person"} )
-public class Phone {
+public class Car {
 
     @GeneratedValue
     @Id
-    private int phoneId;
-    private String model;
+    private int carId;
+    private String carModel;
 
-    @JsonIgnoreProperties("phone")
-    @OneToOne(mappedBy = "phone", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    Person person;
 
 
 }

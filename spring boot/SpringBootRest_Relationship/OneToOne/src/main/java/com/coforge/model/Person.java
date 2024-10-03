@@ -1,16 +1,20 @@
 package com.coforge.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+import java.util.Set;
+
+//@Data
 @Entity
-@Builder
+//@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
+@ToString(exclude = {"phone"})
+@EqualsAndHashCode(exclude ={"phone"} )
 public class Person {
 
     @GeneratedValue
@@ -18,7 +22,10 @@ public class Person {
     private int personId;
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("person")
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Phone phone;
 
+    @OneToMany(cascade =CascadeType.ALL )
+    private Set<Car> carSet;
 }
