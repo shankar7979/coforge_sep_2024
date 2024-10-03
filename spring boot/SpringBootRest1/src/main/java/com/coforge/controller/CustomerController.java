@@ -23,8 +23,9 @@ public class CustomerController {
     }
 
     @PostMapping("/customer")
-    public Customer addCustomer(@RequestBody Customer customer) {
+    public  Customer addCustomer(@RequestBody Customer customer) {
         return repository.save(customer);
+
     }
 //http://localhost:9090/customer/2
     @DeleteMapping("/customer/{id}")
