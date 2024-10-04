@@ -9,3 +9,11 @@ public class Main {
         SpringApplication.run(Main.class,args);
     }
 }
+//http://localhost:6060/customer
+//Post
+/*
+{
+    "customerName":"anand kumar",
+    "customerDob":"2000-10-04"
+}
+*/
