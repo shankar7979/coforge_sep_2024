@@ -26,6 +26,6 @@ public class Person {
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Phone phone;
 
-    @OneToMany(cascade =CascadeType.ALL )
+    @OneToMany(cascade =CascadeType.ALL,fetch = FetchType.EAGER )
     private Set<Car> carSet;
 }

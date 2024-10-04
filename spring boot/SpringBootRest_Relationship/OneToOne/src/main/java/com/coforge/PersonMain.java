@@ -11,6 +11,8 @@ public class PersonMain {
     }
 }
 /*
+http://localhost:6060/swagger-ui/index.html
+
 uni direction
 POST method
 http://localhost:8080/person

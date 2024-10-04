@@ -21,6 +21,7 @@ public class PersonController {
 
     @PostMapping("/person")
     public Person addPerson(@RequestBody  Person person){
+
         return  repository.save(person);
     }
 
