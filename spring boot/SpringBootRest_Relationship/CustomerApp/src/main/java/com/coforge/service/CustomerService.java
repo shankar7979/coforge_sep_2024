@@ -38,7 +38,7 @@ public class CustomerService {
 
     public Customer deleteCustomer(long id) throws CustomerException {
         if (customerRepository.findById(id).isEmpty()) {
-            throw new CustomerException("id not  already present");
+                throw new CustomerException("id not  present");
         } else {
             Customer customer = customerRepository.findById(id).get();
             customerRepository.delete(customer);

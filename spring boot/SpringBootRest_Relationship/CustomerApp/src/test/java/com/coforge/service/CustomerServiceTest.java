@@ -21,13 +21,13 @@ class CustomerServiceTest {
 
     @BeforeEach
     public void init() throws CustomerException {
-        service.addCustomer(Customer.builder().customerDob(LocalDate.of(1998,11,23)).
+        service.addCustomer(Customer.builder().customerDob(LocalDate.of(1998, 11, 23)).
                 customerName("kamal partap").build());
-        service.addCustomer(Customer.builder().customerDob(LocalDate.of(1991,10,22)).
+        service.addCustomer(Customer.builder().customerDob(LocalDate.of(1991, 10, 22)).
                 customerName("suman kumar").build());
-        service.addCustomer(Customer.builder().customerDob(LocalDate.of(1993,9,12)).
+        service.addCustomer(Customer.builder().customerDob(LocalDate.of(1993, 9, 12)).
                 customerName("aarti devi").build());
-        service.addCustomer(Customer.builder().customerDob(LocalDate.of(1990,8,21)).
+        service.addCustomer(Customer.builder().customerDob(LocalDate.of(1990, 8, 21)).
                 customerName("seema kahre").build());
     }
 
@@ -35,13 +35,19 @@ class CustomerServiceTest {
     public void customerTest() throws CustomerException {
 
         Assertions.assertEquals(4, service.getAllCustomer().size());
-        Assertions.assertEquals(service.searchCustomer(1).getCustomerName(),"kamal partap");
+        Assertions.assertEquals(service.searchCustomer(1).getCustomerName(), "kamal partap");
 
-//        Exception exception=Assertions.assertThrows(CustomerException.class,()->{
-//            service.deleteCustomer(2);
-//        });
-//
-//     Assertions.assertEquals(exception.getMessage(),"id not found");
-
+        service.deleteCustomer(2);
+        //CustomerException exception=
+        Assertions.assertThrows(CustomerException.class, () -> {
+                    service.deleteCustomer(2);
+                }, "id not found"
+        );
+        CustomerException exception =
+                Assertions.assertThrows(CustomerException.class, () -> {
+                            service.deleteCustomer(2);
+                        }
+                );
+        Assertions.assertEquals(exception.getMessage(), "id not  present");
     }
 }
