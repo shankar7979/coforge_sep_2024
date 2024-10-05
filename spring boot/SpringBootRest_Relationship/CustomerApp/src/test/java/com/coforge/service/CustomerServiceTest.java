@@ -29,25 +29,27 @@ class CustomerServiceTest {
                 customerName("aarti devi").build());
         service.addCustomer(Customer.builder().customerDob(LocalDate.of(1990, 8, 21)).
                 customerName("seema kahre").build());
+        service.getAllCustomer().forEach(System.out::println);
     }
 
     @Test
-    public void customerTest() throws CustomerException {
+    public void customeTest() throws CustomerException {
 
         Assertions.assertEquals(4, service.getAllCustomer().size());
         Assertions.assertEquals(service.searchCustomer(1).getCustomerName(), "kamal partap");
 
         service.deleteCustomer(2);
         //CustomerException exception=
-        Assertions.assertThrows(CustomerException.class, () -> {
+       /* Assertions.assertThrows(CustomerException.class, () -> {
                     service.deleteCustomer(2);
                 }, "id not found"
-        );
+        );*/
         CustomerException exception =
                 Assertions.assertThrows(CustomerException.class, () -> {
                             service.deleteCustomer(2);
                         }
                 );
         Assertions.assertEquals(exception.getMessage(), "id not  present");
+
     }
 }
