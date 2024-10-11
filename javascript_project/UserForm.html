@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Page Title</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link href="css\bootstrap.min.css" rel="stylesheet">
+
+  <script>
+    function validate() {
+      var id = document.getElementById("id").value
+      var name = document.getElementById("name").value
+      var gender = document.getElementsByName("gender")
+      var hobby = document.getElementsByName("hobby")
+      var domain = document.getElementsByName("domain")
+      var gstatus = false;
+      var hstatus = false;
+      var dstatus = false;
+      
+      domain.forEach(element => {
+        if (element.value!='') {
+          dstatus = true;
+        }
+      });
+
+      gender.forEach(element => {
+        if (element.checked) {
+          gstatus = true;
+        }
+      });
+      hobby.forEach(element => {
+        if (element.checked) {
+          hstatus = true;
+        }
+      });
+
+      if (id == '') {
+        alert('id is blank')
+        return false;
+      }
+      else if (isNaN(id)) {
+        alert('id must be number')
+        return false;
+      }
+
+      else if (name == '') {
+        alert('name is blank')
+        return false;
+      }
+      else if (name.length < 5) {
+        alert('name must of 5 character minimum')
+        return false;
+      }
+      else if (gstatus == false) {
+        alert('select the gender')
+        return false;
+      }
+      else if (hstatus == false) {
+        alert('select the hobbies')
+        return false;
+      }
+      
+      else if (dstatus == false) {
+        alert('select the domain')
+        return false;
+      }
+
+
+      else {
+        alert("form is validated ")
+        return true
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <form onsubmit="return validate()" action="hello.jsp" class="border border-primary p-5 m-5 w-75 bg-info text-primary">
+    <div class="form-group">
+      <label>Country </label>
+      <input name="country" id="country" value="India" readonly disabled class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label>Enter id</label>
+      <input name="id" id="id" required class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label>Enter Name</label>
+      <input name="name" id="name" autocapitalize="words" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label>Select Gender</label>
+      <div><input name="gender" id="gender" value="male" type="radio">Male</div>
+
+      <div><input name="gender" id="gender" value="female" type="radio">Female</div>
+    </div>
+
+    <div class="form-group mt-2 border border-secondary p-3 w-75" style="margin-left: 20pt;">
+      <label>Select Hobbies</label>
+      <div><input name="hobby" id="hobby" value="Music" type="checkbox">Music</div>
+      <div><input name="hobby" id="hobby" value="Swimminng" type="checkbox">Swimminng</div>
+      <div><input name="hobby" id="hobby" value="Movie" type="checkbox">Movie</div>
+      <div><input name="hobby" id="hobby" value="Flowering" type="checkbox">Flowering</div>
+      <div><input name="hobby" id="hobby" value="Reading" type="checkbox">Reading</div>
+    </div>
+    <div class="form-group mt-2 border border-light p-3 w-75" style="margin-left: 20pt;">
+      <div>
+        <label>Select Domain</label>
+      </div>
+      <div>
+        <select name="domain">
+          <option value=""></option>
+          <option value="java">Java</option>
+          <option value="react">React</option>
+          <option value="angular">Angular</option>
+          <option value="spring">Spring</option>
+          <option value="spring boot">Spring Boot</option>
+          <option value="spring microservice">Spring Microservice</option>
+          <option value="nodejs">Nodejs</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group mt-2">
+      <button type="submit" class="btn btn-primary">Ok</button>
+      <button type="reset" class="btn btn-primary">Cancel</button>
+    </div>
+  </form>
+
+</body>
+
+</html>
