@@ -23,35 +23,36 @@ public class CustomerController {
     }
 
     @PostMapping("/customer")
-    public  Customer addCustomer(@RequestBody Customer customer) {
+    public Customer addCustomer(@RequestBody Customer customer) {
         return repository.save(customer);
-
     }
-//http://localhost:9090/customer/2
+
+    //http://localhost:9090/customer/2
     @DeleteMapping("/customer/{id}")
-    public Customer deleteCustomer(@PathVariable("id") int  customerId) {
+    public Customer deleteCustomer(@PathVariable("id") int customerId) {
         Optional<Customer> byId = repository.findById(customerId);
-        if(byId.isPresent()) {
+        if (byId.isPresent()) {
             Customer customer = byId.get();
             repository.delete(byId.get());
             return customer;
-        }
-        else
-            return  null;
+        } else
+            return null;
     }
-//http://localhost:9090/customer/2
+
+    //http://localhost:9090/customer/2
     @GetMapping("/customer/{id}")
-    public Customer getCustomerSearchById(@PathVariable("id") int  id) {
+    public Customer getCustomerSearchById(@PathVariable("id") int id) {
         return repository.findById(id).get();
     }
-//http://localhost:9090/customer/?id=2
+
+    //http://localhost:9090/customer/?id=2
     @GetMapping("/customer/")
     public Customer getCustomerSearchById1(@RequestParam("id") int id) {
         Optional<Customer> byId = repository.findById(id);
-        if(byId.isPresent())
-         return    byId.get();
+        if (byId.isPresent())
+            return byId.get();
         else
-            return  null;
+            return null;
     }
 
     @PutMapping("/customer")
