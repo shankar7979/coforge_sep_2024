@@ -26,6 +26,7 @@
         <module>ProductOrder</module>
         <module>ProductPayment</module>
         <module>EurekaServer1</module>
+        <module>ApiGateWay</module>
     </modules>
     <scm>
         <connection/>

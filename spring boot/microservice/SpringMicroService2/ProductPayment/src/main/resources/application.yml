@@ -3,4 +3,4 @@ spring:
     active:  prod
 
   application:
-    name:  Product Payment App
+    name:  product-payment-app
