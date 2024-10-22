@@ -1,0 +1,30 @@
+<div class="container">
+<div class="border border-primary p-5 m-5 w-50">   
+ <h1>User 1 Information</h1>
+  <div>Id : {{user.userId}}</div>
+  <div>Name : {{user.userName}}</div>
+  <div>Dob : {{user.userDob.toLocaleDateString()}}</div>
+</div>
+
+<table class="table table-bordered table-striped bg-success text-info w-75 ">
+ <tr class="table-success">
+    <th>Id</th>
+    <th>Name</th>
+    <th>Dob</th>
+ </tr>
+
+ <tr *ngFor="let u of user1">
+    <td>
+        {{u.userId}}
+    </td>
+    <td>
+        {{u.userName}}
+    </td>
+    <td>
+        {{u.userDob.toDateString()}}
+    </td>
+
+ </tr>
+</table>
+
+</div>
