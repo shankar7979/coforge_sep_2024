@@ -6,5 +6,10 @@ C:\>md angular
 C:\>cd angular
 C:\angular>ng new App1
 
+-- generate component 
 ng g c  component_name 
 ng generate component component_name
+
+-- generate class
+  
+  ng g class class_name
