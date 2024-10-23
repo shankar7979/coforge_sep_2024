@@ -11,5 +11,7 @@ ng g c  component_name
 ng generate component component_name
 
 -- generate class
-  
   ng g class class_name
+
+--generate pipe 
+  ng g p pipe_name
