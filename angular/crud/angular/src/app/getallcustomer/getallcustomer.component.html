@@ -1,0 +1,18 @@
+<div class="container">
+    <h2>All Customer</h2>
+
+    <table class="table table-border table-striped">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Dob</th>
+        </tr>
+        <tr *ngFor="let c of customerlist|async">
+            <td>{{c.customerId}}</td>
+            <td>{{c.customerName}}</td>
+            <td>{{c.customerDob}}</td>
+        </tr>
+
+    </table>
+
+</div>
