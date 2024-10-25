@@ -14,7 +14,7 @@ import { CustomerService } from './service/customer.service';
 })
 export class GetallcustomerComponent {
   customerlist:Observable<Customer[]>;
-
+  
   constructor(private service:CustomerService){
     this.customerlist= service.getAllCustomer();
   }
