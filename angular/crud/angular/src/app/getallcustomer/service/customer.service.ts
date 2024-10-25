@@ -12,11 +12,24 @@ export class CustomerService {
 
     }
 
+    searchCustomerById(id: number): Observable<Customer> {
+        return <Observable<Customer>>this.http.get("http://localhost:6060/customer/" + id);
+    }
+    // searchCustomerById1(id:number):Observable<Object>{
+
+    //     return  this.http.get("http://localhost:6060/customer/"+id);
+    // }
+
+    //Observable<Customer[]>
     getAllCustomer(): Observable<any> {
         return this.http.get("http://localhost:6060/customer");
     }
 
-    addCustomer(c:Customer): Observable<Object> {
-        return this.http.post("http://localhost:6060/customer",c);
+    addCustomer(c: Customer): Observable<Customer> {
+        return   <Observable<Customer>>this.http.post("http://localhost:6060/customer", c);
     }
+
+    // addCustomer(c: Customer): Observable<Object> {
+    //     return this.http.post("http://localhost:6060/customer", c);
+    // }
 }

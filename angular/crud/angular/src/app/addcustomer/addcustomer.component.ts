@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Customer } from '../getallcustomer/model/customer';
 import { CustomerService } from '../getallcustomer/service/customer.service';
 import { Observable } from 'rxjs';
@@ -15,21 +15,21 @@ import { Router } from '@angular/router';
 })
 export class AddcustomerComponent {
   c: Customer;
+  @Input() c1: Customer;
   msg: string = '';
   data1:string='';
   visible: boolean = false;
+  
   constructor(private service: CustomerService, private route:Router) {
     this.c = new Customer();
+    this.c1 = new Customer();
   }
   addRecord() {
     this.visible = true;
     this.service.addCustomer(this.c).subscribe(
       data => {
         this.msg = 'Record added',
-        this.data1=JSON.stringify(data)  
-      // Object.entries(this.data1).forEach(([key,value]) => {
-      //   console.log(key,value);
-      // });
+        this.c1=data; 
       }
       , error =>
         this.msg = error.error

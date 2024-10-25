@@ -39,7 +39,7 @@ public class CustomerController {
     @GetMapping("/customer/{id}")
     public ResponseEntity<?> searchCustomer(@PathVariable("id") long id) throws CustomerException {
         try {
-            return new ResponseEntity<>(service.searchCustomer(id), HttpStatus.FOUND);
+            return new ResponseEntity<>(service.searchCustomer(id), HttpStatus.OK);
         } catch (CustomerException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
