@@ -1,4 +1,5 @@
 import { Component } from "react";
+import img1 from './image/customer.jfif';
 
 class Customer extends Component {
     constructor(props) {
@@ -14,6 +15,9 @@ class Customer extends Component {
             <>
                 <div className="container p-5 m-5 w-50 border border-primary bg-success text-light">
                     <h2>Customer Class </h2>
+                    <div>
+                        <img src={img1} width={200} height={150} border={10}></img>
+                    </div>
                     <div>Id is {this.state.id}</div>
                     <div>Name is {this.state.name}</div>
                     <div>Salary is {this.state.salary}</div>
