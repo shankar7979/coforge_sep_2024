@@ -10,7 +10,8 @@ export const Clock = () => {
 
     return (
         <div>
-            {setInterval(updateTime,1000)}
+            {
+            setInterval(updateTime,1000)}
             <h1>Clock </h1>
             <div onLoad={()=>setInterval(setTime(c=>new Date().toLocaleTimeString()),1000)}>{c}</div>
             <div onLoad={()=>setInterval(time,1000)}>{c}</div>

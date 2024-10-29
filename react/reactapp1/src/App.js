@@ -1,16 +1,17 @@
-import {Clock} from "./hook/Clock";
-//import {Clock1} from "./hook/Clock1";
+//import {Clock} from "./hook/Clock";
+import {Clock1} from "./hook/Clock1";
 //import Clock1 from "./CounterApp/Clock1";
 //import Counter from "./CounterApp/Counter";
 import DatePrg from "./CounterApp/DatePrg";
 import Customer from "./Customer";
 import { address } from "./Form/data/Address";
 import { Car } from "./Form/data/Car";
-import EmployeeForm from "./Form/EmployeeForm";
+//import EmployeeForm from "./Form/EmployeeForm";
 //import Counter from "./hook/Counter";
 import {Counter} from "./hook/Counter";
 import { phone } from "./hook/data/userphone";
 import User from "./User";
+import { EmployeeForm } from "./hook/EmployeeForm";
 
 function App(){
   return(
@@ -24,7 +25,8 @@ function App(){
       {/* <EmployeeForm myaddress={address} mycar={Car}></EmployeeForm> */}
       {/* <Counter myphone={phone} myaddress={address}></Counter> */}
       {/* <Clock1></Clock1> */}
-     <Clock></Clock> 
+     {/* <Clock></Clock>  */}
+     <EmployeeForm></EmployeeForm>
       </div>
   )
 }

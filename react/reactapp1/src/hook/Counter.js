@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Clock1 } from "./Clock1";
 
 //export default function Counter(){
 //const Counter = () => {
@@ -12,6 +13,9 @@ export const Counter = (props) => {
     return (
         <>
             <div className="container p-5 m-5 w-75 bg-success text-light">
+               <div className="mb-5">
+                <Clock1></Clock1>
+                </div>
                 <h3> This is counter Program</h3>
                 <div>Count is {c}</div>
                 <button type="button" onClick={myincrement} className="btn btn-info">increment</button>
