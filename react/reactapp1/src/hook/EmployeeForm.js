@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router";
 
 export const EmployeeForm1 = () => {
 
@@ -13,7 +14,10 @@ export const EmployeeForm1 = () => {
      setStatus(false)
      setSalaryErr('')
     }
+    const navigate=useNavigate()
+
     return (
+        <>
         <div className="container p-5 m-5 w-75 bg-dark text-light">
             <div className="form-group">
                 <label>Enter Id</label>
@@ -72,5 +76,9 @@ export const EmployeeForm1 = () => {
                 <div>Salary is {salary}</div>
              </div>
         </div>
+        <div>
+        <input type="button" onClick={()=>navigate('/counter_hook')} value="Hounter Hook"/>
+        </div>
+        </>
     )
 }

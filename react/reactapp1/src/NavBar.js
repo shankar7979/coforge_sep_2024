@@ -11,6 +11,22 @@ export const NavBar=()=>{
                             <NavLink to='counter_hook' style={{"marginLeft":"50pt"}}>
                                       Counter-Hook
                             </NavLink>
+                            <NavLink to='counter_class' style={{"marginLeft":"50pt"}}>
+                                      Counter class
+                            </NavLink>
+                            
+
+                            <NavLink to='prdform' style={{"marginLeft":"50pt"}}>
+                                      Product Form
+                            </NavLink>
+                            
+                            <NavLink to='empform_class' style={{"marginLeft":"50pt"}}>
+                                      Employee Form(class)
+                            </NavLink>
+                            
+                            <NavLink to='empform_hook' style={{"marginLeft":"50pt"}}>
+                                      Employee Form(hook)
+                            </NavLink>
 
 
 
