@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-export const EmployeeForm = () => {
+export const EmployeeForm1 = () => {
 
     const [id, setId] = useState('');
     const [err_id, setIdErr] = useState('');

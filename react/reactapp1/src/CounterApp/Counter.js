@@ -2,7 +2,7 @@ import { Component } from "react";
 import DatePrg from "./DatePrg";
 import Clock from "./Clock";
 
-class Counter extends Component {
+class Counter1 extends Component {
     constructor(props) {
         super();
         this.state = {
@@ -71,4 +71,4 @@ class Counter extends Component {
     }
 }
 
-export default Counter;
+export default Counter1;

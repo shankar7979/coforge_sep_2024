@@ -1,17 +1,19 @@
 //import {Clock} from "./hook/Clock";
 import {Clock1} from "./hook/Clock1";
 //import Clock1 from "./CounterApp/Clock1";
-//import Counter from "./CounterApp/Counter";
 import DatePrg from "./CounterApp/DatePrg";
 import Customer from "./Customer";
 import { address } from "./Form/data/Address";
 import { Car } from "./Form/data/Car";
-//import EmployeeForm from "./Form/EmployeeForm";
-//import Counter from "./hook/Counter";
+import EmployeeForm from "./Form/EmployeeForm";
 import {Counter} from "./hook/Counter";
+import  Counter1 from "./CounterApp/Counter"
 import { phone } from "./hook/data/userphone";
 import User from "./User";
-import { EmployeeForm } from "./hook/EmployeeForm";
+import { EmployeeForm1 } from "./hook/EmployeeForm";
+import { ProductForm } from "./hook/ProductForm";
+import { BrowserRouter, Route,  Routes } from "react-router-dom";
+import { NavBar } from "./NavBar";
 
 function App(){
   return(
@@ -26,8 +28,23 @@ function App(){
       {/* <Counter myphone={phone} myaddress={address}></Counter> */}
       {/* <Clock1></Clock1> */}
      {/* <Clock></Clock>  */}
-     <EmployeeForm></EmployeeForm>
-      </div>
+      {/* <EmployeeForm></EmployeeForm> */}
+     {/* <ProductForm></ProductForm> */}
+
+     <BrowserRouter>
+      <NavBar></NavBar>
+      <Routes>
+        <Route path="/" element={<User></User>}></Route>
+        <Route path="/user" element={<User></User>}></Route>
+        <Route path="/counter_hook" element={<Counter1 myphone={phone} myaddress={address}></Counter1>}></Route>
+        <Route path="/counter_class" element={<Counter1></Counter1>}></Route>
+        <Route path="/empform_class" element={<EmployeeForm myaddress={address} mycar={Car}></EmployeeForm>}></Route>
+        <Route path="/empform_hook" element={<EmployeeForm1></EmployeeForm1>}></Route>
+        <Route path="/prdform" element={<ProductForm></ProductForm>}></Route>
+      </Routes>
+
+     </BrowserRouter>
+      </div> 
   )
 }
 export default App;
