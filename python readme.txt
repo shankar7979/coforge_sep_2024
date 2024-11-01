@@ -3,7 +3,10 @@ in window
 set path
 "C:\Users\shank\AppData\Local\Programs\Python\Python312";"C:\Users\shank\PycharmProjects\pythonProject\.venv\Scripts";"C:\Program Files\JetBrains\PyCharm Community Edition 2024.2.4\bin"
 
+.venv\Scripts\activate
+
 pip install django
+
 django-admin startproject django2
 
 py manage.py runserver
@@ -56,9 +59,10 @@ second way
   my_env/bin/python3 manage.py runserver
 
   
+  it will run the server
 
 
-
- 
+ Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK. 
 
 
