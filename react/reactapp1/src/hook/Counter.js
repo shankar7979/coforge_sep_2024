@@ -1,15 +1,18 @@
 import { useState } from "react"
 import { Clock1 } from "./Clock1";
+import { useNavigate } from "react-router";
 
 //export default function Counter(){
 //const Counter = () => {
 export const Counter = (props) => {
     const [c, increment] = useState(0);
     const [user1, setUser] = useState(user);
+    const navigate = useNavigate()
 
     const myincrement = () => {
         increment(c + 1)
     }
+
     return (
         <>
             <div className="container p-5 m-5 w-75 bg-success text-light">
@@ -27,7 +30,7 @@ export const Counter = (props) => {
                     >increment by 10 ==> {c}</button>
                 </div>
 
-                <div>
+                <div className="mt-3">
                     <h2>User </h2>
                     <div> id :   {user1.id}</div>
                     <div> name :   {user1.name}</div>
@@ -36,9 +39,10 @@ export const Counter = (props) => {
                         <button className="btn btn-primary"
                             onClick={() => setUser({ id: 9999, name: "anil kumar", salary: 90000 })}>Change User </button>
                     </div>
+                    <input type="button" onClick={() => navigate('/empform_hook')} value="Employee Form"  className="btn btn-primary m-3"/>
 
-                    <h2>Address</h2>
                     <div className="border p-5 m-5">
+                    <h2>Address</h2>
                         <div>Id :{props.myaddress.addr_id}</div>
                         <div>Location :{props.myaddress.location}</div>
                         <div>City :{props.myaddress.city}</div>
@@ -59,6 +63,7 @@ export const Counter = (props) => {
                         </table>
                     </div>
                 </div>
+            <input type="button" onClick={() => navigate('/empform_hook')} value="Employee Form"  className="btn btn-primary m-3"/>
 
 
             </div>

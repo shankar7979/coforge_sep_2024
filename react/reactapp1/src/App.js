@@ -36,7 +36,7 @@ function App(){
       <Routes>
         <Route path="/" element={<User></User>}></Route>
         <Route path="/user" element={<User></User>}></Route>
-        <Route path="/counter_hook" element={<Counter1 myphone={phone} myaddress={address}></Counter1>}></Route>
+        <Route path="/counter_hook" element={<Counter myphone={phone} myaddress={address}></Counter>}></Route>
         <Route path="/counter_class" element={<Counter1></Counter1>}></Route>
         <Route path="/empform_class" element={<EmployeeForm myaddress={address} mycar={Car}></EmployeeForm>}></Route>
         <Route path="/empform_hook" element={<EmployeeForm1></EmployeeForm1>}></Route>

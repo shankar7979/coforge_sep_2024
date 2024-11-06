@@ -27,7 +27,7 @@ class Counter1 extends Component {
                 </div>     
             
                 <div className="container p-5  bg-info text-success w-100"
-                style={{marginTop:150}}
+                style={{marginTop:50}}
                 >
                       <h1>Counter Application One </h1>
                     <div>Count is {this.state.c}</div>
