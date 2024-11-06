@@ -17,7 +17,7 @@ export const NavBar=()=>{
                             
 
                             <NavLink to='prdform' style={{"marginLeft":"50pt"}}>
-                                      Product Form
+                                      Product Hook Form
                             </NavLink>
                             
                             <NavLink to='empform_class' style={{"marginLeft":"50pt"}}>
