@@ -1,8 +1,14 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 
 export const ProductForm = () => {
+    const navigate=useNavigate()
     const { register, handleSubmit, formState: { errors } } = useForm()
-    const onSubmit = data => console.log(data);
+    const onSubmit = data => {
+        console.log(data)
+        navigate('/prd_data',{state:{data1:data}})
+    };
+
     return (
         <div className="container p-5 m-5 w-50 bg-info">
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -13,7 +19,6 @@ export const ProductForm = () => {
                     <span className="text-danger"> {errors.firstName && errors.firstName.message}</span>
                     <span className="text-danger">{errors.firstName?.type === 'maxLength' && <p role="alert">first name maximum length is 20 </p>}
                     </span>
-
                     <span className="text-danger">{errors.firstName?.type === 'minLength' && <p role="alert">first name minLength is 5 character </p>}
                     </span>
 
@@ -26,7 +31,6 @@ export const ProductForm = () => {
                     </span>
                     <span className="text-danger">{errors.lastName?.type === 'minLength' && <p role="alert">last name minLength is 5 character </p>}
                     </span>
-
                 </div>
 
                 <div className="form-group">
@@ -44,11 +48,11 @@ export const ProductForm = () => {
                 <div className="form-group">
                     <label>Enter Email</label>
                     <input  {...register("email", {
-                        minLength: 10, maxLength: 20, required: true,
-                        pattern: {
-                            value: /^[A-Z0-9]._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                            message: "invalid email address"
-                        }
+                        minLength: 10, maxLength: 20, required: true
+                        // ,pattern: {
+                        //     value: /^[A-Z0-9]._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        //     message: "invalid email address"
+                        // }
                     })} className="form-control" />
                     <span className="text-danger"> {errors.email && errors.email.message}</span>
 

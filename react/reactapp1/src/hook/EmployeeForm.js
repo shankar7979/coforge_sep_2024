@@ -4,16 +4,27 @@ import { useNavigate } from "react-router";
 export const EmployeeForm1 = () => {
 
     const [id, setId] = useState('');
-    const [err_id, setIdErr] = useState('');
+    const [err_id, setIdErr] = useState(' ');
     const [name, setName] = useState('');
-    const [err_name, setNameErr] = useState('');
+    const [err_name, setNameErr] = useState(' ');
     const [salary, setSalary] = useState('');
-    const [err_salary, setSalaryErr] = useState('');
+    const [err_salary, setSalaryErr] = useState(' ');
     const [status, setStatus] = useState(true);
     var show = () => {
-        setStatus(false)
-        setSalaryErr('')
+        if(err_id=='' && err_name=='' && err_salary=='') {     
+        // if(err_id=='' && err_name=='') {     
+            setStatus(false)
+            setSalaryErr('')
+        }
     }
+    
+    var cancel = () => {
+            setStatus(true)
+            setId('')
+            setName('')
+            setSalary('')
+    }
+
     const navigate = useNavigate()
 
     return (
@@ -59,6 +70,11 @@ export const EmployeeForm1 = () => {
                             setSalaryErr('salary is blank')
                             setNameErr('')
                         }
+                        else if (e.target.value != '') {
+                            setIdErr('')
+                            setSalaryErr('')
+                            setNameErr('')
+                        }
                     }}
                         className="form-control"
                         value={salary}
@@ -67,7 +83,7 @@ export const EmployeeForm1 = () => {
                 </div>
                 <div>
                     <input type="submit" className="btn btn-primary" value="login" onClick={show}></input>
-                    <input type="reset" className="btn btn-primary" value="cancel" style={{ "marginLeft": "10pt" }}></input>
+                    <input type="reset" className="btn btn-primary" value="cancel" style={{ "marginLeft": "10pt" }}  onClick={cancel}></input>
                 </div>
 
                 <div hidden={status} >

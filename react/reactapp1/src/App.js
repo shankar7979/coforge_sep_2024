@@ -14,6 +14,7 @@ import { EmployeeForm1 } from "./hook/EmployeeForm";
 import { ProductForm } from "./hook/hookform/ProductForm";
 import { BrowserRouter, Route,  Routes } from "react-router-dom";
 import { NavBar } from "./NavBar";
+import { ProductData } from "./hook/hookform/ProductData";
 
 function App(){
   return(
@@ -41,6 +42,9 @@ function App(){
         <Route path="/empform_class" element={<EmployeeForm myaddress={address} mycar={Car}></EmployeeForm>}></Route>
         <Route path="/empform_hook" element={<EmployeeForm1></EmployeeForm1>}></Route>
         <Route path="/prdform" element={<ProductForm></ProductForm>}></Route>
+        {/* <Route path="/prd_data/:fname/:lname/:age/:email" element={<ProductForm></ProductForm>}></Route> */}
+        {/* <Route path="/prd_data/:fname" element={<ProductData></ProductData>}></Route> */}
+        <Route path="/prd_data" element={<ProductData></ProductData>}></Route>
       </Routes>
 
      </BrowserRouter>
