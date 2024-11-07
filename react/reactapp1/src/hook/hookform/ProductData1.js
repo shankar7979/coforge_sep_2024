@@ -1,17 +1,17 @@
-import { useLocation, useParams } from "react-router";
+import { useEffect } from "react";
+import { useParams } from "react-router";
 
 export const ProductData1 = () => {
-    const { name } = useParams();
-    const { state } = useLocation();
+   const { fname } = useParams();
+   return (
+      <div className="container">
+         <div>Name is  {fname}   </div>
+      </div>
+   )
+//    useEffect(() => {
+//       console.log({fname});
+//   },[]);
 
-    
- return (
-    <div className="container">
-
-    <div>Name is  {state.data1.firstName}  {state.data1.lastName}   </div>
-    <div>Email is  {state.data1.email}    </div>
-    <div>age is  {state.data1.age}    </div>
-
-    </div>
- )
 }
+
+//http://localhost:3000/prd_data1/ram

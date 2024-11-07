@@ -1,7 +1,6 @@
-import { useLocation, useParams } from "react-router";
+import { useLocation } from "react-router";
 
 export const ProductData = () => {
-    const { name } = useParams();
     const { state } = useLocation();
 
     

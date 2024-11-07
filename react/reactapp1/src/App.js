@@ -15,6 +15,7 @@ import { ProductForm } from "./hook/hookform/ProductForm";
 import { BrowserRouter, Route,  Routes } from "react-router-dom";
 import { NavBar } from "./NavBar";
 import { ProductData } from "./hook/hookform/ProductData";
+import { ProductData1 } from "./hook/hookform/ProductData1";
 
 function App(){
   return(
@@ -44,6 +45,7 @@ function App(){
         <Route path="/prdform" element={<ProductForm></ProductForm>}></Route>
         {/* <Route path="/prd_data/:fname/:lname/:age/:email" element={<ProductForm></ProductForm>}></Route> */}
         {/* <Route path="/prd_data/:fname" element={<ProductData></ProductData>}></Route> */}
+        <Route path="/prd_data1/:fname" element={<ProductData1></ProductData1>}></Route>
         <Route path="/prd_data" element={<ProductData></ProductData>}></Route>
       </Routes>
 
