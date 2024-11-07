@@ -25,8 +25,13 @@ export const NavBar = () => {
         </NavLink>
 
         <NavLink to='empform_hook' style={{ "marginLeft": "50pt" }}>
-          Employee Form(hook)
+          Employee Form(hook-form)
         </NavLink>
+        
+        <NavLink to='empform2' style={{ "marginLeft": "50pt" }}>
+          Employee Form2(hook normal)
+        </NavLink>
+
 
         <NavLink to='prd_data1' style={{ "marginLeft": "50pt" }}>
           Product Data1

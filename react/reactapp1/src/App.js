@@ -16,6 +16,8 @@ import { BrowserRouter, Route,  Routes } from "react-router-dom";
 import { NavBar } from "./NavBar";
 import { ProductData } from "./hook/hookform/ProductData";
 import { ProductData1 } from "./hook/hookform/ProductData1";
+import { EmpData } from "./navigate/EmpData";
+import { EmployeeForm2 } from "./navigate/EmployeeForm2";
 
 function App(){
   return(
@@ -47,6 +49,8 @@ function App(){
         {/* <Route path="/prd_data/:fname" element={<ProductData></ProductData>}></Route> */}
         <Route path="/prd_data1/:fname" element={<ProductData1></ProductData1>}></Route>
         <Route path="/prd_data" element={<ProductData></ProductData>}></Route>
+        <Route path="/empdata" element={<EmpData></EmpData>}></Route>
+        <Route path="/empform2" element={<EmployeeForm2></EmployeeForm2>}></Route>
       </Routes>
 
      </BrowserRouter>
