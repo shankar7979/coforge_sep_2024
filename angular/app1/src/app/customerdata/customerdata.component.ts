@@ -13,9 +13,12 @@ export class CustomerdataComponent {
   id1:number=0;
   name1:string='';
   salary1:number=0;
+  country:any='';
   constructor(private router: Router, private route: ActivatedRoute) {
   }
   ngOnInit(): void{
+    //this.country=
+    this.country=sessionStorage.getItem('country')
     this.route.params.subscribe(params => {
       this.id1 = params['id']
       this.name1 = params['name']

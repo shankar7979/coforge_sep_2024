@@ -25,6 +25,7 @@ export class CustomerComponent {
 
   onsubmit() {
     console.log(this.c)
+    sessionStorage.setItem('country','india');
        this.router.navigate(['/customerdata',{id:this.c.id,name:this.c.name,salary:this.c.salary}])
     //    this.visible=true;
   }
