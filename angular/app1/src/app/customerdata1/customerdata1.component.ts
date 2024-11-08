@@ -27,3 +27,5 @@ export class Customerdata1Component {
     this.capital=sessionStorage.getItem('capital')
   }
 }
+
+//http://localhost:4200/customerdata1/65656/ram%20kumar%20sharm/12000/hindustan

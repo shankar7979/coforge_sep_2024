@@ -35,3 +35,4 @@ export class CustomerdataComponent {
   }
 
 }
+//http://localhost:4200/customerdata;id=6666767677;name=ram%20kumar%20sharm;salary=12000
