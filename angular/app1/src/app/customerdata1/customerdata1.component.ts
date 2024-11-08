@@ -6,32 +6,24 @@ import { Customer } from '../customer/model/customer';
   selector: 'app-customerdata',
   standalone: true,
   imports: [],
-  templateUrl: './customerdata.component.html',
-  styleUrl: './customerdata.component.css'
+  templateUrl: './customerdata1.component.html',
+  styleUrl: './customerdata1.component.css'
 })
-export class CustomerdataComponent {
-  id1:number=0;
-  name1:string='';
-  salary1:number=0;
-  country:string='';
+export class Customerdata1Component {
 
   id:number=0;
   name:string='';
   salary:number=0;
-
+  country:string='';
+  capital:any='';
 
   constructor(private router: Router, private route: ActivatedRoute) {
   }
   ngOnInit(): void{
-    this.route.params.subscribe(params => {
-      this.id1 = params['id']
-      this.name1 = params['name']
-      this.salary1 = params['salary']
-    });
     this.id=this.route.snapshot.params['id'];
     this.name=this.route.snapshot.params['name'];
     this.salary=this.route.snapshot.params['salary'];
-
+    this.country=this.route.snapshot.params['country'];
+    this.capital=sessionStorage.getItem('capital')
   }
-
 }

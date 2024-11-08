@@ -16,9 +16,6 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 })
 export class CustomerComponent {
   @Input()  c:Customer;
-  
-  visible: boolean = true;
-
   constructor(private route:ActivatedRoute, private router:Router) {
     this.c=new Customer();
   }
@@ -27,7 +24,6 @@ export class CustomerComponent {
     console.log(this.c)
     sessionStorage.setItem('country','india');
        this.router.navigate(['/customerdata',{id:this.c.id,name:this.c.name,salary:this.c.salary}])
-    //    this.visible=true;
   }
 
 }
