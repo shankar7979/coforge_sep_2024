@@ -1,3 +1,7 @@
+npm i @angular/cli
+
+ng new projectname
+
 angular with binary nodejs
 download https://nodejs.org/dist/v22.12.0/node-v22.12.0-win-x64.zip
 
