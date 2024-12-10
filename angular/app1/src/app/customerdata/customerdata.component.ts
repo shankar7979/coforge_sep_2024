@@ -13,7 +13,7 @@ export class CustomerdataComponent {
   id1:number=0;
   name1:string='';
   salary1:number=0;
-  country:string='';
+  country:any='';
 
   id:number=0;
   name:string='';
@@ -23,11 +23,15 @@ export class CustomerdataComponent {
   constructor(private router: Router, private route: ActivatedRoute) {
   }
   ngOnInit(): void{
+    this.country=sessionStorage.getItem('country')
+    console.log('country  getItem is '+this.country)
+
     this.route.params.subscribe(params => {
       this.id1 = params['id']
       this.name1 = params['name']
       this.salary1 = params['salary']
     });
+
     this.id=this.route.snapshot.params['id'];
     this.name=this.route.snapshot.params['name'];
     this.salary=this.route.snapshot.params['salary'];
