@@ -19,7 +19,6 @@ export class CustomerdataComponent {
   name:string='';
   salary:number=0;
 
-
   constructor(private router: Router, private route: ActivatedRoute) {
   }
   ngOnInit(): void{

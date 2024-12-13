@@ -1,0 +1,69 @@
+<!DOCTYPE html> 
+<html> 
+
+<head> 
+	<title> 
+		How to wrap setTimeout in a promise? 
+	</title> 
+</head> 
+
+<body> 
+	<br> 
+<div style="border:solid;padding: 20pt;">
+	<h3> 
+		How to wrap setTimeout in a promise? 
+	</h3> 
+
+    <button onclick="change()"> 
+		Click to print 
+	</button> 
+	<p id="gfg"></p> 
+	<script> 
+		function change() { 
+			return new Promise(function (resolve, reject) { 
+		
+				// Setting 2000 ms time 
+				setTimeout(resolve, 2000); 
+			}).then(function () { 
+				document.getElementById("gfg").innerHTML = 
+				"Wrapped setTimeout after 2000ms"; 
+			}); 
+		} 
+	</script> 
+</div>
+
+<div style="border:solid;padding: 20pt;">
+	<script> 
+		
+
+		// function for promise example 
+		async function resolvePromise() { 
+			let newPromise = 
+				new Promise(function (resolve, reject) { 
+				setTimeout(function () { 
+					resolve("Wrapped  setTimeout() in a promise using await"); 
+				}, 1000); 
+			}); 
+            let gfg1 = document.getElementById('gfg1'); 
+			let result = await newPromise; 
+			//let result =  newPromise; 
+            console.log(result)
+			gfg1.innerHTML = result; 
+		} 
+	</script> 
+
+	<h3> 
+		How to wrap setTimeout in a promise? using async and await 
+	</h3> 
+	<br> 
+	
+	<button onclick="resolvePromise()"> 
+		Click to print 
+	</button> 
+	<p id="gfg1"></p> 
+
+    
+</div>
+</body> 
+
+</html>
