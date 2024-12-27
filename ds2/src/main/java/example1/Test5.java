@@ -1,8 +1,6 @@
 package example1;
 
-import java.util.LinkedList;
-
-public class Test3 {
+public class Test5 {
 
     static class Node {
         int data;
@@ -13,6 +11,28 @@ public class Test3 {
         }
     }
 
+    static void display(Node start) {
+        while (start != null) {
+            System.out.print(start.data + ",\t");
+            start = start.next;
+        }
+    }
+  static Node start;
+    static void addNode(int d) {
+    Node node=new Node(d);
+    node.next=start;
+    //start=node;
+    }
+
+    public static void main(String[] args) {
+        addNode(1);
+        addNode(2);
+        addNode(3);
+        addNode(4);
+        display();
+    }
+
+/*
     public static void main(String[] args) {
         Node start = new Node(201);
         Node node = start;
@@ -28,12 +48,9 @@ public class Test3 {
         System.out.println(start.next.data);
         System.out.println(start.next.next.data);
 
+        display(start);
 
-        while (start != null) {
-            System.out.print(start.data + ",\t");
-            start = start.next;
-        }
         //    LinkedList linkedList;
 
-    }
+    }*/
 }

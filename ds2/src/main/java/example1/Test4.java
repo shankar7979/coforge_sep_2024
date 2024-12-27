@@ -1,15 +1,18 @@
 package example1;
 
-import java.util.LinkedList;
-
-public class Test3 {
+public class Test4 {
 
     static class Node {
         int data;
         Node next;
-
         Node(int k) {
             data = k;
+        }
+    }
+    static void display(Node start){
+        while (start != null) {
+            System.out.print(start.data + ",\t");
+            start = start.next;
         }
     }
 
@@ -28,11 +31,8 @@ public class Test3 {
         System.out.println(start.next.data);
         System.out.println(start.next.next.data);
 
+ display(start);
 
-        while (start != null) {
-            System.out.print(start.data + ",\t");
-            start = start.next;
-        }
         //    LinkedList linkedList;
 
     }
