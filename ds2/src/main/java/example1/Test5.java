@@ -20,7 +20,7 @@ public class Test5 {
   static Node start;
     static void addNode(int d) {
     Node node=new Node(d);
-    node.next=start;
+    node=start;
     //start=node;
     }
 
@@ -29,7 +29,7 @@ public class Test5 {
         addNode(2);
         addNode(3);
         addNode(4);
-        display();
+        display(start);
     }
 
 /*
