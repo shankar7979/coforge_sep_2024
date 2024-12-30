@@ -18,6 +18,5 @@ static  class Node{
         System.out.println(node1.data);
         System.out.println(node1.next.data);
         System.out.println(node1.next.next.data);
-
     }
 }

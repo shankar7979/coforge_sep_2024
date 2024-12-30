@@ -5,7 +5,6 @@ public class Test5 {
     static class Node {
         int data;
         Node next;
-
         Node(int k) {
             data = k;
         }

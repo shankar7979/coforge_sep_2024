@@ -28,7 +28,6 @@ public class Test3 {
         System.out.println(start.next.data);
         System.out.println(start.next.next.data);
 
-
         while (start != null) {
             System.out.print(start.data + ",\t");
             start = start.next;
