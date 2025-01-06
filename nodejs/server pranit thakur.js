@@ -2,12 +2,16 @@ var mysql = require('mysql');
 var express = require('express')
 var app = express()
 app.use(express.json())
-
+//mysql> create database nodedb;
+//create table employee(id int primary key, name varchar(20), salary float);
+//error   Error: ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client
+//ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'mysql';
+//flush privileges;
 var connection = mysql.createConnection(
     {
         host: 'localhost',
         user: 'root',
-        password: 'root',
+        password: 'mysql',
         database: 'nodedb'
     }
 );
@@ -117,3 +121,31 @@ app.put("/employee", (req, resp) => {
 
 
 app.listen(8000);
+
+/*
+http://localhost:8000/employee
+post 
+{
+   "id":"1001",
+	"name":"ram kumar",
+	"salary":2000
+}
+
+http://localhost:8000/employee
+put 
+{
+   "id":"1001",
+	"name":"ramesh kumar",
+	"salary":90000
+}
+  
+http://localhost:8000/employee/1001
+delete 
+
+http://localhost:8000/employee/1001
+get  - search
+
+http://localhost:8000/employee
+get -- getall
+
+*/
