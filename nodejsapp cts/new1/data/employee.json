@@ -1,0 +1,13 @@
+{
+"id":10001,
+"name":"suman bharti",
+"salary":20000,
+ "address":{
+        "street":"sector1",
+        "location":"laxminagar",
+        "city":"new delhi",
+        "state":"delhi",
+        "pin":6556566,
+        "country":"india"
+ }
+}
