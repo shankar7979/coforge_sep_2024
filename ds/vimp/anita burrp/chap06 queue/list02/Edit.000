@@ -1,0 +1,15 @@
+for (int t=0; ; t++) {                                     // step  1
+  if (t==nextArrivalTime) {                                // step  2
+    Client client = clients[i++] = new SimClient(i,t);     // step  3
+    queue.add(client);                                     // step  4
+    nextArrivalTime = t + randomArrival.nextInt();         // step  5
+  }
+  for (int j=0; j<numServers; j++) {                       // step  6
+    Server server = servers[j];
+    if (t==server.getStopTime()) server.stopServing(t);    // step  7
+    if (server.isIdle() && !queue.isEmpty()) {             // step  8
+      Client client = (SimClient)queue.remove();           // step  9
+      server.startServing(client,t);                       // step 10
+    }
+  }
+}

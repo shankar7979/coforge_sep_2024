@@ -1,0 +1,91 @@
+//  Data Structures with Java
+//  by John R. Hubbard and Anita Huray
+//  Copyright 2004 by Prentice Hall
+//  chap09\prob05\TestQuadraticProbing.java
+
+package chap09.prob05;
+
+import chap09.list01.Country;
+
+public class TestQuadraticProbing {
+    
+    public TestQuadraticProbing() {
+        System.out.println("Linear Probing:");
+        chap09.prob03.HashTable lt = new chap09.prob03.HashTable(17);
+        lt.put("AT", new Country("Austria", "German", 32378, 8139299));
+        lt.put("FR", new Country("France", "French", 211200, 58978172));
+        lt.put("DE", new Country("Germany", "German", 137800, 82087361));
+        lt.put("GR", new Country("Greece", "Greek", 50900, 10707135));
+        lt.put("IT", new Country("Italy", "Italian", 116300, 56735130));
+        lt.put("PT", new Country("Portugal", "Portuguese", 35672, 9918040));
+        lt.put("SE", new Country("Sweden", "Swedish", 173732, 8911296));
+        lt.put("FI", new Country("Finland", "Finnish", 130100, 5158372));
+        lt.put("IQ", new Country("Iraq", "Arabic", 168754, 22427150));
+        lt.put("IR", new Country("Iran", "Farsi", 636000, 65179752));
+        lt.put("SK", new Country("Slovakia", "Slovak", 18859, 5396193));
+        lt.put("CA", new Country("Canada", "English", 3851800, 31006347));
+        lt.put("LY", new Country("Libya", "Arabic", 679400, 4992838));
+        lt.put("IT", new Country("Italy", "Italian", 116300, 56735130));
+        lt.put("PE", new Country("Peru", "Spanish", 496200, 26624582));
+        lt.put("IS", new Country("Iceland", "Islenska", 40000, 272512));
+        System.out.println(lt);
+        System.out.println("Quadratic Probing:");
+        chap09.prob05.HashTable qt = new chap09.prob05.HashTable(17);
+        qt.put("AT", new Country("Austria", "German", 32378, 8139299));
+        qt.put("FR", new Country("France", "French", 211200, 58978172));
+        qt.put("DE", new Country("Germany", "German", 137800, 82087361));
+        qt.put("GR", new Country("Greece", "Greek", 50900, 10707135));
+        qt.put("IT", new Country("Italy", "Italian", 116300, 56735130));
+        qt.put("PT", new Country("Portugal", "Portuguese", 35672, 9918040));
+        qt.put("SE", new Country("Sweden", "Swedish", 173732, 8911296));
+        qt.put("FI", new Country("Finland", "Finnish", 130100, 5158372));
+        qt.put("IQ", new Country("Iraq", "Arabic", 168754, 22427150));
+        qt.put("IR", new Country("Iran", "Farsi", 636000, 65179752));
+        qt.put("SK", new Country("Slovakia", "Slovak", 18859, 5396193));
+        qt.put("CA", new Country("Canada", "English", 3851800, 31006347));
+        qt.put("LY", new Country("Libya", "Arabic", 679400, 4992838));
+        qt.put("IT", new Country("Italy", "Italian", 116300, 56735130));
+        qt.put("PE", new Country("Peru", "Spanish", 496200, 26624582));
+        qt.put("IS", new Country("Iceland", "Islenska", 40000, 272512));
+        System.out.println(qt);
+    }
+
+    public static void main(String[] args) {
+        new TestQuadraticProbing();
+    }
+}
+
+/*  Output:
+Linear Probing:
+IR: (Iran,Farsi,636000,65179752)
+IQ: (Iraq,Arabic,168754,22427150)
+IT: (Italy,Italian,116300,56735130)
+FI: (Finland,Finnish,130100,5158372)
+IS: (Iceland,Islenska,40000,272512)
+DE: (Germany,German,137800,82087361)
+CA: (Canada,English,3851800,31006347)
+GR: (Greece,Greek,50900,10707135)
+PT: (Portugal,Portuguese,35672,9918040)
+FR: (France,French,211200,58978172)
+SE: (Sweden,Swedish,173732,8911296)
+SK: (Slovakia,Slovak,18859,5396193)
+PE: (Peru,Spanish,496200,26624582)
+LY: (Libya,Arabic,679400,4992838)
+AT: (Austria,German,32378,8139299)
+Quadratic Probing:
+IR: (Iran,Farsi,636000,65179752)
+IS: (Iceland,Islenska,40000,272512)
+IT: (Italy,Italian,116300,56735130)
+IQ: (Iraq,Arabic,168754,22427150)
+FI: (Finland,Finnish,130100,5158372)
+DE: (Germany,German,137800,82087361)
+CA: (Canada,English,3851800,31006347)
+GR: (Greece,Greek,50900,10707135)
+PT: (Portugal,Portuguese,35672,9918040)
+FR: (France,French,211200,58978172)
+SE: (Sweden,Swedish,173732,8911296)
+SK: (Slovakia,Slovak,18859,5396193)
+PE: (Peru,Spanish,496200,26624582)
+LY: (Libya,Arabic,679400,4992838)
+AT: (Austria,German,32378,8139299)
+*/

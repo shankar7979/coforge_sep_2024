@@ -1,0 +1,91 @@
+The last clause in the statement of Programming Problem 5.18 should be: "leaving the rest of the stack in its original order." So, after the call removeBottom(crates), the stack would be changed like this:
+
+	BANANAS
+	PICKLES                   BANANAS
+	RAISINS        -->        PICKLES
+	ORANGES                   RAISINS
+	CARROTS                   ORANGES
+
+An "external method", also called a "client method", is one that is not a member of the class that it is using. So it has no access to the private members of the class. It can use only the class's public methods.
+
+So the method for Problem 5.18 would look like this:
+	Object removeBottom(Stack stack) {
+	    Stack auxStack = new ArrayStack(100);
+	    // uses only stack.peek(), stack.pop(),
+	    // stack.push(object), stack.size(),
+          // auxStack.peek(), auxStack.pop(), etc.
+	    //...
+	}
+
+The programmer has no information about the implementation of the stack; he does not know whether it is an ArrayStack or a LinkedStack. (Of course, the local variable auxStack could be either an ArrayStack or a LinkedStack.)
+
+It doesn't matter here, whether the removeBottom() method is static. That only affects how it works within its own class. That class is merely a test driver. It need't extend anything. It should look like this:
+
+///////////////////////////////////////////////////////////
+// TestRemoveBottom.java
+
+package chap05.prob18;
+
+import chap05.list01.Stack;
+import chap05.list02.ArrayStack;
+
+public class TestRemoveBottom {
+    
+    public TestRemoveBottom() {
+        Stack crates = new ArrayStack(4);
+        crates.push("CARROTS");
+        crates.push("ORANGES");
+        crates.push("RAISINS");
+        crates.push("PICKLES");
+        crates.push("BANANAS");
+        System.out.println("crates.size(): " + crates.size()
+                     + "\tcrates.peek(): " + crates.peek());
+        System.out.println("removeBottom(crates): "
+                     + removeBottom(crates));
+        System.out.println("crates.size(): " + crates.size()
+                     + "\tcrates.peek(): " + crates.peek());
+    }
+    
+    public static void main(String[] args) {
+        new TestRemoveBottom();
+    }
+
+    Object removeBottom(Stack stack) {
+        Stack auxStack = new ArrayStack(100);
+        ////////    ADD CODE HERE    ////////
+        return bottom;
+    }
+}
+
+/*  Output:
+crates.size(): 5        crates.peek(): BANANAS
+removeBottom(crates): CARROTS
+crates.size(): 4        crates.peek(): BANANAS
+*/
+///////////////////////////////////////////////////////////
+
+
+
+> -----Original Message-----
+> From: Trin Chavalittumrong [mailto:trin.chavalittumrong@richmond.edu]
+> Sent: Saturday, February 01, 2003 1:36 PM
+> To: jhubbard@richmond.edu
+> Subject: Re: Assignment 3
+> 
+> 
+> Dr. Hubbard,
+> 
+> I have questions on 5.18-5.20.
+> What do you mean my external method?
+> Is it a static method in LinkedStack class?
+> Is it an extended medthod "public class AuxiliaryStack extends Stack{}"?
+> or something else?
+> 
+> And 5.18 How can I remove the bottom object without changing the stack?
+> Do I just remove the object but the node that contains that object still
+> exists?
+> 
+> Thank you,
+> Trin
+> 
+> 
