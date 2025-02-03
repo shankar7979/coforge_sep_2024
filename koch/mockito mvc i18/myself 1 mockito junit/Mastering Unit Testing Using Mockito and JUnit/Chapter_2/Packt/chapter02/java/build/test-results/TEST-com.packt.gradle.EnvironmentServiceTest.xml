@@ -1,0 +1,8 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<testsuite name="com.packt.gradle.EnvironmentServiceTest" tests="2" failures="0" errors="0" timestamp="2014-02-02T12:12:09" hostname="CCUSISLNB62" time="0.0060">
+  <properties/>
+  <testcase name="production_environment_configured" classname="com.packt.gradle.EnvironmentServiceTest" time="0.0050"/>
+  <testcase name="returns_NULL_when_environment_not_configured" classname="com.packt.gradle.EnvironmentServiceTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
