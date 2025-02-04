@@ -25,10 +25,12 @@ public class EmployeeTest {
 	
 	@Test
 	public void test1() {
+		address.setCity("kochi");
 		employee.setAddress(address);
 		Mockito.when(address.getCity()).thenReturn("kochi");
 		Assertions.assertEquals("kochi", employee.getAddress().getCity());
-		Mockito.verify(employee);
+		//Mockito.verify(employee).getAddress().getCity().equals("kochi");
+	    Mockito.verify(address).setCity("kochi");
 	}
 }
 

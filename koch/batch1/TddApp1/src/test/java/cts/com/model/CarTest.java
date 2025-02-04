@@ -22,10 +22,13 @@ public class CarTest {
 	
 	@Test
 	public void testCar() {
+        Assertions.assertTrue(car instanceof Car);
+
 		double enginezTemperature = car.getEnginezTemperature();
-		Assertions.assertEquals(0, enginezTemperature);
+		Assertions.assertEquals(0.0, enginezTemperature,0);
+		Assertions.assertEquals(false, car.needsFuel());
 		car.driveTo("chennai");
-		Mockito.verify(car).driveTo("cheaani");
+		Mockito.verify(car).driveTo("chennai");
 		
 	}
 	
