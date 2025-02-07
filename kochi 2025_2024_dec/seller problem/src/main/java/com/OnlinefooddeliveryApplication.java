@@ -113,16 +113,18 @@ public class OnlinefooddeliveryApplication implements CommandLineRunner {
 
         dao.addSeller(seller);
         dao.addSeller(seller);
-        dao.addSeller(seller1);
-        dao.addSeller(seller1);
-        dao.addSeller(seller1);
+        //dao.addSeller(seller1);
+
+        //dao.addSeller(seller1);
+        //dao.addSeller(seller1);
         dao.addSeller(seller1);
 
         System.out.println("first seller car sold  " + seller.getCarList().size());
         System.out.println("second seller car sold  " + seller1.getCarList().size());
 
+        System.out.println("final result ...");
         dao.sellerWithMaximumSalesCount().forEach(System.out::println);
-        System.out.println(dao.sellerWithMaximumSalesCount().size());
+        //System.out.println(dao.sellerWithMaximumSalesCount().size());
 
     }
 }

@@ -54,7 +54,8 @@ public class SellerDAO {
                         (a, b) -> (Integer.valueOf(a.getCarList().size()).compareTo(Integer.valueOf(a.getCarList().size())))).max(
                         (a, b) -> (Integer.valueOf(a.getCarList().size()).compareTo(Integer.valueOf(a.getCarList().size())))
                 );
-
+        //System.out.println( max.stream().collect(Collectors.toList())+" final ....");
+        List<Seller> collect = max.stream().collect(Collectors.toList());
         return max.stream().collect(Collectors.toList());
     }
     /* public List<Seller> sellerWithMaximumSalesCount() {

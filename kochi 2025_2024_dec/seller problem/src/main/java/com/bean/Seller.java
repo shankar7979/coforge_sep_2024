@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Seller")
@@ -22,7 +23,7 @@ public class Seller {
     private String sellerContactNumber;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
-	@JsonIgnoreProperties("car")
+	@JsonIgnoreProperties("seller")
 	private List<Car> carList = new ArrayList<>();
 
 
@@ -57,14 +58,27 @@ public class Seller {
 	public void setCarList(List<Car> carList) {
 		this.carList = carList;
 	}
+//
+//	@Override
+//	public String toString() {
+//		return "Seller{" +
+//				"sellerId='" + sellerId + '\'' +
+//				", sellerName='" + sellerName + '\'' +
+//				", sellerContactNumber='" + sellerContactNumber + '\'' +
+//				", carList=" + carList +
+//				'}';
+//	}
+
 
 	@Override
-	public String toString() {
-		return "Seller{" +
-				"sellerId='" + sellerId + '\'' +
-				", sellerName='" + sellerName + '\'' +
-				", sellerContactNumber='" + sellerContactNumber + '\'' +
-				", carList=" + carList +
-				'}';
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass()) return false;
+		Seller seller = (Seller) o;
+		return Objects.equals(sellerId, seller.sellerId) && Objects.equals(sellerName, seller.sellerName) && Objects.equals(sellerContactNumber, seller.sellerContactNumber) && Objects.equals(carList, seller.carList);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(sellerId, sellerName, sellerContactNumber, carList);
 	}
 }

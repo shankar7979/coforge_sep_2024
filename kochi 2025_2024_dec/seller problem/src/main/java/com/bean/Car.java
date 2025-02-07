@@ -1,7 +1,10 @@
 package com.bean;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "Car")
@@ -28,6 +31,7 @@ public class Car {
     private double carPrice;
 
     @ManyToOne( cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonIgnoreProperties("carList")
     @JoinColumn(name = "sellerid", nullable = false)
     private Seller seller;
 
@@ -87,15 +91,28 @@ public class Car {
 		this.seller = seller;
 	}
 
+//	@Override
+//	public String toString() {
+//		return "Car{" +
+//				"regNumber='" + regNumber + '\'' +
+//				", carName='" + carName + '\'' +
+//				", carManufacturer='" + carManufacturer + '\'' +
+//				", carModel='" + carModel + '\'' +
+//				", carRegistrationDate='" + carRegistrationDate + '\'' +
+//				", carPrice=" + carPrice +
+//				'}';
+//	}
+
+
 	@Override
-	public String toString() {
-		return "Car{" +
-				"regNumber='" + regNumber + '\'' +
-				", carName='" + carName + '\'' +
-				", carManufacturer='" + carManufacturer + '\'' +
-				", carModel='" + carModel + '\'' +
-				", carRegistrationDate='" + carRegistrationDate + '\'' +
-				", carPrice=" + carPrice +
-				'}';
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass()) return false;
+		Car car = (Car) o;
+		return Double.compare(carPrice, car.carPrice) == 0 && Objects.equals(regNumber, car.regNumber) && Objects.equals(carName, car.carName) && Objects.equals(carManufacturer, car.carManufacturer) && Objects.equals(carModel, car.carModel) && Objects.equals(carRegistrationDate, car.carRegistrationDate) && Objects.equals(seller, car.seller);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(regNumber, carName, carManufacturer, carModel, carRegistrationDate, carPrice, seller);
 	}
 }
