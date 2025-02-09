@@ -1,6 +1,5 @@
 package com.example.model;
 
-import javax.security.auth.login.AccountException;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -25,7 +24,7 @@ public class EmployeeValidator implements Validator {
 		ValidationUtils.rejectIfEmpty(errors, "id", "id.required");
 		ValidationUtils.rejectIfEmpty(errors, "name", "name.required");
 		ValidationUtils.rejectIfEmpty(errors, "salary", "salary.required", "salary is empty");
-		ValidationUtils.rejectIfEmpty(errors, "dob", "dob.required", "dob is empty");
+		ValidationUtils.rejectIfEmpty(errors, "dob1", "dob1.required", "dob1 is empty");
 
 		/*Employee employee=(Employee) target;
 		if(employee==null) {
