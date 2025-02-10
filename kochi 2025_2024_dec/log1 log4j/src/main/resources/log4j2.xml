@@ -19,7 +19,7 @@
     </Appenders>
     <Loggers>
        <!-- <Logger name="org.example.Test1" level="error" additivity="false">
-			AppenderRef ref="Console" /
+			<AppenderRef ref="Console" /
 			<AppenderRef ref="File" />
 		</Logger>-->
 
