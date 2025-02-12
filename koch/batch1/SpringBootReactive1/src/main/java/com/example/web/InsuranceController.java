@@ -19,11 +19,14 @@ import com.example.exception.InsuranceException;
 import com.example.model.Insurance;
 import com.example.service.InsuranceService;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/insurance")
+@Slf4j
+
 public class InsuranceController {
 
 	@Autowired
@@ -49,54 +52,65 @@ public class InsuranceController {
 				);
 	}
 
-	
-
 	@PostMapping("/insurance")
 	public ResponseEntity<Insurance> addInsurance(@RequestBody Insurance insurance) {
+		log.info("addInsurance");
 		try {
+			log.info("insurance saved ");
 			return new ResponseEntity<>(service.addInsurance(insurance), HttpStatus.CREATED);
 		} catch (InsuranceException e) {
+			log.error("add insurance error "+e.getMessage());
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@GetMapping("/insurance/{id}")
 	public ResponseEntity<Insurance> findInsuranceById(@PathVariable int id) {
+		log.info("findInsuranceById");
 		try {
+			log.info("found "+service.findInsuranceById(id));
 			return new ResponseEntity<>(service.findInsuranceById(id), HttpStatus.FOUND);
 		} catch (InsuranceException e) {
+			log.error("error "+e.getMessage());
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
-
 	}
 
 	@GetMapping("/insurance")
 	public ResponseEntity<List<Insurance>> getAllInsurance() {
+		log.info("getAllInsurance");
 		try {
+			log.info("found "+service.getAllInsurance());
 			return new ResponseEntity<>(service.getAllInsurance(), HttpStatus.FOUND);
 		} catch (InsuranceException e) {
+			log.error("error "+e.getMessage());
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
-
 	}
 
 	@PutMapping("/insurance")
 	public ResponseEntity<Insurance> updateInsurance(@RequestBody Insurance insurance) {
+		log.info("updateInsurance");
 		try {
-			return new ResponseEntity<>(service.updateInsurance(insurance), HttpStatus.CREATED);
+			Insurance updateInsurance = service.updateInsurance(insurance);
+			log.info("updated "+updateInsurance+"status "+HttpStatus.CREATED);
+			return new ResponseEntity<>(updateInsurance, HttpStatus.CREATED);
 		} catch (InsuranceException e) {
+			log.error(e.getMessage()+" status "+HttpStatus.NOT_FOUND);
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
 
-	@DeleteMapping("/insurance")
-	public  ResponseEntity<Insurance> deleteInsurance(int id) {
+	@DeleteMapping("/insurance/{id}")
+	public  ResponseEntity<Insurance> deleteInsurance(@PathVariable("id") int id) {
+		log.info("deleteInsurance");
 		try {
-			return new ResponseEntity<>(service.deleteInsurance(id), HttpStatus.OK);
+			Insurance deleteInsurance = service.deleteInsurance(id);
+			log.info("deleted with id "+id+" value "+deleteInsurance+" status "+HttpStatus.OK);
+			return new ResponseEntity<>(deleteInsurance, HttpStatus.OK);
 		} catch (InsuranceException e) {
+			log.error(e.getMessage());
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
-
 	}
-
 }
