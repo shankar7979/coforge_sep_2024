@@ -250,3 +250,12 @@
 2025-02-12 18:12:20 - com.example.web.InsuranceController - found [Insurance(insuranceId=2, insuranceName=bike insurance, years=1, startDate=2022-12-12), Insurance(insuranceId=3, insuranceName=home insurance, years=5, startDate=2021-12-12), Insurance(insuranceId=4, insuranceName=mobile insurance, years=10, startDate=2020-12-12)]
 2025-02-12 18:12:20 - c.example.service.InsuranceService - getAllInsurance 
 2025-02-12 18:12:20 - c.example.service.InsuranceService - found all [Insurance(insuranceId=2, insuranceName=bike insurance, years=1, startDate=2022-12-12), Insurance(insuranceId=3, insuranceName=home insurance, years=5, startDate=2021-12-12), Insurance(insuranceId=4, insuranceName=mobile insurance, years=10, startDate=2020-12-12)]
+2025-02-12 18:37:46 - o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin - Application shutdown requested.
+2025-02-12 18:37:46 - o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-02-12 18:37:46 - o.a.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-6060"]
+2025-02-12 18:37:46 - o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-02-12 18:37:46 - o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-6060"]
+2025-02-12 18:37:46 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-02-12 18:37:46 - o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-232]
+2025-02-12 18:37:46 - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-02-12 18:37:46 - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
