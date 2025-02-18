@@ -1,3 +1,31 @@
+ms 
+
+https://github.com/sivaprasadreddy/spring-boot-microservices-series/tree/master
+
+https://github.com/koushikkothagal/spring-boot-microservices-workshop
+
+https://github.com/eazybytes/microservices  imp tutorial
+
+https://github.com/Java-Techie-jt/jwt-apigateway-security   jt 
+
+https://github.com/SaiUpadhyayula/spring-boot-microservices vip
+
+
+
+https://github.com/spring-guides/gs-accessing-data-r2dbc/tree/main
+
+https://sdmis.nios.ac.in/registration/index?stream_code=1&block_code=12
+
+mockmvc  rest
+
+https://www.geeksforgeeks.org/spring-boot-mockmvc-example/
+
+https://github.com/gurkanucar/spring-boot-test
+
+https://github.com/reachansari/spring-boot-testing-mock-mvc
+
+https://github.com/deepakkumar55/ULTIMATE-JAVASCRIPT-PROJECT
+
 https://stackoverflow.com/questions/77862054/intellij-spring-boot-devtools-not-detecting-changes-automatically
 
 https://www.initgrep.com/posts/java/spring/mastering-spring-webclient:-from-basics-to-advanced-techniques
@@ -63,40 +91,6 @@ jstl
 <%@ taglib uri="jakarta.tags.sql" prefix="sql" %>
 
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
