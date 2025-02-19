@@ -10,6 +10,18 @@ https://github.com/Java-Techie-jt/jwt-apigateway-security   jt
 
 https://github.com/SaiUpadhyayula/spring-boot-microservices vip
 
+--- new latest ms 
+
+https://github.com/Aliabbos-Ashurov/spring-cloud-eureka-microservices/tree/main
+
+https://github.com/Manevy22/java-microservices-course/tree/main
+
+https://github.com/Thekishor/ecommerce-microservices  very very good
+
+https://github.com/DanielCHFer/LucaTicket-Microservices-Rest-APIs avg
+
+https://github.com/Rohithsingamaneni/shop-ease  good 1
+
 
 
 https://github.com/spring-guides/gs-accessing-data-r2dbc/tree/main
