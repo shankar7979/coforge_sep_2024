@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,15 +42,8 @@ public class EmployeeService {
         }
     }
 
-    /*    public List<Employee> findEmployeeByname(String name) {
-            return employeeRepository.findByname(name);
-        }*/
     public List<Employee> findEmployeeByname(String name) {
-        if (employeeRepository.findByname(name).isEmpty()) {
-            log.error("name not found");
-            throw new EmployeeException("name not found");
-        } else
-            return employeeRepository.findByname(name);
+        return employeeRepository.findByname(name);
     }
 
     public List<Employee> findByNameAndSalary(String name, float salary) {
@@ -66,16 +60,6 @@ public class EmployeeService {
             return byId.get();
         }
     }
-
-   public Employee updateEmployee(String name, int id) {
-        if (employeeRepository.updateEmployee(name, id) != 1) {
-            throw new EmployeeException("id not present");
-        } else {
-            employeeRepository.updateEmployee(name, id);
-            return employeeRepository.findById(id).get();
-        }
-    }
-
 
     public Employee updateEmployeeById(Employee employee) {
         Optional<Employee> byId = employeeRepository.findById(employee.getId());
@@ -98,10 +82,20 @@ public class EmployeeService {
         }
     }
 
-    public List<Employee> searchwithsalary(float salary) {
-        if (employeeRepository.searchwithsalary(salary) == null) {
-            throw new EmployeeException("no record found by salary");
-        } else
-            return employeeRepository.searchwithsalary(salary);
+    public List<Employee> searchWithsalary(float salary){
+            if(employeeRepository.searchWithsalary(salary).isEmpty())
+              throw new EmployeeException("no record found with salary "+salary);
+            else
+                return employeeRepository.searchWithsalary(salary);
     }
+
+    public Employee updateEmployeeSalary(float salary, int id){
+        if(employeeRepository.findById(id).isEmpty())
+            throw new EmployeeException("id not present");
+        else {
+            employeeRepository.updateEmployeeSalary(salary, id);
+             return employeeRepository.findById(id).get();
+        }
+    }
+
 }

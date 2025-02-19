@@ -19,7 +19,26 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @PostMapping("/employee")
+    @GetMapping("/employee2/{salary}")
+    public ResponseEntity<List<Employee>> searchWithsalary(@PathVariable("salary") float salary) {
+        try {
+            return new ResponseEntity<>(employeeService.searchWithsalary(salary), HttpStatus.FOUND);
+        } catch (EmployeeException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+    @PutMapping("/employee/{salary}/{id}")
+    public  ResponseEntity<Employee> updateEmployeeSalary(@PathVariable("salary") float salary, @PathVariable("id") int id) {
+   try{
+       return new ResponseEntity<>(employeeService.updateEmployeeSalary(salary,id), HttpStatus.FOUND);
+   }
+   catch (EmployeeException e){
+       return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+   }
+
+    }
+
+        @PostMapping("/employee")
     public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
         try {
             log.info("addEmployee called ");
@@ -52,17 +71,6 @@ public class EmployeeController {
         }
     }
 
-@PutMapping("/employee/{name}/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable("name") String name, @PathVariable("id") int id) {
-        try {
-            log.info("updateEmployee called ");
-            return new ResponseEntity<>(employeeService.updateEmployee(name,id), HttpStatus.FOUND);
-        } catch (EmployeeException e) {
-            log.error("updateEmployee error  " + e.getMessage());
-            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
     @DeleteMapping("/employee/{id}")
     public ResponseEntity<Employee> deleteEmployee(@PathVariable("id") int id) {
         try {
@@ -85,19 +93,9 @@ public class EmployeeController {
         }
     }
 
-    /*@GetMapping("/employee1/{name}")
-    public List<Employee> findEmployeeByname(@PathVariable("name") String name) {
-
-        return employeeService.findEmployeeByname(name);
-    }*/
-
     @GetMapping("/employee1/{name}")
-    public ResponseEntity<List<Employee>> findEmployeeByname(@PathVariable("name") String name) {
-        try {
-            return new ResponseEntity<>(employeeService.findEmployeeByname(name), HttpStatus.FOUND);
-        } catch (EmployeeException e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public List<Employee> findEmployeeByname(@PathVariable("name") String name) {
+        return employeeService.findEmployeeByname(name);
     }
 
     @GetMapping("/employee/{name}/{salary}")
@@ -106,12 +104,4 @@ public class EmployeeController {
         return employeeService.findByNameAndSalary(name, salary);
     }
 
-    @GetMapping("/employee2/{salary}")
-    public  ResponseEntity<List<Employee>> searchwithsalary(@PathVariable float salary) {
-            try {
-                return new ResponseEntity<>(employeeService.searchwithsalary(salary), HttpStatus.FOUND);
-            } catch (EmployeeException e) {
-                return new ResponseEntity(e.getMessage(),HttpStatus.NOT_FOUND);
-            }
-        }
-    }
+}
