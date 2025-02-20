@@ -1,4 +1,34 @@
+rest dto 
+
+DTO as a request or response in a REST controller,
+
+https://softwareengineering.stackexchange.com/questions/368878/data-objects-for-each-layerdto-vs-entity-vs-response-objects
+
+https://levelup.gitconnected.com/seamless-data-exchange-in-net-unlocking-efficiency-with-request-and-response-dtos-5b14716c9459
+
+https://dev.to/jarjanazy/optimize-your-api-responses-using-dtos-io4
+
+
+
+
+
 ms 
+
+https://rameshfadatare.medium.com/spring-boot-microservices-resttemplate-example-with-e-commerce-eb530186fd31
+
+https://github.com/RameshMF/springboot-microservices
+
+https://github.com/RameshMF/springboot-microservices-ecommerce
+
+https://github.com/RameshMF/learn-microservices-w-spring-boot
+
+https://github.com/Ali-Modassir/SpringBoot-Microservices-Order-Management-System  imp
+
+https://github.com/nrkapri/customer-orders-product   imp
+
+
+
+
 
 https://github.com/sivaprasadreddy/spring-boot-microservices-series/tree/master
 
