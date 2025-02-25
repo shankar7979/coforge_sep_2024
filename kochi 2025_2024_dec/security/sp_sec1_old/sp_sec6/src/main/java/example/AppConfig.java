@@ -1,3 +1,4 @@
+/*
 package example;
 
 import org.springframework.context.annotation.Bean;
@@ -13,33 +14,31 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-public class AppConfig1 {
+public class AppConfig {
+   // SecurityFilterChain with bean not working, below UserDetailsService commented
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //      http.httpBasic(Customizer.withDefaults());
         http.formLogin(Customizer.withDefaults());
-      //  http.authorizeHttpRequests(c -> c.anyRequest().permitAll());// will allow all without any username
-      //  http.authorizeHttpRequests(c -> c.anyRequest().authenticated());
-        //http.authorizeHttpRequests(c -> c.anyRequest().hasAuthority("read"));// allow user4
-        //http.authorizeHttpRequests(c -> c.anyRequest().hasRole("admin"));// allow user4
+        http.authorizeHttpRequests(c -> c.anyRequest().authenticated());
+        UserDetails build = User.withUsername("ram").password("1234").authorities("admin").build();
+        //InMemoryUserDetailsManager detailsManager = new InMemoryUserDetailsManager();
+        //detailsManager.createUser(build);
 
+        InMemoryUserDetailsManager detailsManager = new InMemoryUserDetailsManager(build);
+        http.userDetailsService(detailsManager);
         return http.build();
     }
 
-    @Bean
+*/
+/*    @Bean
     public UserDetailsService userDetails() {
-        UserDetails user1 = User.withUsername("ram1").password("1234").authorities("admin").build();
-        UserDetails user2 = User.withUsername("ram2").password("1234").authorities("user").build();
-        UserDetails user3 = User.withUsername("ram3").password("1234").authorities("write").build();
-        UserDetails user4 = User.withUsername("ram4").password("1234").authorities("read").build();
-        UserDetails user5 = User.withUsername("ram5").password("1234").authorities("read").build();
+        UserDetails build = User.withUsername("ram").password("1234").authorities("admin").build();
         InMemoryUserDetailsManager detailsManager = new InMemoryUserDetailsManager();
-        detailsManager.createUser(user1);
-        detailsManager.createUser(user2);
-        detailsManager.createUser(user3);
-        detailsManager.createUser(user4);
+        detailsManager.createUser(build);
         return  detailsManager;
-    }
+    }*//*
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -47,3 +46,4 @@ public class AppConfig1 {
     }
 
 }
+*/

@@ -27,12 +27,6 @@
         <module>sp_sec4</module>
         <module>sp_sec5</module>
         <module>sp_sec6</module>
-        <module>sp_sec7</module>
-        <module>sp_sec8</module>
-        <module>sp_sec9</module>
-        <module>sp_10</module>
-        <module>sp_sec_11_jpa</module>
-        <module>sp_sec_12_jpa</module>
     </modules>
     <scm>
         <connection/>

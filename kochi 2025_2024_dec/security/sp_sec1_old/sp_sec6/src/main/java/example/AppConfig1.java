@@ -20,9 +20,7 @@ public class AppConfig1 {
         http.formLogin(Customizer.withDefaults());
       //  http.authorizeHttpRequests(c -> c.anyRequest().permitAll());// will allow all without any username
       //  http.authorizeHttpRequests(c -> c.anyRequest().authenticated());
-        //http.authorizeHttpRequests(c -> c.anyRequest().hasAuthority("read"));// allow user4
-        //http.authorizeHttpRequests(c -> c.anyRequest().hasRole("admin"));// allow user4
-
+        http.authorizeHttpRequests(c -> c.anyRequest().hasAuthority("read"));// allow user4
         return http.build();
     }
 
@@ -32,7 +30,6 @@ public class AppConfig1 {
         UserDetails user2 = User.withUsername("ram2").password("1234").authorities("user").build();
         UserDetails user3 = User.withUsername("ram3").password("1234").authorities("write").build();
         UserDetails user4 = User.withUsername("ram4").password("1234").authorities("read").build();
-        UserDetails user5 = User.withUsername("ram5").password("1234").authorities("read").build();
         InMemoryUserDetailsManager detailsManager = new InMemoryUserDetailsManager();
         detailsManager.createUser(user1);
         detailsManager.createUser(user2);

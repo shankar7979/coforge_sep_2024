@@ -1,3 +1,87 @@
+security
+
+https://www.manning.com/downloads/2105
+
+Spring security jpa
+
+https://codeload.github.com/lakshay1341/Movie-Review-System-API/zip/refs/heads/main
+
+Spring in action ch03 02
+
+https://github.com/mohammedmangari/SpringSecurity_JPA_Authentication/tree/main
+
+
+
+ms latest
+
+
+
+https://vinsguru.medium.com/resilient-microservice-design-with-spring-boot-retry-pattern-90824638f2d9   -all patterns link
+
+https://medium.com/@egorponomarev/bulkhead-pattern-in-spring-boot-ab022d5ed0cb
+
+
+
+https://medium.com/@AlexanderObregon/introduction-to-spring-microservices-what-you-need-to-know-f9a26d4ccfef
+
+---
+
+https://github.com/senuravihanjayadeva/Spring-Microservice
+
+https://medium.com/ms-club-of-sliit/lets-build-a-microservice-with-spring-boot-faf39b968857
+
+
+
+
+
+circuit breaker
+
+https://github.com/MaheshBabu11/CircuitBreaker   -imp
+
+https://medium.com/@truongbui95/circuit-breaker-pattern-in-spring-boot-d2d258b75042
+
+https://medium.com/@mustafa_ciminli/implementing-circuit-breaker-with-resilience4j-in-spring-boot-fe8cc9b43e89
+
+https://medium.com/spring-boot/exploring-resilience4j-enhancing-circuit-breaker-patterns-for-robust-applications-6cb8093d0b9
+
+https://medium.com/bliblidotcom-techblog/resilience4j-circuit-breaker-implementation-on-spring-boot-9f8d195a49e0
+
+https://medium.com/bliblidotcom-techblog/spring-cloud-circuit-breaker-implementation-using-resilience4j-and-spring-open-feign-734d0fd34e37
+
+https://github.com/zulffaza
+
+
+
+https://medium.com/@truongbui95/microservice-patterns-retry-with-spring-boot-03b4d59f7c8c
+
+https://github.com/buingoctruong/circuit-breaker-pattern-spring-boot
+
+
+
+https://medium.com/@truongbui95/microservice-patterns-rate-limiting-with-spring-boot-7e2a068e1b8b
+
+https://github.com/buingoctruong/circuit-breaker-pattern-spring-boot
+
+Learn Microservices with Spring Boot: A Practical Approach to RESTful pdf
+
+curl -su 'user' <url>
+
+curl -u jane:12345 http://localhost:8080/hello
+
+
+
+when calling path /a using HTTP GET without authenticating, use
+
+curl -XGET http://localhost:8080/a
+
+
+
+ curl.exe -X POST -H "Content-Type: application/json" -d '{"name":"shyam","ssn":"ssn1010"}' http://localhost:8080/add
+
+
+
+
+
 rest dto 
 
 DTO as a request or response in a REST controller,
@@ -108,7 +192,9 @@ https://blog.devgenius.io/circuit-breaker-and-feign-client-implementation-in-spr
 
 https://blog.devops.dev/resilience4j-circuit-breaker-with-spring-boot-77d175e943ef
 
+nios 
 
+CYJm593w
 
 
 
@@ -2728,3 +2814,34 @@ The output is "bean2".
 
 
 
+========== spring security role vs authority============
+
+
+
+Role and Authority Management in Spring Security 4+
+
+Spring Security 4 brought consistency in how roles are handled. For example, hasRole('ADMIN') and hasAuthority('ROLE_ADMIN') are equivalent because Spring automatically adds the ROLE_ prefix when you use hasRole.
+
+@PreAuthorize("hasRole('ADMIN')")
+
+public String adminAccess() {
+
+  return "Access granted to admin.";
+
+}
+
+
+
+public User. UserBuilder roles (String ... roles)
+
+Populates the roles. This method is a shortcut for calling authorities(String...), but automatically prefixes each entry with "ROLE_". This means the following: builder. roles("USER","ADMIN"); is equivalent to builder. authorities("ROLE_USER","ROLE_ADMIN");
+
+This attribute is required, but can also be populated with authorities(String...).
+
+Parameters:
+
+roles - the roles for this user (i. e. USER, ADMIN, etc). Cannot be null, contain null values or start with "ROLE_"
+
+Returns:
+
+the User. UserBuilder for method chaining (i. e. to populate additional attributes for this user)
