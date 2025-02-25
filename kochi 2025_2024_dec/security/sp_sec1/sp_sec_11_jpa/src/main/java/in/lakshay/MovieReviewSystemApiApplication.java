@@ -11,3 +11,7 @@ public class MovieReviewSystemApiApplication {
 	}
 
 }
+
+//insert into users (user_name,password) values('ram kumar','$2a$12$nq3xL/pOmid1K1QWS/peDOk6OIOkIjFAWooTH8RnSPDi9o7tVDOjm');
+//https://bcrypt-generator.com/
+
