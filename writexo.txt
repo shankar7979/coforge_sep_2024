@@ -1,3 +1,107 @@
+email n notification 
+
+https://codeload.github.com/hendisantika/springboot-email/zip/refs/heads/master
+
+https://codeload.github.com/hendisantika/thymeleaf-template/zip/refs/heads/master
+
+Notifications
+
+https://medium.com/@javatechie/build-real-time-notifications-in-spring-boot-applications-websocket-1d5a452c528c
+
+
+
+https://javafullstackdev.medium.com/building-real-time-notification-systems-with-websocket-and-spring-boot-ac197935dd5d
+
+
+
+Kafka
+
+kafka_app1 ukg
+
+Ramesh
+
+https://codeload.github.com/RameshMF/springboot-kafka-course/zip/refs/heads/main
+
+https://www.javaguides.net/2022/05/spring-boot-kafka-jsonserializer-and-Jsondeserializer-example.html
+
+
+
+https://github.com/netsurfingzone/Spring-Boot-Kafka-Producer-and-Consumer-Example
+
+https://javatute.com/kafka/spring-boot-kafka-producer-and-consumer-example-step-by-step-guide/
+
+
+
+https://github.com/thepracticaldeveloper/kafka-spring-boot-example/tree/master
+
+https://www.practicalsoftwarearchitecture.com/blog/spring-boot-kafka-config
+
+
+
+
+
+https://fintech.theodo.com/blog-posts/emailing-microservice-with-apache-kafka-and-spring-boot-made-easy
+
+https://github.com/felixzero/messaging_microservice_kafka   imp 
+
+
+
+https://medium.com/simform-engineering/kafka-integration-made-easy-with-spring-boot-b7aaf44d8889
+
+https://github.com/jhulick/notification
+
+https://github.com/abhithube/notifications-service
+
+imp
+
+https://github.com/hugotb88/EmailNotificationService  
+
+https://github.com/hugotb88/ProductsRepository
+
+
+
+https://github.com/marwenlb/eCommerce-Microservices
+
+https://github.com/avixkap/lms-microservices
+
+https://www.geeksforgeeks.org/spring-boot-integration-with-kafka/
+
+
+
+https://javatechonline.com/how-to-work-with-apache-kafka-in-spring-boot/
+
+
+
+jwt 
+
+hello-world-coforge23_2\angular\jwt spring boot -angular
+
+jwt cors
+
+https://medium.com/@robertt.taylor9517/java-spring-jwt-security-and-cors-81cfa3e8cf1b
+
+https://github.com/RobertTTaylor9517/SecurityBlog?source=post_page-----81cfa3e8cf1b---------------------------------------
+
+
+
+
+
+config server
+
+https://stackoverflow.com/questions/27131143/spring-cloud-configuration-server-not-working-with-local-properties-file
+
+https://github.com/spencergibb/communityanswers/tree/so27131143
+
+
+
+Pagination
+
+https://github.com/ArdiJorganxhi/SpringBootTemplate
+
+https://ardijorganxhi.medium.com/implement-pagination-at-your-spring-boot-application-a540270b5f60
+
+
+
 security
 
 https://www.manning.com/downloads/2105
@@ -6,9 +110,53 @@ Spring security jpa
 
 https://codeload.github.com/lakshay1341/Movie-Review-System-API/zip/refs/heads/main
 
+
+
+//insert into users (user_name,password) values('ram kumar','$2a$12$nq3xL/pOmid1K1QWS/peDOk6OIOkIjFAWooTH8RnSPDi9o7tVDOjm');
+
+//https://bcrypt-generator.com/
+
+
+
+
+
 Spring in action ch03 02
 
 https://github.com/mohammedmangari/SpringSecurity_JPA_Authentication/tree/main
+
+
+
+new imp jwt and basic
+
+-----------------------------------------------------
+
+https://medium.com/@Lakshitha_Fernando/spring-security-6-and-spring-boot-3-with-simple-project-91389cc13119
+
+
+
+INSERT INTO employee VALUES
+
+(1,'john@gmail.com','john','$2a$12$.DNBDk4w3VlG6Fn3sNmUOeCw6VXuVa7O3oDCfvRrfMucwMn5VthQK','john'),
+
+(2,'sam@gmail.com','sam','$2a$12$FujPv5E0QKVRVt1zIIu3GuTMxkvLs9dEgTQOx0z8WYfyjYJAZF0Zm','sam');
+
+INSERT INTO roles VALUES (1,'ROLE_USER'),(2,'ROLE_ADMIN');
+
+INSERT INTO employee_roles VALUES (1,1),(2,2);
+
+Here, I generated password from this site — Bcrypt-Generator.com — Generate, Check, Hash, Decode Bcrypt Strings
+
+https://github.com/lakshitha200/Spring-Security
+
+-------------------------------------
+
+
+
+https://www.geeksforgeeks.org/implementing-database-authentication-and-authorization-with-spring-security-6/
+
+https://stackoverflow.com/questions/2323377/spring-security-authenticationmanager-vs-authenticationprovider
+
+
 
 
 
@@ -37,6 +185,12 @@ https://medium.com/ms-club-of-sliit/lets-build-a-microservice-with-spring-boot-f
 circuit breaker
 
 https://github.com/MaheshBabu11/CircuitBreaker   -imp
+
+https://medium.com/@truongbui95/load-balancing-in-distributed-systems-exploring-concepts-and-practical-demonstration-c3e911850067
+
+https://github.com/buingoctruong/Load-balancer-distributed-system?tab=readme-ov-file
+
+
 
 https://medium.com/@truongbui95/circuit-breaker-pattern-in-spring-boot-d2d258b75042
 
@@ -120,7 +274,7 @@ https://github.com/koushikkothagal/spring-boot-microservices-workshop
 
 https://github.com/eazybytes/microservices  imp tutorial
 
-https://github.com/Java-Techie-jt/jwt-apigateway-security   jt 
+https://github.com/Java-Techie-jt/jwt-apigateway-security   jt   security at apigateway
 
 https://github.com/SaiUpadhyayula/spring-boot-microservices vip
 
