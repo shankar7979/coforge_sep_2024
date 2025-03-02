@@ -18,7 +18,7 @@ public class EmailService {
 //        message.setFrom("postmaster@sandboxaf6a5713b47d457bb8fb2c9c25df583b.mailgun.org"); // Sender's email
 //        message.setTo("labassimarouene@gmail.com");
 
-        message.setFrom("sankar.jaiswal@gmail.com"); // Sender's email
+        message.setFrom("shankar7979@gmail.com"); // Sender's email
         message.setTo(to); // Recipient's email
 
         message.setSubject(subject);

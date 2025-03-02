@@ -20,7 +20,8 @@ public class KafkaConsumerService {
 
         // Example recipient email (replace with actual customer email)
         //String emailRecipient = "labassimarouene@gmail.com ";
-        String emailRecipient = "Shankar.Kumar@cognizant.com";
+//        String emailRecipient = "Shankar.Kumar@cognizant.com";
+        String emailRecipient = "sankar.jaiswal@gmail.com";
         String emailSubject = "Order Confirmation";
         String emailBody = "Hello ,\n\nYour order has been successfully created.\nDetails: " + message;
 
