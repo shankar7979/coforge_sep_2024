@@ -1,3 +1,85 @@
+Prometheus and Grafana
+
+Monitoring Made Simple: Empowering Spring Boot Applications with Prometheus and Grafana
+
+
+
+flask
+
+https://medium.com/@ericvanrees/creating-a-flask-app-using-vscode-fcdb2d0b9979
+
+https://dev.to/mursalfk/setup-flask-on-windows-system-using-vs-code-4p9j
+
+
+
+oauth 
+
+https://github.com/hendisantika/spring-boot-security-oauth2-example
+
+https://github.com/hendisantika/springboot-oauth2-login
+
+https://medium.com/@suveshagnihotri/oauth2-with-spring-boot-83927546237d
+
+
+
+
+
+$ curl client:secret@localhost:8080/oauth/token -d grant_type=password -d username=user -d password=pwd
+
+https://www.codejava.net/frameworks/spring-boot/oauth2-login-with-github-example
+
+https://medium.com/swlh/spring-boot-oauth2-login-with-github-88b178e0c004
+
+Maroun Maroun GitHub
+
+https://medium.com/@lucas.rj.fernandes/spring-security-with-oauth2-and-linkedin-a20874ae7477
+
+https://github.com/Medium-Artigos/spring-oauth2-login-linkedin
+
+https://github.com/lexburner/oauth2-demo
+
+https://github.com/SammyOcharo/Springboot-Auth-OAuth2-Username-Password
+
+https://github.com/royclarkson/spring-rest-service-oauth
+
+https://github.com/longfeizheng/springboot2.0-oauth2
+
+
+
+
+
+
+
+https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2
+
+
+
+
+
+https://medium.com/@bubu.tripathy/oauth-2-using-spring-boot-99c17292f228
+
+
+
+https://docs.spring.io/spring-security-oauth2-boot/docs/current/reference/pdf/spring-security-oauth2-boot-reference.pdf
+
+https://docs.spring.io/spring-security/site/docs/5.3.13.RELEASE/reference/pdf/spring-security-reference.pdf
+
+https://docs.spring.io/spring-security/site/docs/3.0.8.RELEASE/reference/springsecurity.pdf
+
+https://spring.io/projects/spring-security#learn
+
+https://spring.io/projects/spring-kafka
+
+https://docs.spring.io/spring-security/site/docs/
+
+https://docs.spring.io/spring-security/site/docs/5.0.0.RELEASE/reference/pdf/spring-security-reference.pdf
+
+https://docs.spring.io/spring-security/site/docs/5.3.13.RELEASE/reference/pdf/spring-security-reference.pdf
+
+
+
+
+
 email n notification 
 
 https://codeload.github.com/hendisantika/springboot-email/zip/refs/heads/master
@@ -74,7 +156,19 @@ https://javatechonline.com/how-to-work-with-apache-kafka-in-spring-boot/
 
 jwt 
 
+https://medium.com/@tericcabrel/implement-jwt-authentication-in-a-spring-boot-3-application-5839e4fd8fac
+
+https://github.com/tericcabrel/blog-tutorials/tree/main/springboot-jwt-auth
+
+---
+
+
+
 hello-world-coforge23_2\angular\jwt spring boot -angular
+
+https://jcs.ep.jhu.edu/legacy-ejava-springboot/coursedocs/content/pdf/jwt-notes.pdf
+
+https://www.toptal.com/spring/spring-security-tutorial
 
 jwt cors
 
@@ -221,6 +315,10 @@ Learn Microservices with Spring Boot: A Practical Approach to RESTful pdf
 curl -su 'user' <url>
 
 curl -u jane:12345 http://localhost:8080/hello
+
+curl -u "ram kumar" http://localhost:8080/hello
+
+
 
 
 
@@ -378,9 +476,13 @@ jstl
 
 https://howtodoinjava.com/log4j2/log4j2-xml-configuration-example/#3-rollingfileappender-%E2%80%93-logging-to-file
 
-
+ni
 
 https://docs.google.com/spreadsheets/d/1yF1Cet1bFkOKbtGmBSgQ3UNe_gg79yK1/edit?gid=434028871#gid=434028871
+
+re
+
+https://docs.google.com/spreadsheets/d/1xpGqkcC2J5rGZkl0RkKyNRG7eU-4R6RQ/edit?gid=618062781#gid=618062781
 
 
 
@@ -2999,3 +3101,16 @@ roles - the roles for this user (i. e. USER, ADMIN, etc). Cannot be null, contai
 Returns:
 
 the User. UserBuilder for method chaining (i. e. to populate additional attributes for this user)
+
+
+
+rancher desktop
+
+https://rancherdesktop.io/
+
+
+
+https://objects.githubusercontent.com/github-production-release-asset-2e65be/306701996/67d16d2c-0e7f-4c02-befc-bf40579415c3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20250303%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250303T003304Z&X-Amz-Expires=300&X-Amz-Signature=a72b33172dd542f0cfa6699e3be7bbbd62c8ef396b2accb112926c11f744a250&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3DRancher.Desktop.Setup.1.18.0.msi&response-content-type=application%2Foctet-stream
+
+
+
