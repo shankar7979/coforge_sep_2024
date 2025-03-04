@@ -71,3 +71,16 @@ app.run(port=5000)
 # pip install flask
 #go inside .venv/Scripts/ and issue activate.bat
 # python test2.py
+# get method
+# http://localhost:5000/books
+#
+# post method
+# http://localhost:5000/books
+#
+# {
+#     "isbn": "0123456",
+#     "name": "F",
+#     "price": 6.99
+# }
+
+
