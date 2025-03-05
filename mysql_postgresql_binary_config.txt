@@ -14,6 +14,8 @@ C:\Users\aniket.bose\Downloads\postgresql-16.3-2-windows-x64-binaries\pgsql\bin>
 
 pg_ctl.exe -D c:\pgsql_data start
 
+C:\Users\aniket.bose\Downloads\postgresql-16.3-2-windows-x64-binaries\pgsql\bin>psql.exe -U postgres
+
 
 C:\Users\aniket.bose\Downloads\postgresql-16.3-2-windows-x64-binaries\pgsql\bin>psql.exe -U postgres
 ====================  mysql ============
