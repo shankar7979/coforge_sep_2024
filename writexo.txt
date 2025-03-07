@@ -1,3 +1,11 @@
+docker
+
+https://www.youtube.com/watch?v=t78cXNFHFxo
+
+https://podman-desktop.io/
+
+
+
 Prometheus and Grafana
 
 Monitoring Made Simple: Empowering Spring Boot Applications with Prometheus and Grafana
@@ -481,6 +489,8 @@ https://blog.devops.dev/resilience4j-circuit-breaker-with-spring-boot-77d175e943
 nios 
 
 CYJm593w
+
+pnr  4415622508
 
 
 
