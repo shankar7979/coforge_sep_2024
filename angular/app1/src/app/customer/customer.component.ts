@@ -28,5 +28,7 @@ export class CustomerComponent {
   }
 
 }
-
+// params subscribe
+//http://localhost:4200/customerdata;id=21211;name=ram%20kumar;salary=12000
+// route  {path:'customerdata',component:CustomerdataComponent},
 

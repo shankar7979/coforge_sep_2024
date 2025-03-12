@@ -26,3 +26,6 @@ export class Customer1Component {
     this.router.navigate(['/customerdata1', this.c.id, this.c.name, this.c.salary,'hindustan'])
   }
 }
+//http://localhost:4200/customerdata1/10001/ram%20kumar/12000/hindustan
+//params snapshot
+// route   {path:'customerdata1/:id/:name/:salary/:country',component:Customerdata1Component},
