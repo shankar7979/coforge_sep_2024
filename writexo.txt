@@ -1,21 +1,20 @@
+kubernetes
+labs.play-with-k8s.com
+https://praveendandu24.medium.com/kubernetes-tutorial-for-beginners-mastering-the-basics-in-1-hour-332db7b5916b
+https://spacelift.io/blog/kubernetes-tutorial
+
+
 docker
 
 docker tag imagename shankar2929/imagename 
-
 docker push shankar2929/imagename
 
 error failed to resolve : process /bin/sh -c mvn -f /home/app/pom.xml clean package
-
 https://stackoverflow.com/questions/77119356/failed-to-solve-process-bin-sh-c-mvn-package-in-ci-cd-database-connection
 
 
-
 https://www.docker.com/blog/kickstart-your-spring-boot-application-development/
-
-
-
 https://www.youtube.com/watch?v=t78cXNFHFxo
-
 https://podman-desktop.io/
 
 
@@ -23,15 +22,12 @@ https://podman-desktop.io/
 online labs 
 
 https://kodekloud.com/pages/free-labs/docker/docker-images
-
 https://labs.play-with-docker.com/p/cv9q4egl2o9000f440g0#cv9q4egl_cv9q4h8l2o9000f440gg
-
 https://labex.io/labs/docker-your-first-docker-lab-92719
 
 --
 
 Spring Boot Docker Kubernetes | Spring Boot Kubernetes Microservices | Docker Kubernetes tutorial
-
 https://www.youtube.com/watch?v=SzbeDqBSRkc
 
 --
