@@ -3,6 +3,13 @@ labs.play-with-k8s.com
 https://praveendandu24.medium.com/kubernetes-tutorial-for-beginners-mastering-the-basics-in-1-hour-332db7b5916b
 https://spacelift.io/blog/kubernetes-tutorial
 
+kubernetes slide
+https://collabnix.com/wp-content/uploads/2022/02/Understand-Kubernetes-in-100-slides.pdf
+https://kodekloud.com/wp-content/uploads/2020/11/Kubernetes-for-Beginners.pdf
+https://www.cncf.io/wp-content/uploads/2020/08/Getting-Started-with-Containers-and-Kubernetes_-March-2020-CNCF-Webinar.pdf
+https://indico.ict.inaf.it/event/1543/attachments/4999/10240/A%20brief%20introduction%20to%20Kubernetes.pdf
+
+
 
 docker
 
