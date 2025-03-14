@@ -1,8 +1,72 @@
 docker
 
+docker tag imagename shankar2929/imagename 
+
+docker push shankar2929/imagename
+
+error failed to resolve : process /bin/sh -c mvn -f /home/app/pom.xml clean package
+
+https://stackoverflow.com/questions/77119356/failed-to-solve-process-bin-sh-c-mvn-package-in-ci-cd-database-connection
+
+
+
+https://www.docker.com/blog/kickstart-your-spring-boot-application-development/
+
+
+
 https://www.youtube.com/watch?v=t78cXNFHFxo
 
 https://podman-desktop.io/
+
+
+
+online labs 
+
+https://kodekloud.com/pages/free-labs/docker/docker-images
+
+https://labs.play-with-docker.com/p/cv9q4egl2o9000f440g0#cv9q4egl_cv9q4h8l2o9000f440gg
+
+https://labex.io/labs/docker-your-first-docker-lab-92719
+
+--
+
+Spring Boot Docker Kubernetes | Spring Boot Kubernetes Microservices | Docker Kubernetes tutorial
+
+https://www.youtube.com/watch?v=SzbeDqBSRkc
+
+--
+
+
+
+angular 
+
+https://github.com/PacktPublishing/Learning-Angular-Fourth-Edition
+
+https://github.com/ManningBooks/pro-angular-16
+
+https://github.com/manojjha86/angular-16-complete-course
+
+https://goalkicker.com/Angular2Book/Angular2NotesForProfessionals.pdf
+
+
+
+
+
+Kubernetes
+
+Java techie
+
+https://m.youtube.com/watch?v=7o7e8OAAWyg&pp=ygUka3ViZXJuZXRlcyBzcHJpbmcgYm9vdCBtaWNyb3NlcnZpY2Vz
+
+
+
+Kubernetes Tutorial | Run & Deploy Spring Boot Application in K8s Cluster using yaml configuration
+
+
+
+https://m.youtube.com/watch?v=pIPji3_rYPY&pp=ygUWa3ViZXJuZXRlcyBzcHJpbmcgYm9vdA%3D%3D
+
+Run & Deploy Spring Boot CRUD Application With MySQL on K8S | JavaTechie
 
 
 
@@ -10,15 +74,27 @@ Prometheus and Grafana
 
 Monitoring Made Simple: Empowering Spring Boot Applications with Prometheus and Grafana
 
+
+
 https://medium.com/simform-engineering/revolutionize-monitoring-empowering-spring-boot-applications-with-prometheus-and-grafana-e99c5c7248cf
+
+
 
 https://nawress-rafrafi.medium.com/monitoring-your-spring-boot-app-with-prometheus-and-grafana-a-step-by-step-guide-6b93b50070d1
 
+
+
 https://grafana.com/docs/grafana-cloud/monitor-applications/asserts/enable-prom-metrics-collection/application-frameworks/springboot/
+
+
 
 https://github.com/jreijn/demo-micrometer-prometheus-grafana
 
+
+
 https://github.com/adamquan/hello-observability
+
+
 
 https://grafana.com/blog/2022/04/26/set-up-and-observe-a-spring-boot-application-with-grafana-cloud-prometheus-and-opentelemetry/
 
@@ -45,6 +121,14 @@ oauth 2.1  oauth-authorization-server
 
 
 imp below
+
+Google
+
+https://github.com/Sallu-Salman/auth-server-module
+
+https://medium.com/@sallu-salman/implementing-sign-in-with-google-in-spring-boot-application-5f05a34905a8
+
+
 
 https://github.com/m-thirumal/oauth-authorization-server
 
@@ -207,6 +291,8 @@ https://github.com/tericcabrel/blog-tutorials/tree/main/springboot-jwt-auth
 
 
 hello-world-coforge23_2\angular\jwt spring boot -angular
+
+
 
 https://jcs.ep.jhu.edu/legacy-ejava-springboot/coursedocs/content/pdf/jwt-notes.pdf
 
@@ -433,8 +519,6 @@ https://github.com/Rohithsingamaneni/shop-ease  good 1
 
 
 https://github.com/spring-guides/gs-accessing-data-r2dbc/tree/main
-
-https://sdmis.nios.ac.in/registration/index?stream_code=1&block_code=12
 
 mockmvc  rest
 
