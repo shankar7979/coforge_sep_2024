@@ -1,8 +1,62 @@
+Angular auth guard
+
+https://www.yourteaminindia.com/blog/angular-authentication-using-route-guards
+
+https://github.com/SmadusankaB/Auth-guard-in-Angular
+
+
+
+https://medium.com/@jaydeepvpatil225/auth-guards-in-angular-6960950b3c6c
+
+ above  medium code 
+
+https://github.com/Jaydeep-007/angular-auth-guards
+
+
+
+https://www.geeksforgeeks.org/how-to-use-authguard-for-angular-17-routes/
+
+
+
+https://www.geeksforgeeks.org/how-to-use-authguard-for-angular-17-routes/
+
+
+
 angular jwt 
 
 https://medium.com/@arunaselvam23/angular-jwt-authentication-with-spring-boot-backend-41bd9950e51
 
---
+
+
+Jtechie
+
+Spring jwt
+
+2022  
+
+https://github.com/Java-Techie-jt/spring-boot3-jwt
+
+2024 
+
+https://github.com/Java-Techie-jt/spring-security-jwt-example  
+
+ 5 years old 
+
+https://github.com/Java-Techie-jt/angular-jwt-client
+
+https://github.com/Java-Techie-jt/jwt-apigateway-security
+
+https://github.com/Java-Techie-jt/jwt-refresh-token
+
+
+
+https://m.youtube.com/watch?v=NcLtLZqGu2M&pp=ygUOSmF2YXRlY2hpZSBqd3Q%3D
+
+Angular
+
+
+
+
 
 2 yr back v good all auth  by 28 min
 
