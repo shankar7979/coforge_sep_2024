@@ -1,4 +1,6 @@
 https://www.geeksforgeeks.org/how-to-use-authguard-for-angular-17-routes/
+https://medium.com/@jaydeepvpatil225/auth-guards-in-angular-6960950b3c6c
+
 
 How to use AuthGuard For Angular 17 routes?
 Last Updated : 01 May, 2024
@@ -8,6 +10,7 @@ Prerequisites:
 Node >= 18.13.0
 Angular Cli v17
 Approach
+
 Create AuthGuard Service: Start by creating an AuthGuard service in your Angular app. Implement the CanActivate interface to control access to routes based on user authentication.
 Authenticate Users: Implement authentication logic within the AuthGuard service to determine if a user is authenticated and allowed to access a route.
 Provide the AuthGuard: Ensure the AuthGuard service is provided either at the root level or within a specific module to make it available throughout the app.
@@ -20,19 +23,21 @@ Once you have the prerequisites, you can use the below commands to create an ang
 
 ng new auth-gaurds
 cd auth-gaurds
+
 Step 2: Create routes to protect
 
 Before we create and implement the auth guard, first we need to make some components we need to protect. We will create two components auth and dashboard,
 
 ng g c auth
 ng g c dashboard
+
 We will create a simple auth service file so it will be easy to manage auth state in our application. Also we will update our app.router.ts and app, auth and dashboard components to have a basic skeleton of a real world application.
 
 Step 3: Create Auth Service:
 
 We can use the below command to create the service file using angular cli.
+ng g service auth
 
-ng g s auth
 Step 4: Protecting dashboard route
 
 Notice that when we are not signed in and we try to click the dashboard nav anchor, we can still see the dashboard component. Well, we will need to create an auth guard in order to protect it.
@@ -44,7 +49,7 @@ CanDeactivate: Guards the exit from a route or component, prompting the user bef
 CanMatch: Guards whether a specific route should be considered during navigation or not, dynamically enabling or disabling routes based on conditions.
 We will of course create a CanActivate guard in order to protect the dashboard route.
 
-ng g g auth
+ng g service auth
 You will be prompted to select type for the guard, you can select CanActivate here.
 
 
