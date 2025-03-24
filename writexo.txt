@@ -4,9 +4,11 @@ https://www.javaguides.net/2019/04/spring-boot-spring-security-angular-example-t
 
 https://github.com/RameshMF/angular8-springboot-basic-auth-login-logout
 
+https://github.com/GubioGarcia/Security_Angular_Basic_Auth   very gud
+
+https://github.com/nikyxj03/Spring_Security_JWT-Angular     very gud
+
 --
-
-
 
 @async spring 
 
@@ -66,7 +68,7 @@ https://github.com/kaleeswaran35/angular-JWT-and-Spring
 
 https://github.com/IssaEhtishamAli/angular-springboot-jwt-refresh-auth    gud
 
-https://github.com/nikyxj03/Spring_Security_JWT-Angular -- gud 
+https://github.com/nikyxj03/Spring_Security_JWT-Angular -- very gud 
 
 https://github.com/bezkoder/angular-16-jwt-auth
 
@@ -184,7 +186,7 @@ https://github.com/AlousiusAmbrose18/spring-security-with-jwt-angular
 
 
 
-https://github.com/rakeshacharya-d/springboot-angular-todoApp   8 mon back
+https://github.com/rakeshacharya-d/springboot-angular-todoApp   8 mon back  imp  
 
 
 
