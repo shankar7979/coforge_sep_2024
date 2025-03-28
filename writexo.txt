@@ -4,11 +4,23 @@ https://www.javaguides.net/2019/04/spring-boot-spring-security-angular-example-t
 
 https://github.com/RameshMF/angular8-springboot-basic-auth-login-logout
 
+
+
+https://github.com/JavaaTechSolutions/angular18-login-example-with-spring-boot
+
 https://github.com/GubioGarcia/Security_Angular_Basic_Auth   very gud
 
 https://github.com/nikyxj03/Spring_Security_JWT-Angular     very gud
 
+https://github.com/Jaydeep-007/angular-auth-guards
+
+
+
+
+
 --
+
+
 
 @async spring 
 
@@ -25,8 +37,6 @@ https://github.com/sudheerj?tab=repositories
 
 
 angular jwt 
-
-
 
 ---
 
@@ -184,8 +194,6 @@ https://github.com/jithinsp/SpringBackendJWT
 
 https://github.com/AlousiusAmbrose18/spring-security-with-jwt-angular
 
-
-
 https://github.com/rakeshacharya-d/springboot-angular-todoApp   8 mon back  imp  
 
 
@@ -200,7 +208,37 @@ https://medium.com/@tericcabrel/implement-jwt-authentication-in-a-spring-boot-3-
 
 Ci cd
 
+https://medium.com/@nanditasahu031/jenkins-pipeline-with-maven-sonarqube-and-talisman-fa9118910b98
+
+https://medium.com/@ozanbozkurtt96/ci-cd-ipeline-with-jenkins-sonarqube-docker-registry-1-7fa07f172560
+
+https://gitlab.com/gpranataAsyst/springboot-demodeploy
+
+https://medium.com/@pranata.giya12.gp/spring-boot-docker-application-deployment-using-jenkins-pipeline-5b3bee83e5e6
+
+docker pull jenkins/jenkins
+
+docker run -p 8080:8080 jenkins/jenkins
+
+https://github.com/AjushaLalasan/springboot-jenkins-docker/blob/main/Jenkinsfile
+
+
+
+
+
+https://tomgregory.com/jenkins/building-a-spring-boot-application-in-docker-and-jenkins/
+
+https://github.com/ghadaabassi/PipelineSpringBoot  -- not working 
+
+https://github.com/javatechi99/SpringbootDockerJenkinsPipeline  -- checking
+
+https://medium.com/@mericcana/ci-cd-with-jenkins-docker-spring-bee52202c92f#:~:text=Before%20creating%20our%20Jenkins%20Project,the%20%2Fapp%20directory%20it%20creates.
+
+
+
 https://medium.com/@contactkumaramit9139/step-by-step-guide-to-build-ci-cd-pipeline-for-spring-boot-microservices-33ddb545f95c
+
+https://github.com/akum47/spring-boot-ci-cd
 
 https://dokumen.pub/ci-cd-pipeline-with-docker-and-jenkins-learn-how-to-build-and-manage-your-ci-cd-pipelines-effectively-9789355513502.html
 
@@ -267,6 +305,8 @@ mysqldb container
  docker exec -it basic-mysqldb-1 bash
 
 
+
+https://journaldev.nyc3.cdn.digitaloceanspaces.com/2012/11/String-Pool-Java1.png
 
 
 
@@ -616,6 +656,12 @@ curl -u jane:12345 http://localhost:8080/hello
 
 curl -u "ram kumar" http://localhost:8080/hello
 
+jio  7982522673
+
+Chandralekha 1948 
+
+
+
 when calling path /a using HTTP GET without authenticating, use
 
 curl -XGET http://localhost:8080/a
@@ -871,6 +917,10 @@ https://github.com/Java-Techie-jt/spring-boot-mockito
 webclient
 
 https://github.com/BalagoniRamesh/Calling-REST-Services-with-WebClient-Spring-Boot-Microservices-Communication-using-WebClient-Java
+
+editor 
+
+https://lap.dev/lapce/#downloads-all
 
 @ResponseStatus(HttpStatus.OK)
 
