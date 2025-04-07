@@ -17,6 +17,12 @@ https://thecodinginterface.com/blog/django-auth-part1/
 https://testdriven.io/blog/drf-basics/
 
 
+adranced rest with django pdf  2023  below 
+
+https://is.muni.cz/th/uximq/output_Archive.pdf
+
+
+
 https://www.pl3databases.co.za/media/django_tutorial/Tutorial%20(2024-02).pdf
 
 
