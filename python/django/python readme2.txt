@@ -1,6 +1,5 @@
 https://docs.djangoproject.com/en/5.0/intro/tutorial01/
 
-
 "E:\software\python\Portable Python-3.10.5 x64\App\Python\python.exe  
 
 pip install 
