@@ -17,16 +17,20 @@ https://thecodinginterface.com/blog/django-auth-part1/
 https://testdriven.io/blog/drf-basics/
 
 
-adranced rest with django pdf  2023  below 
+advanced rest with django pdf  2023  below 
 
 https://is.muni.cz/th/uximq/output_Archive.pdf
-
 
 
 https://www.pl3databases.co.za/media/django_tutorial/Tutorial%20(2024-02).pdf
 
 
 django-for-apis-build-web-apis-with-python-amp-django
+
+
+spring jsr303 rest customvalidation
+
+https://github.com/mmeany/springboot-rest-validation/tree/master/src/main/java/com/mvmlabs/rest
 
 
 
@@ -414,6 +418,9 @@ https://medium.com/@ericvanrees/creating-a-flask-app-using-vscode-fcdb2d0b9979
 https://dev.to/mursalfk/setup-flask-on-windows-system-using-vs-code-4p9j
 
 oauth 2.1 oauth-authorization-server
+
+https://github.com/helloflask/flask-tutorial/blob/main/chapters/hello.md    -- imp
+
 
 imp below
 
