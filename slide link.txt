@@ -80,3 +80,6 @@ https://drive.google.com/drive/folders/1GnMAflZ3PcwNX_OV0Wygy5W1o0dAXEex?usp=sha
 
 agile scrum slide 
 https://drive.google.com/drive/folders/1RO8vAlkgbyaE3Lt-2rEvuoeu4pBGYkm9?usp=sharing
+
+junit and mockito slide link 
+https://drive.google.com/drive/folders/1MpZaSIUNSBYPD0WMWCelrTRHzdarhPzM?usp=sharing
