@@ -50,7 +50,10 @@ const AddEmployee = () => {
             </div>
             
             <div>
-                 {msg} 
+                 <p>{msg}</p> 
+				 
+				 {msg.trim() && <p className="bg-info text-success">{msg}</p>} 
+
             </div>
 
             <div>
