@@ -50,10 +50,7 @@ const AddEmployee = () => {
             </div>
             
             <div>
-            
-            {!msg && {msg} }
-
-            {/* {msg} */}
+                 {msg} 
             </div>
 
             <div>

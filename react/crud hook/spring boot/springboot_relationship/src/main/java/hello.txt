@@ -1,0 +1,17 @@
+ {
+    "name":"amit kumar",
+    "dob":"2001-12-20",
+    "car":{
+      "cost":200000,
+      "type":"thar"
+    },
+    "addressSet":[
+          {"city":"noida", "state":"up"},
+          {"city":"shimla", "state":"hp"},
+          {"city":"bhopal", "state":"mp"}
+    ]
+}
+// 200 OK
+  // 404 not found
+
+ResponseEntity = ResponseBody + status
