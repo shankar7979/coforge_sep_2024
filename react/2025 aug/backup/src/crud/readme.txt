@@ -1,3 +1,6 @@
+https://github.com/jskim1991/react-axios-interceptors.git
+https://jskim1991.medium.com/react-routing-to-an-error-page-with-axios-interceptors
+
 Handling 404 errors from an Axios GET request within a React hook involves using a try-catch block and managing state for the error.
 1. Basic Error Handling with useState and useEffect:
 JavaScript
