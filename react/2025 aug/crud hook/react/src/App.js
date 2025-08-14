@@ -12,6 +12,7 @@ import {  Router } from 'react-router';
 import { AllEmployees } from "./crud/Employees";
 import AddEmployee from "./crud/AddEmployee";
 import { NavBar } from "./NavBar";
+import AddEmployee1 from "./crud/AddEmployee1";
 function App() {
   return (
     <div className="App">
@@ -27,13 +28,13 @@ function App() {
       {/* <MyTerminal></MyTerminal> */}
       {/* <MyTerminalHook></MyTerminalHook> */}
 
-
       <BrowserRouter>
       <NavBar></NavBar>
       <Routes>
         <Route path="/" element={<AllEmployees></AllEmployees>}></Route>
         <Route path="/allemp" element={<AllEmployees></AllEmployees>}></Route>
         <Route path="/add_emp" element={<AddEmployee></AddEmployee>}></Route>
+        <Route path="/add_emp1" element={<AddEmployee1></AddEmployee1>}></Route>
        
       </Routes>
      </BrowserRouter>

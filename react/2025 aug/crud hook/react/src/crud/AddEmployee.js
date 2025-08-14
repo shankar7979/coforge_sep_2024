@@ -4,6 +4,7 @@ import axios from "axios";
 const AddEmployee = () => {
 
     const [employee, setEmployee] = useState({});
+    const [employee1, setEmployee1] = useState({});
     const [msg, setMessage] = useState('');
 
     const handleForm = (e) => {
@@ -13,14 +14,18 @@ const AddEmployee = () => {
     };
 
     const sendDataToPostAPI = (data) => {
-        axios.post(`http://localhost:9090/employee`, data).then(
+        axios.post('http://localhost:7070/employee', data).then(
             (response) => {
-                setMessage("Record Added")
+                setMessage("Record Added id "+response.data.id+" name  "+response.data.name+" dob "+response.data.dob)
+                //setMessage("Record Added ")
+                //setEmployee1(response.data.id,response.data.name,response.data.dob)
+                console.log(JSON.stringify(response))
+                //console.log(JSON.stringify(employee1))// its is blank {}
                 // alert("Record added")
             },
             (error) => {
-                console.log(error);
-                <p>Some error </p>
+                //console.log(error);
+                <p>Some error {error} </p>
 
             }
         );
@@ -48,11 +53,10 @@ const AddEmployee = () => {
                     }}
                 />
             </div>
-            
             <div>
-                 <p>{msg}</p> 
-				 
-				 {msg.trim() && <p className="bg-info text-success">{msg}</p>} 
+            
+            {/* {msg.trim() && <p className="bg-info text-success">{msg} </p> && <p className="bg-info text-success"> employee {employee1.id} {employee1.name} {employee1.dob}</p>}  */}
+            {msg.trim() && <p className="bg-info text-success">{msg} </p> } 
 
             </div>
 

@@ -12,6 +12,10 @@ export const NavBar = () => {
           Add Employee
         </NavLink>
        
+        <NavLink to='add_emp1' style={{ "marginLeft": "50pt" }}>
+          Add Employee1
+        </NavLink>
+       
 
       </nav>
     </div>

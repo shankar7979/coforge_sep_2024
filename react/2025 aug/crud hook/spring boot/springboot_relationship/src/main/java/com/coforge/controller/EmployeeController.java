@@ -13,7 +13,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/")
 //@CrossOrigin("http://localhost:4200/")
-@CrossOrigin("http://localhost:3000/")
+@CrossOrigin("http://localhost:3000")
+// donot add / in last after 3000
 
 public class EmployeeController {
 

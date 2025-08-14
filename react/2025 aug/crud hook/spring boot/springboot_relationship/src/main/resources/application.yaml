@@ -2,4 +2,4 @@ spring:
   application:
     name:  SpringbootRelationship
   profiles:
-    active:  prod
+    active:  dev

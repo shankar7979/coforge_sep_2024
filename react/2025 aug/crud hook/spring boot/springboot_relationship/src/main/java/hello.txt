@@ -11,7 +11,11 @@
           {"city":"bhopal", "state":"mp"}
     ]
 }
-// 200 OK
-  // 404 not found
+
 
 ResponseEntity = ResponseBody + status
+
+
+
+
+curl.exe -X POST -H  "Content-Type: application/json" -d '{"name":"shyam","dob":"2001-11-11"}' http://localhost:9090/employee
