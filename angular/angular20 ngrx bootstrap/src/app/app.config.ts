@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideExperimentalZonelessChangeDetection, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideExperimentalZonelessChangeDetection, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 //import { routes } from './app.routes';
@@ -7,6 +7,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideStore } from '@ngrx/store';
 import { counterReducer } from './counterapp1/counter.reducer';
+import { HttpClientModule } from '@angular/common/http';
 // import { counterReducer } from './client/client.store';
 
 
@@ -19,6 +20,8 @@ export const appConfig: ApplicationConfig = {
     provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
      provideStore({ counter: counterReducer }),
+     importProvidersFrom(HttpClientModule)
+
 
   ]
 

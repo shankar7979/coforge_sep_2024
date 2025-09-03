@@ -1,0 +1,11 @@
+<div>
+    <h1>All Books</h1>
+<table *ngFor="let b of book|async">
+    <tr>
+            <td>{{b.isbn}}</td>
+            <td>{{b.bname}}</td>
+    </tr>
+
+</table>
+
+</div>
