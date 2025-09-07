@@ -1,3 +1,10 @@
+
+angular testing 
+https://drive.google.com/drive/folders/1RvS181FE2Ll4WRw5tttXFrHPY0lrCOil?usp=sharing
+
+angular debugging 
+https://drive.google.com/drive/folders/1J4HwHSXggAP1Q9FS-HGTW2l6Q2ahrZWj?usp=sharing
+
 slide link
 mysql
 https://drive.google.com/drive/folders/1NZCsd6FEd-cZkeaso8d87FaggBJaMdJG?usp=sharing
@@ -83,3 +90,7 @@ https://drive.google.com/drive/folders/1RO8vAlkgbyaE3Lt-2rEvuoeu4pBGYkm9?usp=sha
 
 junit and mockito slide link 
 https://drive.google.com/drive/folders/1MpZaSIUNSBYPD0WMWCelrTRHzdarhPzM?usp=sharing
+
+2025 slide saga swagger eureka circuit breaker actuator  angular test 
+
+https://drive.google.com/drive/folders/1O1poGNY0fg74izjAGAYYz6p2sZgEeTZa?usp=sharing
