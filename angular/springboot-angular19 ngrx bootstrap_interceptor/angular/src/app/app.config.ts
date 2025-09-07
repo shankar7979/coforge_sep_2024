@@ -7,7 +7,8 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideStore } from '@ngrx/store';
 import { counterReducer } from './counterapp1/counter.reducer';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { loggingInterceptor } from './logging.interceptor';
 // import { counterReducer } from './client/client.store';
 
 
@@ -20,9 +21,9 @@ export const appConfig: ApplicationConfig = {
     provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
      provideStore({ counter: counterReducer }),
-     importProvidersFrom(HttpClientModule)
-
-
+     importProvidersFrom(HttpClientModule),
+     provideHttpClient(
+      withInterceptors([loggingInterceptor]) // Register your functional interceptor
+    ),
   ]
-
 };
