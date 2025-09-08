@@ -1,7 +1,26 @@
 import { HttpEvent, HttpEventType, HttpHandler, HttpInterceptor, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 
-// functional implementation
+// @Injectable()
+// export class loggingInterceptor implements HttpInterceptor {
+//   constructor() {}
+
+//   intercept(
+//     request: HttpRequest<any>,
+//     next: HttpHandler
+//   ): Observable<HttpEvent<any>> {
+//     console.log('Outgoing HTTP request', request);
+//     return next.handle(request).pipe(
+//       tap((event: HttpEvent<any>) => {
+//         console.log('Incoming HTTP response', event);
+//       })
+//     );
+//   }
+// }
+
+
+// // functional implementation
 export const loggingInterceptor: HttpInterceptorFn = (req, next) => {
   console.log('Request URL:', req.url);
   //return next(req);

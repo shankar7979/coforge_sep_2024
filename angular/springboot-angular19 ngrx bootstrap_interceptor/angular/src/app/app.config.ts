@@ -9,6 +9,7 @@ import { provideStore } from '@ngrx/store';
 import { counterReducer } from './counterapp1/counter.reducer';
 import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { loggingInterceptor } from './logging.interceptor';
+import { ErrorInterceptor } from './error.interceptor';
 // import { counterReducer } from './client/client.store';
 
 
@@ -23,7 +24,8 @@ export const appConfig: ApplicationConfig = {
      provideStore({ counter: counterReducer }),
      importProvidersFrom(HttpClientModule),
      provideHttpClient(
-      withInterceptors([loggingInterceptor]) // Register your functional interceptor
+       withInterceptors([loggingInterceptor, ErrorInterceptor]) // Register your functional interceptor
+      // withInterceptors([loggingInterceptor]) // Register your functional interceptor
     ),
   ]
 };
