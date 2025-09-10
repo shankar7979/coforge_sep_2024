@@ -35,31 +35,33 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
 //     })
 //   );
 // };
-
-export const ErrorInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
-  return next(req).pipe(
-      catchError((error: HttpErrorResponse) => {
-                // Handle the error here
-                console.error('error occurred:', error);
-                //throw error as per requirement
-                return throwError(error);
-    })
-  );
-};
-
-// @Injectable()
-// export class ErrorInterceptor implements HttpInterceptor {
-
-//   constructor() {}
-
-//   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-//     return next.handle(request).pipe(
+// with functional 
+// export const ErrorInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
+//   return next(req).pipe(
 //       catchError((error: HttpErrorResponse) => {
-//         // Handle the error here
-//         console.error('error occurred:', error);
-//         //throw error as per requirement
-//         return throwError(error);
-//       })
-//     );
-//   }
-// }
+//                 // Handle the error here
+//                 console.error('error occurred: using functional ', error);
+//                 //throw error as per requirement
+//                 return throwError(error);
+//     })
+//   );
+// };
+
+// using class based , di
+
+@Injectable()
+export class ErrorInterceptor implements HttpInterceptor {
+
+  constructor() {}
+
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        // Handle the error here
+        console.error('error occurred: using class based', error);
+        //throw error as per requirement
+        return throwError(error);
+      })
+    );
+  }
+}
