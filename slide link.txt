@@ -1,6 +1,18 @@
+
+unix slide
+https://drive.google.com/drive/folders/1Fv-7fpT1AE9PXi1ppqUKwdmVXpgjJk47?usp=sharing
+ 
+jodhpur_slide_aws_agile
+https://drive.google.com/drive/folders/13Km7n2DC1kH5UUV3IhZ-CidvULYVRTOF?usp=sharing
+
+spring_new_2025
+https://drive.google.com/drive/folders/1wp3Qmms41ZL6S-CPK-VDKpai6zDwoNu0?usp=sharing
+
+spring core 2025
+https://drive.google.com/drive/folders/1TgER8pH1-j2fEWmbkLqydJUd1d-GRQk5?usp=sharing
+
 angular interceptor 
 https://drive.google.com/drive/folders/1mKmockx6T5N7fL6gxh8B8dtMTQ72RfVo?usp=sharing
-
 
 angular testing 
 https://drive.google.com/drive/folders/1RvS181FE2Ll4WRw5tttXFrHPY0lrCOil?usp=sharing
@@ -97,3 +109,14 @@ https://drive.google.com/drive/folders/1MpZaSIUNSBYPD0WMWCelrTRHzdarhPzM?usp=sha
 2025 slide saga swagger eureka circuit breaker actuator  angular test 
 
 https://drive.google.com/drive/folders/1O1poGNY0fg74izjAGAYYz6p2sZgEeTZa?usp=sharing
+
+
+cg all alide 
+https://drive.google.com/drive/folders/1zghlY-5zxokVE_tzrgDZoMhXHL3kVwUC?usp=drive_link
+
+
+sl4j slide
+https://drive.google.com/drive/folders/1VJ6u6aiIlHhou_cUCEuDX6Zm2Z9u9LMR?usp=sharing
+
+logging slide 
+https://drive.google.com/drive/folders/1x9zVauuCxO5hpl4_o1ikCRRasb2pqSFd?usp=sharing
