@@ -1,0 +1,412 @@
+Loose coupling in the context of Spring refers to designing classes with minimal dependencies on each other, making them more independent and easier to maintain.
+ This is achieved through techniques like dependency injection and inversion of control. In essence, Spring helps create loosely coupled applications, promoting flexibility and testability.
+ 
+Key aspects of loose coupling in Spring:
+Dependency Injection:
+Instead of classes creating their own dependencies, Spring injects them into the class, reducing direct dependencies. 
+Inversion of Control (IoC):
+Spring manages the lifecycle of objects and their dependencies, giving control to the framework instead of the classes themselves. 
+
+Interfaces and Abstraction:
+Using interfaces and abstract classes allows for greater flexibility, as concrete implementations can be swapped out without affecting the dependent classes. 
+
+Reduced Dependencies:
+Minimizing the number of direct dependencies between classes makes the application more modular and easier to understand. 
+
+
+Benefits of Loose Coupling:
+
+Increased Flexibility: Changing one part of the application has less chance of impacting other parts. 
+
+Improved Testability: Loosely coupled code is easier to test in isolation. 
+
+Easier Maintenance: Modifications and updates are less likely to cause cascading effects. 
+
+Enhanced Scalability: Loose coupling allows for easier scaling and adaptation to changing requirements. 
+==========
+loose hard coupling example
+
+---------
+In Java, coupling refers to the degree of interdependence between software modules or components. It describes how closely connected two classes or modules are.
+Tight Coupling
+Tight coupling occurs when classes are highly dependent on each other, meaning a change in one class often necessitates changes in another. This typically happens when one class directly creates or relies heavily on the concrete implementation of another class.
+Example of Tight Coupling:
+Java
+
+class Engine {
+    public void start() {
+        System.out.println("Engine started.");
+    }
+}
+
+class Car {
+    private Engine engine;
+
+    public Car() {
+        this.engine = new Engine(); // Car directly creates an Engine object
+    }
+
+    public void drive() {
+        engine.start();
+        System.out.println("Car is driving.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Car myCar = new Car();
+        myCar.drive();
+    }
+}
+In this example, Car is tightly coupled to Engine because it directly instantiates Engine. If you wanted to use a different type of engine (e.g., an ElectricEngine), you would have to modify the Car class.
+Loose Coupling
+Loose coupling, conversely, indicates that classes are relatively independent, and changes in one class are less likely to impact others. This is often achieved through interfaces, abstract classes, or dependency injection, which provide a layer of abstraction between components.
+Example of Loose Coupling (using an interface):
+Java
+
+interface VehicleEngine {
+    void start();
+}
+
+class PetrolEngine implements VehicleEngine {
+    @Override
+    public void start() {
+        System.out.println("Petrol engine started.");
+    }
+}
+
+class ElectricEngine implements VehicleEngine {
+    @Override
+    public void start() {
+        System.out.println("Electric engine started.");
+    }
+}
+
+class Car {
+    private VehicleEngine engine;
+
+    // Constructor Injection for dependency
+    public Car(VehicleEngine engine) {
+        this.engine = engine; 
+    }
+
+    public void drive() {
+        engine.start();
+        System.out.println("Car is driving.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        VehicleEngine petrolEngine = new PetrolEngine();
+        Car petrolCar = new Car(petrolEngine);
+        petrolCar.drive();
+
+        System.out.println();
+
+        VehicleEngine electricEngine = new ElectricEngine();
+        Car electricCar = new Car(electricEngine);
+        electricCar.drive();
+    }
+}
+Here, Car is loosely coupled to the VehicleEngine interface. It doesn't care about the concrete implementation (whether it's PetrolEngine or ElectricEngine). The specific engine is injected into the Car object, allowing for easy swapping of engine types without modifying the Car class itself. This promotes flexibility, reusability, and testability.
+==========
+Coupling in Java refers to the degree of dependency between classes or modules. 
+Tight Coupling:
+Tight coupling occurs when classes are highly dependent on each other's internal implementations. A change in one class often necessitates changes in the dependent classes. This leads to reduced flexibility, maintainability, and reusability. 
+Example (Tight Coupling - Shape Calculation):
+Java
+
+class Circle {
+    public double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    public double calculateArea() {
+        return Math.PI * radius * radius;
+    }
+}
+
+class AreaCalculator {
+    public void printArea(Circle circle) {
+        System.out.println("Area of Circle: " + circle.calculateArea());
+    }
+}
+
+public class TightCouplingExample {
+    public static void main(String[] args) {
+        Circle myCircle = new Circle(5.0);
+        AreaCalculator calculator = new AreaCalculator();
+        calculator.printArea(myCircle); // AreaCalculator directly depends on Circle
+    }
+}
+In this example, AreaCalculator is tightly coupled to Circle because it directly interacts with Circle's specific implementation (e.g., calling calculateArea() on a Circle object). If a new shape like Square is introduced, AreaCalculator would need modification to handle it.
+Loose Coupling:
+Loose coupling promotes minimal dependencies between classes, typically achieved through interfaces or abstract classes. Components interact through well-defined contracts (interfaces), allowing for independent development, modification, and testing. This enhances flexibility, maintainability, and reusability.
+Example (Loose Coupling - Shape Calculation):
+Java
+
+interface Shape {
+    double calculateArea();
+}
+
+class Circle implements Shape {
+    private double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public double calculateArea() {
+        return Math.PI * radius * radius;
+    }
+}
+
+class Square implements Shape {
+    private double side;
+
+    public Square(double side) {
+        this.side = side;
+    }
+
+    @Override
+    public double calculateArea() {
+        return side * side;
+    }
+}
+
+class AreaCalculator {
+    public void printArea(Shape shape) { // Depends on the Shape interface
+        System.out.println("Area of Shape: " + shape.calculateArea());
+    }
+}
+
+public class LooseCouplingExample {
+    public static void main(String[] args) {
+        Shape myCircle = new Circle(5.0);
+        Shape mySquare = new Square(4.0);
+        AreaCalculator calculator = new AreaCalculator();
+        calculator.printArea(myCircle);
+        calculator.printArea(mySquare); // AreaCalculator can handle any Shape
+    }
+}
+Here, AreaCalculator depends on the Shape interface, not a specific Shape implementation. This means AreaCalculator can work with any class that implements Shape (like Circle or Square) without needing modification. This demonstrates loose coupling, as changes to Circle or Square (as long as they adhere to the Shape interface) do not impact AreaCalculator
+
+=======================
+Java, coupling refers to the degree of interdependence between software modules or classes.
+Tight Coupling:
+Definition: Classes are highly dependent on each other, often directly referencing concrete implementations. Changes in one class frequently necessitate changes in the dependent class.
+Drawbacks: Reduced flexibility, difficult to maintain and test, and limits reusability.
+Game Example:
+Imagine a GameRunner class directly instantiating and calling specific methods of a MarioGame class:
+Java
+
+    public class GameRunner {
+        private MarioGame mario;
+
+        public GameRunner() {
+            this.mario = new MarioGame(); // Direct instantiation
+        }
+
+        public void runGame() {
+            mario.playLevel(); // Direct method call
+        }
+    }
+
+    public class MarioGame {
+        public void playLevel() {
+            System.out.println("Playing Mario level...");
+        }
+    }
+If you wanted to run a ContraGame, you would need to modify GameRunner to instantiate ContraGame and call its specific methods, creating tight coupling.
+Loose Coupling:
+Definition: Classes are designed to be independent, interacting primarily through interfaces or abstract classes rather than concrete implementations. Changes in one class have minimal or no impact on dependent classes.
+Benefits: Increased flexibility, easier maintenance and testing, and promotes reusability.
+Game Example (using interfaces):
+Introduce a GamingConsole interface that MarioGame and ContraGame implement:
+Java
+
+    public interface GamingConsole {
+        void play();
+    }
+
+    public class MarioGame implements GamingConsole {
+        @Override
+        public void play() {
+            System.out.println("Playing Mario game...");
+        }
+    }
+
+    public class ContraGame implements GamingConsole {
+        @Override
+        public void play() {
+            System.out.println("Playing Contra game...");
+        }
+    }
+
+    public class GameRunner {
+        private GamingConsole game; // Reference to interface
+
+        public GameRunner(GamingConsole game) { // Dependency Injection
+            this.game = game;
+        }
+
+        public void runGame() {
+            game.play();
+        }
+    }
+Now, GameRunner is loosely coupled to the specific game implementation. You can easily switch between MarioGame and ContraGame by injecting a different GamingConsole implementation without modifying the GameRunner class itself. This is a common application of the Dependency Inversion Principle.
+
+=======
+
+
+Coupling in Java refers to the degree of dependency between different classes, objects, or modules in a program. Understanding what is loose coupling and tight coupling in Java is essential for writing maintainable and scalable code. When components are loosely coupled in Java, they can be modified independently, promoting better flexibility and testability. In contrast, tight coupling in Java occurs when classes are highly dependent on one another, often leading to rigid and difficult-to-maintain code.
+
+This article covers a deep dive into the concept of coupling in Java, exploring both loosely coupled and tightly coupled in Java systems with real-world examples. We’ll also compare loosely coupled vs tightly coupled scenarios, discuss design best practices, and help you understand how to build software architectures that are both robust and adaptable.
+
+Explore our wide range of Software Engineering Courses and kickstart your journey to becoming a Java developer!
+
+What is Coupling in Java?
+Coupling is nothing but the dependency of one class on the other. If one object in a code uses another object in the program, it is called loose coupling in Java. In coupling, two classes or objects collaborate and work with each other to complete a pre-defined task. It simply means that one element requires another element to complete a function. It is known as collaboration when one class calls the logic of the other class.
+
+What are the Types of Coupling?
+Coupling in Java defines how closely classes or modules depend on each other, impacting software flexibility. Tight coupling in Java creates rigid dependencies, complicating changes, while loose coupling in Java fosters independence through abstractions, enhancing modularity. 
+
+This section briefly outlines tight coupling and loose coupling in Java, comparing loosely coupled vs tightly coupled systems to clarify what is loose coupling and tight coupling in Java for better design decisions
+
+
+1) Loose Coupling in Java
+“What is loose coupling in Java?” Loose coupling in Java refers to a scenario where two classes, modules, or components have minimal dependencies on each other. It signifies that these classes are independent, with one class knowing only what the other exposes through its interfaces. In Java, loose coupling ensures that objects can be used externally when needed, promoting flexibility and easier maintenance in software development.
+
+Check Out upGrad Java Bootcamp
+
+Here, the parent object is rarely using the object, and the object can be easily changed from external sources. Loose coupling is generally considered best because it promotes flexibility, scalability, and easier maintenance by reducing dependencies between components, allowing for independent development and modification without impacting other parts of the system.
+
+Be sure to check out this List of 50 Java Projects With Source Code in 2025 for beginners and advanced professionals to build a strong portfolio!
+
+Example 1
+Imagine you have created two classes, A and B, in your program. Class A is called volume, and class B evaluates the volume of a cylinder. If you change class A volume, then you are not forced to change class B. This is called loose coupling in Java. When class A requires changes in class B, then you have tight coupling.
+
+Code
+
+package loosecoupling;
+ class Volume {
+   public static void main(String args[]) {
+        Cylinder b = new Cylinder(25, 25, 25);
+           System.out.println(b.getVolume());
+   }
+}
+final class Cylinder {
+    private int volume;
+    Cylinder(int length, int width, int height) {
+             this.volume = length * width * height;
+    }
+    public int getVolume() {
+             return volume;
+    }
+}
+</> Copy Code
+Explanation: In the above example, class A and class B are loosely coupled.
+
+Our learners also read: Learn java free!
+
+Example 2
+import java.io.IOException;
+interface Food {
+   public void display();
+}
+class Italian {
+  Food s;
+   public Italian(Food s){
+   this.s = s;
+   }
+   public void display(){
+      System.out.println("Italian");
+      s.display();
+   }
+}
+class Chinese implements Food {
+   public Chinese(){}
+   public void display(){
+      System.out.println("Chinese");
+   }
+}
+class Mexican implements Food {
+   public Mexican(){}
+   public void display(){
+      System.out.println("Mexican");
+   }
+}
+public class Test {
+   public static void main(String args[]) throws IOException {
+   Food b = new Chinese();
+   Food c = new Mexican();
+   Italian a = new Italian(b);
+      //a.display() will print Italian and Chinese
+      a.display();
+   Italian a1 = new Italian(c);
+      //a.display() will print Italian and Mexican
+      a1.display();
+   }
+}
+</> Copy Code
+Output
+
+Italian
+Chinese
+Italian
+Mexican
+</> Copy Code
+Explanation: In the above example, all three classes are loosely coupled. It simply means that you can use the food interface to provide services by injecting any of the implemented services.
+
+Get Software Engineering degrees online from the World’s top Universities. Earn Executive PG Programs, Advanced Certificate Programs, or Masters Programs to fast-track your career.
+
+upGrad’s Exclusive Software and Tech Webinar for you –
+
+SAAS Business – What is So Different?
+
+ 
+
+Preparing for a Java role? Ace your interview preparation with these Top 135+ Java Interview Questions You Should Know in 2025
+
+2) Tight Coupling
+When two classes are highly dependent on each other, it is called tight coupling. It occurs when a class takes too many responsibilities or where a change in one class requires changes in the other class. In tight coupling, an object (parent object) creates another object (child object) for its usage. If the parent object knows more about how the child object was implemented, we can say that the parent and child object are tightly coupled.
+
+Example: 
+Imagine you have created two classes A and B, in your program. Class A is called volume, and class B evaluates the volume of a cylinder. If you make any changes in the volume, then the same changes will reflect in class B. Hence, we can say both the classes are highly dependent on each other and are tightly coupled.
+
+Code
+package tightcoupling;
+</> Copy Code
+class Volume {
+   public static void main(String args[]) {
+        Cylinder b = new Cylinder(15, 15, 15);
+           System.out.println(b.volume);
+   }}
+ class Cylinder {
+   public int volume;
+   Cylinder(int length, int width, int height) {
+           this.volume = length * width * height;  }}
+</> Copy Code
+Output
+
+3375
+</> Copy Code
+Explanation: In the above example, class A and class B are bound together and work with each other as a team.
+
+Differences Between Loose Coupling and Tight Coupling
+Coupling in Java determines how interconnected classes or modules are, directly affecting code maintainability and scalability. Tight coupling in Java binds classes to specific implementations, creating rigid dependencies, whereas loose coupling in Java uses abstractions like interfaces for flexibility. 
+
+This table highlights key distinctions in loosely coupled vs tightly coupled systems, clarifying what is loose coupling and tight coupling in Java to guide better software design with tight coupling and loose coupling in Java.
+
+Parameters 	Loose Coupling 	Tight Coupling 
+Objects Independence 	Objects are independent of each other. 	One object is dependent on the other object to complete a task. 
+Testability 	Better testability. 	Testability is not as great as loose coupling in Java. 
+Communication Style 	Asynchronous communication. 	Synchronous communication. 
+Coordination 	Less coordination. Swapping code between two classes is not easy. 	Provides better coordination. You can easily swap code between two objects. 
+Concept of Interface 	No concept of interface. 	Follows GOF principles to interface. 
+Information Flow 	Less information flows. 	More information flows. 
+Change Capability 	Highly changeable. 	It does not have the change capability. 

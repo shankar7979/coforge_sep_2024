@@ -1,0 +1,74 @@
+ in notifications.service.ts to use catchError
+#164
+Jump to bottom
+Description
+@coderabbitai
+coderabbitai
+bot
+opened on Feb 16, 2024
+In the context of PR #159 and the discussion at #159 (comment), it's suggested to refactor the error handling within the operator of the method in .
+
+Currently, the method checks for directly within the operator. The suggestion is to use RxJS's to handle errors thrown by Apollo's method, which aligns with best practices for error handling in observables.
+
+This change aims to improve error handling robustness and maintainability of the codebase.
+
+Activity
+kshitij-k-osmosys commented on May 9, 2024
+@kshitij-k-osmosys
+kshitij-k-osmosys
+on May 9, 2024
+Contributor
+@coderabbitai can you give a commit suggestion for this issue?
+
+coderabbitai commented on May 9, 2024
+@coderabbitai
+coderabbitai
+bot
+on May 9, 2024
+Author
+Tip
+
+For best results, initiate chat on the files or code changes.
+
+Based on the provided code from notifications.service.ts, it appears that the getNotifications method is the one that needs refactoring to use RxJS's catchError for handling errors. Currently, the method checks for errors directly within the map operator.
+
+Here's a suggested commit for refactoring the getNotifications method to use catchError:
+
+import { Injectable } from '@angular/core';
+import { Observable, map, catchError } from 'rxjs';
+import { GraphqlService } from 'src/app/graphql/graphql.service';
+import { GetNotifications } from 'src/app/graphql/graphql.queries';
+import { ApolloQueryResult } from '@apollo/client/core';
+import { Notification } from './notification.model';
+
+interface GetNotificationsResponse {
+  notifications: {
+    notifications?: Notification[];
+  };
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class NotificationsService {
+  constructor(private graphqlService: GraphqlService) {}
+
+  getNotifications(variables): Observable<Notification[]> {
+    return this.graphqlService.query(GetNotifications, variables).pipe(
+      map((response: ApolloQueryResult<GetNotificationsResponse>) => {
+        const notifications = response.data?.notifications.notifications;
+        return JSON.parse(JSON.stringify(notifications));
+      }),
+      catchError((error) => {
+        const errorMessage: string = error.message;
+        throw new Error(errorMessage);
+      })
+    );
+  }
+}
+This refactoring introduces the catchError operator from RxJS, which is used to catch and handle any errors that occur during the execution of the observable stream. The error handling logic is moved from the map operator to catchError, making the error handling more explicit and isolated, which is a best practice in RxJS.
+
+Please review the suggested changes and let me know if this aligns with your expectations or if further modifications are needed.
+
+Analysis chain
+Scripts executed

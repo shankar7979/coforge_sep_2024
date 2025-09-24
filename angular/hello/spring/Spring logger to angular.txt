@@ -1,0 +1,146 @@
+Spring logger to angular 
+
+get logger messages from a Spring Boot backend in an Angular frontend, a common approach involves sending the log messages as part of a response to a request or by implementing a dedicated logging endpoint.
+1. Sending Logs in API Responses:
+Spring Boot: When your Angular application makes an API call to your Spring Boot backend, you can include relevant log messages (e.g., error details, warning messages) within the API's response payload.
+Java
+
+    @RestController
+    public class MyController {
+        private static final Logger logger = LoggerFactory.getLogger(MyController.class);
+
+        @GetMapping("/data")
+        public ResponseEntity<Map<String, Object>> getData() {
+            try {
+                // ... business logic ...
+                logger.info("Data successfully retrieved.");
+                Map<String, Object> response = new HashMap<>();
+                response.put("data", /* your data */);
+                response.put("message", "Data loaded successfully.");
+                return ResponseEntity.ok(response);
+            } catch (Exception e) {
+                logger.error("Error retrieving data: {}", e.getMessage());
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Failed to retrieve data.");
+                errorResponse.put("logMessage", e.getMessage()); // Include specific error message for Angular
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            }
+        }
+    }
+Angular: Your Angular service handling the API call can then extract these messages from the response and display them to the user or log them using Angular's own logging mechanisms (e.g., console.log or a dedicated Angular logger like ngx-logger).
+TypeScript
+
+    import { HttpClient } from '@angular/common/http';
+    import { Injectable } from '@angular/core';
+
+    @Injectable({
+      providedIn: 'root'
+    })
+    export class DataService {
+      constructor(private http: HttpClient) { }
+
+      getData() {
+        this.http.get<any>('/api/data').subscribe(
+          response => {
+            console.log('Backend message:', response.message);
+            // Display message to user
+          },
+          error => {
+            console.error('Backend error log:', error.error.logMessage);
+            // Display error to user
+          }
+        );
+      }
+    }
+2. Dedicated Logging Endpoint (for client-side logs):
+Spring Boot: Create a REST endpoint in Spring Boot that accepts log messages (e.g., as JSON) from the Angular application. This allows your Angular app to send its own client-side logs to the backend for centralized storage and analysis.
+Java
+
+    @RestController
+    @RequestMapping("/logs")
+    public class LogController {
+        private static final Logger clientLogger = LoggerFactory.getLogger("ClientLogger");
+
+        @PostMapping
+        public ResponseEntity<Void> receiveClientLog(@RequestBody Map<String, String> logEntry) {
+            String level = logEntry.get("level");
+            String message = logEntry.get("message");
+
+            switch (level.toLowerCase()) {
+                case "info":
+                    clientLogger.info(message);
+                    break;
+                case "warn":
+                    clientLogger.warn(message);
+                    break;
+                case "error":
+                    clientLogger.error(message);
+                    break;
+                default:
+                    clientLogger.debug(message);
+            }
+            return ResponseEntity.ok().build();
+        }
+    }
+Angular: Implement a service that captures Angular's log messages and sends them to this Spring Boot endpoint using HttpClient.
+TypeScript
+
+    import { HttpClient } from '@angular/common/http';
+    import { Injectable } from '@angular/core';
+
+    @Injectable({
+      providedIn: 'root'
+    })
+    export class ClientLogService {
+      constructor(private http: HttpClient) { }
+
+      logToServer(level: string, message: string) {
+        this.http.post('/api/logs', { level, message }).subscribe();
+      }
+    }
+
+    // In your component or a custom logger service:
+    // this.clientLogService.logToServer('info', 'User performed action X');
+Important Considerations:
+Security: Be cautious about exposing sensitive information in logs, especially when sending them to the frontend.
+Performance: Avoid sending excessive log data over the network, as it can impact performance.
+Log Levels: Implement appropriate log levels (INFO, WARN, ERROR, DEBUG) on both the client and server to manage the volume and importance of logged messages.
+Structured Logging: Consider using structured logging (e.g., JSON format) for easier parsing and analysis of logs, especially when using log management tools.
+एआई मोड में ज़्यादा जानकारी पाएं
+AI responses may include mistakes. Learn more
+
+Stack Overflow
+2 जवाब · 8 वर्ष पहले
+How to Send Java Spring logger.info Messages Back to Angular For ...
+I am currently looking for a way to send Java logger.info messages from a Spring Controller back to the front end, to be listened and displayed by AngularJS ... · हिंदी में देखने के लिए क्लिक करें
+
+
+
+
+===
+You will have to create Websocket Server using Java to throw all the logging messages. You can use Socket Io client in AngularJs which will receive live logging messages from Java and display in the UI.
+
+Share
+Improve this answer
+Follow
+answered Aug 26, 2017 at 22:31
+JEET ADHIKARI's user avatar
+JEET ADHIKARI
+53922 gold badges66 silver badges1919 bronze badges
+Comments
+
+0
+
+On the font end, use something like angular-websocket as a message receiver.
+
+On the backend, if you use log4j, just extends your own WriterAppender as a message sender and make some change with config properties. If you use other log components, do something like this.
+
+Share
+Improve this answer
+Follow
+answered Aug 27, 2017 at 3:30
+BobJiang's user avatar
+BobJiang
+50644 silver badges44 bronze badges
+Comments
+

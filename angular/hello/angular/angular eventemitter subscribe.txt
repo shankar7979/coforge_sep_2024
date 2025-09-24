@@ -1,0 +1,139 @@
+angular eventemitter subscribe
+
+most common and proper way to "subscribe" to an Angular EventEmitter is by using event binding in the parent component's template, not through a manual .subscribe() call in the component's code. This is the standard mechanism for a child component to pass data and events up to its parent component. 
+How to set up EventEmitter (Child Component)
+First, create the custom event in the child component. 
+child.component.ts
+typescript
+import { Component, EventEmitter, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `
+    <button (click)="emitEvent()">Emit Event</button>
+  `,
+})
+export class ChildComponent {
+  // 1. Create an @Output property, which is an instance of EventEmitter.
+  //    The generic type (<string>) specifies the type of data to be emitted.
+  @Output() customEvent = new EventEmitter<string>();
+
+  // 2. Define a method to trigger the event.
+  emitEvent() {
+    this.customEvent.emit('Hello from the child!');
+  }
+}
+Use code with caution.
+
+How to "subscribe" to the event (Parent Component)
+The parent component listens for the customEvent in its template using standard event binding syntax—the output property name enclosed in parentheses. 
+parent.component.html
+html
+<p>Parent Component</p>
+<app-child (customEvent)="handleCustomEvent($event)"></app-child>
+<p>{{ messageFromChild }}</p>
+Use code with caution.
+
+parent.component.ts
+typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-parent',
+  templateUrl: './parent.component.html',
+})
+export class ParentComponent {
+  messageFromChild = '';
+
+  // 3. Define a method to handle the event data.
+  //    Angular passes the emitted data into the handler via the `$event` variable.
+  handleCustomEvent(eventData: string) {
+    this.messageFromChild = eventData;
+    console.log('Event received from child:', eventData);
+  }
+}
+Use code with caution.
+
+When to use manual .subscribe()
+The Angular team recommends against manually subscribing to an EventEmitter for component communication. The standard template event binding is cleaner and more aligned with Angular's unidirectional data flow. 
+However, a manual .subscribe() call may be necessary if you are working with a dynamically created component and need to access its outputs programmatically. 
+Example of programmatic subscription:
+typescript
+// Assume a ViewContainerRef is available
+const someComponentRef = viewContainerRef.createComponent(ChildComponent);
+const eventSubscription = someComponentRef.instance.customEvent.subscribe(
+  (eventData) => {
+    console.log('Programmatic subscription:', eventData);
+  },
+);
+
+// Remember to unsubscribe when the component is destroyed to prevent memory leaks.
+// (Angular handles this for components created via the template).
+eventSubscription.unsubscribe();
+Use code with caution.
+
+Best practices
+Component communication only: Only use EventEmitter for communication between a child component and its direct parent. The @Output decorator is intended for this specific purpose.
+Use RxJS Subjects for services: For communication between components that do not have a direct parent-child relationship (e.g., sibling components or across the application), use an RxJS Subject or BehaviorSubject within a shared service. This is the recommended pattern for sharing state or events across an entire application.
+Avoid manual subscription: Rely on template event binding (customEvent)="handler($event)" for standard child-to-parent communication. 
+
+
+, ===========  ===
+No, you should not subscribe manually to it.
+EventEmitter is an angular2 abstraction and its only purpose is to emit events in components. Quoting a comment from Rob Wormald
+
+[...] EventEmitter is really an Angular abstraction, and should be used pretty much only for emitting custom Events in components. Otherwise, just use Rx as if it was any other library.
+
+This is stated really clear in EventEmitter's documentation.
+
+Use by directives and components to emit custom Events.
+
+What's wrong about using it?
+Angular2 will never guarantee us that EventEmitter will continue being an Observable. So that means refactoring our code if it changes. The only API we must access is its emit() method. We should never subscribe manually to an EventEmitter.
+
+All the stated above is more clear in this Ward Bell's comment (recommended to read the article, and the answer to that comment). Quoting for reference
+
+Do NOT count on EventEmitter continuing to be an Observable!
+
+Do NOT count on those Observable operators being there in the future!
+
+These will be deprecated soon and probably removed before release.
+
+Use EventEmitter only for event binding between a child and parent component. Do not subscribe to it. Do not call any of those methods. Only call eve.emit()
+
+His comment is in line with Rob's comment long time ago.
+
+So, how to use it properly?
+Simply use it to emit events from your component. Take a look a the following example.
+
+@Component({
+    selector : 'child',
+    template : `
+        <button (click)="sendNotification()">Notify my parent!</button>
+    `
+})
+class Child {
+    @Output() notifyParent: EventEmitter<any> = new EventEmitter();
+    sendNotification() {
+        this.notifyParent.emit('Some value to send to the parent');
+    }
+}
+
+@Component({
+    selector : 'parent',
+    template : `
+        <child (notifyParent)="getNotification($event)"></child>
+    `
+})
+class Parent {
+    getNotification(evt) {
+        // Do something with the notification (evt) sent by the child!
+    }
+}
+How not to use it?
+class MyService {
+    @Output() myServiceEvent : EventEmitter<any> = new EventEmitter();
+}
+Stop right there... you're already wrong...
+
+Hopefully these two simple examples will clarify EventEmitter's proper usage.

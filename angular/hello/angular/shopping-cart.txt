@@ -1,0 +1,242 @@
+Creating a simple NgRx shopping cart involves several key steps: defining your state, creating actions for events, building a reducer to handle state changes, writing selectors to retrieve data, and using effects for side-effect operations like fetching product data. 
+This example will guide you through the process, assuming you already have an Angular project set up with the NgRx packages installed.
+1. Define the state and model
+First, define the data structures for your products and the shopping cart state. 
+src/app/models/product.model.ts
+typescript
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+}
+Use code with caution.
+
+src/app/state/cart.state.ts
+typescript
+import { Product } from '../models/product.model';
+
+export interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+export interface AppState {
+  cart: CartItem[];
+}
+
+export const initialState: AppState = {
+  cart: []
+};
+Use code with caution.
+
+2. Create actions
+Actions are unique events dispatched throughout the application. They describe what happened but not how to handle it. 
+src/app/state/cart.actions.ts
+typescript
+import { createAction, props } from '@ngrx/store';
+import { Product } from '../models/product.model';
+
+export const addProductToCart = createAction(
+  '[Cart] Add Product to Cart',
+  props<{ product: Product }>()
+);
+
+export const removeProductFromCart = createAction(
+  '[Cart] Remove Product from Cart',
+  props<{ productId: number }>()
+);
+
+export const clearCart = createAction(
+  '[Cart] Clear Cart'
+);
+Use code with caution.
+
+3. Build the reducer
+A reducer is a pure function that takes the current state and an action, then returns a new state. 
+src/app/state/cart.reducer.ts 
+typescript
+import { createReducer, on } from '@ngrx/store';
+import { addProductToCart, removeProductFromCart, clearCart } from './cart.actions';
+import { initialState } from './cart.state';
+
+export const cartReducer = createReducer(
+  initialState,
+  on(addProductToCart, (state, { product }) => {
+    const existingItem = state.cart.find(item => item.product.id === product.id);
+    if (existingItem) {
+      // If the product is already in the cart, increment the quantity
+      const updatedCart = state.cart.map(item =>
+        item.product.id === product.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+      return { ...state, cart: updatedCart };
+    } else {
+      // Otherwise, add the new product with a quantity of 1
+      return {
+        ...state,
+        cart: [...state.cart, { product, quantity: 1 }],
+      };
+    }
+  }),
+  on(removeProductFromCart, (state, { productId }) => ({
+    ...state,
+    cart: state.cart.filter(item => item.product.id !== productId),
+  })),
+  on(clearCart, state => ({
+    ...state,
+    cart: [],
+  }))
+);
+Use code with caution.
+
+4. Create selectors
+Selectors are pure functions used for selecting slices of the state from the store. They allow components to access the required data. 
+src/app/state/cart.selectors.ts 
+typescript
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { AppState } from './cart.state';
+
+export const selectCartState = createFeatureSelector<AppState>('cart');
+
+export const selectCartItems = createSelector(
+  selectCartState,
+  (state: AppState) => state.cart
+);
+
+export const selectCartTotal = createSelector(
+  selectCartItems,
+  (cartItems) => cartItems.reduce((total, item) => total + (item.product.price * item.quantity), 0)
+);
+Use code with caution.
+
+5. Set up the store in app.config.ts (for Standalone Components)
+With modern Angular, you can register the store without using AppModule.
+src/app/app.config.ts 
+typescript
+import { ApplicationConfig } from '@angular/core';
+import { provideStore } from '@ngrx/store';
+import { cartReducer } from './state/cart.reducer';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideStore({ cart: cartReducer }),
+  ]
+};
+Use code with caution.
+
+6. Create components to interact with the store
+Here's an example of two simple components: one for displaying products and adding to the cart, and another for showing the cart contents. 
+Product List component
+src/app/product-list/product-list.component.ts 
+typescript
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { addProductToCart } from '../state/cart.actions';
+import { Product } from '../models/product.model';
+
+@Component({
+  standalone: true,
+  selector: 'app-product-list',
+  template: `
+    <h2>Products</h2>
+    <ul>
+      <li *ngFor="let product of products">
+        {{ product.name }} - \${{ product.price }}
+        <button (click)="addToCart(product)">Add to Cart</button>
+      </li>
+    </ul>
+  `,
+  imports: [],
+  styles: ``,
+})
+export class ProductListComponent {
+  products: Product[] = [
+    { id: 1, name: 'Laptop', price: 1200 },
+    { id: 2, name: 'Mouse', price: 25 },
+    { id: 3, name: 'Keyboard', price: 75 },
+  ];
+
+  constructor(private store: Store) {}
+
+  addToCart(product: Product) {
+    this.store.dispatch(addProductToCart({ product }));
+  }
+}
+Use code with caution.
+
+Cart component
+src/app/cart/cart.component.ts 
+typescript
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { selectCartItems, selectCartTotal } from '../state/cart.selectors';
+import { removeProductFromCart, clearCart } from '../state/cart.actions';
+import { AsyncPipe, CurrencyPipe, NgIf, NgFor } from '@angular/common';
+
+@Component({
+  standalone: true,
+  selector: 'app-cart',
+  template: `
+    <h2>Shopping Cart</h2>
+    <div *ngIf="cartItems$ | async as cartItems">
+      <div *ngIf="cartItems.length === 0">
+        <p>Your cart is empty.</p>
+      </div>
+      <ul *ngIf="cartItems.length > 0">
+        <li *ngFor="let item of cartItems">
+          {{ item.product.name }} ({{ item.quantity }}) - {{ (item.product.price * item.quantity) | currency }}
+          <button (click)="removeFromCart(item.product.id)">Remove</button>
+        </li>
+      </ul>
+      <p *ngIf="cartItems.length > 0">
+        Total: {{ (cartTotal$ | async) | currency }}
+      </p>
+      <button *ngIf="cartItems.length > 0" (click)="clearAll()">Clear Cart</button>
+    </div>
+  `,
+  imports: [NgIf, NgFor, AsyncPipe, CurrencyPipe],
+  styles: ``,
+})
+export class CartComponent {
+  cartItems$ = this.store.select(selectCartItems);
+  cartTotal$ = this.store.select(selectCartTotal);
+
+  constructor(private store: Store) {}
+
+  removeFromCart(productId: number) {
+    this.store.dispatch(removeProductFromCart({ productId }));
+  }
+
+  clearAll() {
+    this.store.dispatch(clearCart());
+  }
+}
+Use code with caution.
+
+7. Update app.component.ts
+Finally, include the new components in your main application component. 
+src/app/app.component.ts
+typescript
+import { Component } from '@angular/core';
+import { ProductListComponent } from './product-list/product-list.component';
+import { CartComponent } from './cart/cart.component';
+
+@Component({
+  standalone: true,
+  selector: 'app-root',
+  template: `
+    <h1>My Ngrx Shopping App</h1>
+    <div class="content">
+      <app-product-list></app-product-list>
+      <app-cart></app-cart>
+    </div>
+  `,
+  imports: [ProductListComponent, CartComponent],
+  styles: `
+    .content { display: flex; gap: 40px; }
+  `,
+})
+export class AppComponent {
+  title = 'simple-ngrx-cart';
+}

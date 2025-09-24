@@ -1,0 +1,47 @@
+
+CSS Grid · Bootstrap v5.3
+
+Bootstrap
+
+Bootstrap Gap CSS - FastBootstrap
+
+FastBootstrap
+Spacing · Bootstrap v5.3
+
+Bootstrap
+
+Bootstrap 5 Spacing Gap - GeeksforGeeks
+
+GeeksforGeeks
+
+Stacks · Bootstrap v5.1
+
+Bootstrap
+See all
+In Bootstrap, gap is a utility class used to add spacing between grid and flexbox items. Since Bootstrap 5, this utility has replaced the use of margins for creating gutters in a grid, which provides a cleaner and more consistent layout. 
+Here's a breakdown of how it works:
+Grid layout: When applied to a parent container with display: grid, the gap class adds spacing between the grid items, eliminating the need to add margins to individual columns.
+Flexbox layout: For parent elements with display: flex, the gap utility also adds spacing between flex items. It is a more modern approach than using margins, though older browser versions may have limited support.
+Syntax: The classes use the format .gap-{size} to control the space between both rows and columns. The {size} ranges from 0 to 5, with each number representing an increasing spacing value.
+Responsive variations: You can apply the gap utility at different breakpoints for responsive designs using the format .gap-{breakpoint}-{size}. 
+Example of using gap in a flexbox layout
+To create a uniform gap of 1rem (16px) between items in a flex container, you would use d-flex and gap-4. 
+html
+<div class="d-flex gap-4">
+  <div class="p-2 border">Flex item</div>
+  <div class="p-2 border">Flex item</div>
+  <div class="p-2 border">Flex item</div>
+</div>
+Use code with caution.
+
+Example of using gap in a grid layout
+To create a grid with a uniform gap of 1.25rem (20px) between items, apply the gap-5 class to the grid container.
+html
+<div class="d-grid gap-5">
+  <div class="p-2 border">Grid item 1</div>
+  <div class="p-2 border">Grid item 2</div>
+  <div class="p-2 border">Grid item 3</div>
+</div>
+Use code with caution.
+
+.

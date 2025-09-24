@@ -1,0 +1,59 @@
+The @ResponseBody annotation in Spring is used to indicate that the return value of a controller method should be bound directly to the HTTP response body. This means that Spring will automatically convert the returned Java object into a suitable format (like JSON or XML) and send it as the response content, rather than resolving it to a view name.
+Example: Returning a simple String
+Java
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+public class SimpleController {
+
+    @GetMapping("/hello")
+    @ResponseBody
+    public String sayHello() {
+        return "Hello from Spring!";
+    }
+}
+In this example, when a GET request is made to /hello, the sayHello() method will be executed. The @ResponseBody annotation ensures that the String "Hello from Spring!" is directly written to the HTTP response body as plain text.
+Example: Returning a Java object as JSON
+Java
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+// A simple POJO (Plain Old Java Object)
+class User {
+    private String firstName;
+    private String lastName;
+
+    public User(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    // Getters and Setters (omitted for brevity)
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+}
+
+@Controller
+public class UserController {
+
+    @GetMapping("/user")
+    @ResponseBody
+    public User getUser() {
+        return new User("Alice", "Smith");
+    }
+}
+In this case, when a GET request is made to /user, the getUser() method returns a User object. Due to @ResponseBody and the presence of a JSON message converter (like Jackson, typically included in Spring Boot), Spring will automatically serialize the User object into JSON format and send it in the HTTP response body. The response would look something like:
+कोड
+
+{
+    "firstName": "Alice",
+    "lastName": "Smith"
+}
+AI responses may include mistake

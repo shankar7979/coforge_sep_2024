@@ -1,0 +1,120 @@
+Dropdown onchange using ajax
+
+Asked 7 years, 11 months ago
+Modified 7 years, 11 months ago
+Viewed 23k times
+ Part of PHP Collective
+0
+
+I have a dropdown in my form which I used to filter data. I am using ajax onchange function to filter the data based on the selected list.
+
+My dropdown looked something like this :
+
+<select id="opt_level" name="opt_level">
+    <option value="level1">Level 1</option>
+    <option value="level2">Level 2</option>
+    <option value="level3">Level 3</option>
+</select>
+And here is the div that I wanted to display the onchange data :
+
+<div id="opt_lesson_list">
+    <!-- Some statement here -->
+</div>
+When there is onchange on dropdown, it will go through this ajax function :
+
+jQuery(document).ready(function($) {
+    $("#opt_level").on('change', function() {
+        var level = $(this).val();
+        if(level){
+            $.ajax ({
+                type: 'POST',
+                url: 'example-domain.com',
+                data: { hps_level: '' + level + '' },
+                success : function(htmlresponse) {
+                    $('#opt_lesson_list').html(htmlresponse);
+                    console.log(htmlresponse);
+                }
+            });
+        }
+    });
+});
+And going to the url example-domain.com to check if there is post made from ajax :
+
+if(isset($_POST['hps_level'])){
+    // Statement to select from database
+}
+So after filtering done, data inside the <div id="opt_lesson_list"></div> should display the filtered data. But what happened is, the ajax response to the whole page which means that my whole form is multiplying and displayed in the div that I used to display onchange data.
+
+EDIT
+
+My PHP is just filtering data from database based on the value selected :
+
+if(isset($_POST['hps_level'])){
+    $sql = "SELECT DISTINCT(hps_lessons) FROM holiday_program_setup WHERE hps_level = '".$_POST['hps_level']."'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            echo '<ul class="list-unstyled subjects">';
+            echo '<li class="bordered" style="width: 30%;">';
+            echo $row['hps_lessons'];
+            echo '</li>';
+            echo '</ul>';
+        }
+    }
+    $sql = NULL;
+}
+If I echo $_POST['hps_level']; I can get the value of the dropdown selected.
+
+
+
+
+It seems like you are pointing your ajax url example-domain.com to the page where all your html page is and the ajax returning the whole html page to your div response <div id="opt_lesson_list"></div>.
+
+Try to create another blank php page and put your php isset code in the new php file.
+
+if(isset($_POST['hps_level'])){
+    // Statement to select from database
+}
+Replace your ajax url with the new php file url. By doing that, your ajax will grab all the data from the new file and display in your response div.
+
+Share
+Improve this answer
+Follow
+answered Aug 29, 2017 at 12:46
+Eaten Taik's user avatar
+Eaten Taik
+95833 gold badges1414 silver badges3838 bronze badges
+Add a comment
+0
+
+your provide valid url,becz data filter to hps_level
+
+jQuery(document).ready(function($) {
+    $("#opt_level").on('change', function() {
+        var level = $(this).val();
+        alert(level);
+        if(level){
+               $.ajax ({
+                type: 'POST',
+                url: 'example-domain.com',
+                data: { hps_level: '' + level + '' },
+                success : function(htmlresponse) {
+                    check$('#opt_lesson_list').append(htmlresponse);
+                    alert(htmlresponse); 
+                },error:function(e){
+                alert("error");}
+            });
+        }gypsy
+    });
+});
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<select id="opt_level" name="opt_level">
+    <option value="level1">Level 1</option>
+    <option value="level2">Level 2</option>
+    <option value="level3">Level 3</option>
+</select>
+
+<div id="opt_lesson_list">
+    <!-- Some statement here -->
+</div>

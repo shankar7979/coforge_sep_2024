@@ -1,0 +1,979 @@
+Spring auditing
+
+##   **Auditing in Spring Boot?**
+Auditing in Spring Boot refers to the ability to automatically track and manage the creation and modification of entities within your application. It is a powerful feature that provides valuable information about the lifecycle of your data, such as who created or last modified a record and when these actions occurred. This can be especially useful in applications that require accountability, traceability, and compliance with auditing standards.
+
+**Key Annotations**
+@CreatedDate: Used to mark a field in your entity class that should be automatically populated with the date and time when the entity is created.
+
+@LastModifiedDate: Used to mark a field in your entity class that should be automatically updated with the date and time when the entity is last modified.
+
+@CreatedBy: Used to mark a field in your entity class that should be populated with the user who created the entity. This requires a custom implementation to provide the user information.
+
+@LastModifiedBy: Used to mark a field in your entity class that should be updated with the user who last modified the entity. This also requires a custom implementation to provide the user information.
+
+**Implementation Example**
+
+Let’s create a simple Spring Boot application that demonstrates auditing with the mentioned annotations. We’ll build a simple “Employee” entity that tracks who created and modified it, as well as when.
+
+Implementing auditing in a Spring Boot application using Spring Data JPA is a common practice to automatically track changes to your entities, such as who created or last modified a record and when. The process involves three main steps: enabling JPA auditing, creating a base class for auditable entities, and implementing an AuditorAware bean to provide the current user. 
+
+
+Step 1: Enable JPA auditing
+Add the @EnableJpaAuditing annotation to your main application class or a dedicated configuration class. This tells Spring to activate the auditing features. 
+src/main/java/com/example/demo/DemoApplication.java 
+java
+java
+package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
+@SpringBootApplication
+@EnableJpaAuditing // Enables JPA auditing
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
+Use code with caution.
+
+Step 2: Create a base Auditable entity
+Create an abstract base class that holds the common audit fields. This prevents you from having to repeat the same code in every entity you want to audit. 
+Annotate the class with @MappedSuperclass so that its fields are included in the table mapping of any entity that extends it.
+Annotate the fields with @CreatedBy, @CreatedDate, @LastModifiedBy, and @LastModifiedDate. 
+src/main/java/com/example/demo/Auditable.java 
+java
+package com.example.demo;
+
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+public abstract class Auditable<U> {
+
+    @CreatedBy
+    protected U createdBy;
+
+    @CreatedDate
+    protected LocalDateTime createdDate;
+
+    @LastModifiedBy
+    protected U lastModifiedBy;
+
+    @LastModifiedDate
+    protected LocalDateTime lastModifiedDate;
+    
+    // Getters and setters for audit fields
+}
+Use code with caution.
+
+Step 3: Implement an AuditorAware bean
+To tell Spring how to get the current auditor (user), you need to create a class that implements the AuditorAware interface. This is especially useful when integrated with Spring Security to automatically capture the currently logged-in user. 
+src/main/java/com/example/demo/AuditorAwareImpl.java
+undefined
+undefined
+undefined
+
+Spring Boot auditing with Spring Data JPA allows for automatic tracking of creation and modification timestamps and user information for entities.
+1. Enable JPA Auditing:
+Annotate your main Spring Boot application class or a dedicated configuration class with @EnableJpaAuditing.
+Java
+
+@Configuration
+@EnableJpaAuditing(auditorAwareRef = "auditorProvider") // Optional: Specify custom AuditorAware
+public class JpaAuditingConfig {
+    // Optional: Define a custom AuditorAware bean here if auditorAwareRef is used
+    // @Bean
+    // public AuditorAware<String> auditorProvider() {
+    //     return () -> Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+    //             .filter(Authentication::isAuthenticated)
+    //             .map(Authentication::getName);
+    // }
+}
+2. Create an Auditable Base Class:
+Define an abstract base class with common auditing fields and annotations.
+Java
+
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+public abstract class Auditable<U> {
+
+    @CreatedBy
+    protected U createdBy;
+
+    @CreatedDate
+    protected LocalDateTime createdDate;
+
+    @LastModifiedBy
+    protected U lastModifiedBy;
+
+    @LastModifiedDate
+    protected LocalDateTime lastModifiedDate;
+
+    // Getters and setters for audit fields
+}
+3. Extend the Auditable Class in Your Entities:
+Have your JPA entities extend the Auditable class.
+Java
+
+@Entity
+public class Product extends Auditable<String> { // Assuming String for user ID
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private double price;
+
+    // Constructors, other fields, getters, and setters
+}
+4. (Optional) Implement AuditorAware for User Tracking:
+If you need to track the user who performed the action (e.g., from Spring Security context), implement the AuditorAware interface.
+Java
+
+public class SpringSecurityAuditorAware implements AuditorAware<String> {
+
+    @Override
+    public Optional<String> getCurrentAuditor() {
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .filter(Authentication::isAuthenticated)
+                .map(Authentication::getName); // Or extract user ID from principal
+    }
+}
+Then, register this AuditorAware implementation as a bean and reference it in @EnableJpaAuditing using auditorAwareRef.
+How it works:
+@EnableJpaAuditing activates the auditing functionality.
+@MappedSuperclass indicates that Auditable is a superclass for entities but not an entity itself.
+@EntityListeners(AuditingEntityListener.class) registers a listener that automatically populates the audit fields.
+@CreatedBy, @CreatedDate, @LastModifiedBy, and @LastModifiedDate annotations on the fields instruct Spring Data JPA to populate them with the respective auditing information.
+If AuditorAware is implemented and configured, it provides the user information for @CreatedBy and @LastModifiedBy.
+===.==baekdag=====
+The Baeldung Logo
+Auditing with JPA, Hibernate, and Spring Data JPA
+Last updated: December 14, 2023
+
+
+Written by:
+baeldung
+JPA
+Hibernate Spring Data JPA
+1. Overview
+In the context of ORM, database auditing means tracking and logging events related to persistent entities, or simply entity versioning. Inspired by SQL triggers, the events are insert, update, and delete operations on entities. The benefits of database auditing are analogous to those provided by source version control.
+
+In this tutorial, we’ll demonstrate three approaches to introducing auditing into an application. First, we’ll implement it using standard JPA. Next, we’ll look at two JPA extensions that provide their own auditing functionality, one provided by Hibernate, another by Spring Data.
+
+Here are the sample related entities, Bar and Foo, that we’ll use in this example:
+
+Screenshot_4
+2. Auditing With JPA
+JPA doesn’t explicitly contain an auditing API, but we can achieve this functionality by using entity lifecycle events.
+
+2.1. @PrePersist, @PreUpdate and @PreRemove
+In the JPA Entity class, we can specify a method as a callback, which we can invoke during a particular entity lifecycle event. As we’re interested in callbacks executed before the corresponding DML operations, the @PrePersist, @PreUpdate and @PreRemove callback annotations are available for our purposes:
+
+@Entity
+public class Bar {
+      
+    @PrePersist
+    public void onPrePersist() { ... }
+      
+    @PreUpdate
+    public void onPreUpdate() { ... }
+      
+    @PreRemove
+    public void onPreRemove() { ... }
+      
+}
+Copy
+Internal callback methods should always return void, and take no arguments. They can have any name and any access level, but shouldn’t be static.
+
+Be aware that the @Version annotation in JPA isn’t strictly related to our topic; it has to do with optimistic locking more than with audit data.
+
+2.2. Implementing the Callback Methods
+There’s a significant restriction with this approach though. As stated in JPA 2 specification (JSR 317):
+
+In general, the lifecycle method of a portable application should not invoke EntityManager or Query operations, access other entity instances, or modify relationships within the same persistence context. A lifecycle callback method may modify the non-relationship state of the entity on which it is invoked.
+
+In the absence of an auditing framework, we must maintain the database schema and domain model manually. For our simple use case, let’s add two new properties to the entity, as we can manage only the “non-relationship state of the entity.” An operation property will store the name of an operation performed, and a timestamp property is for the timestamp of the operation:
+
+@Entity
+public class Bar {
+     
+    //...
+     
+    @Column(name = "operation")
+    private String operation;
+     
+    @Column(name = "timestamp")
+    private long timestamp;
+     
+    //...
+     
+    // standard setters and getters for the new properties
+     
+    //...
+     
+    @PrePersist
+    public void onPrePersist() {
+        audit("INSERT");
+    }
+     
+    @PreUpdate
+    public void onPreUpdate() {
+        audit("UPDATE");
+    }
+     
+    @PreRemove
+    public void onPreRemove() {
+        audit("DELETE");
+    }
+     
+    private void audit(String operation) {
+        setOperation(operation);
+        setTimestamp((new Date()).getTime());
+    }
+     
+}
+Copy
+If we need to add such auditing to multiple classes, we can use @EntityListeners to centralize the code:
+
+@EntityListeners(AuditListener.class)
+@Entity
+public class Bar { ... }
+Copy
+public class AuditListener {
+    
+    @PrePersist
+    @PreUpdate
+    @PreRemove
+    private void beforeAnyOperation(Object object) { ... }
+    
+}
+Copy
+3. Hibernate Envers
+With Hibernate, we can make use of Interceptors and EventListeners, as well as database triggers, to accomplish auditing. But the ORM framework offers Envers, a module implementing auditing and versioning of persistent classes.
+
+3.1. Get Started With Envers
+To set up Envers, we need to add the hibernate-envers JAR into our classpath:
+
+<dependency>
+    <groupId>org.hibernate.orm</groupId>
+    <artifactId>hibernate-envers</artifactId>
+    <version>6.4.4.Final</version>
+</dependency>
+Copy
+Then we add the @Audited annotation, either on an @Entity (to audit the whole entity) or on specific @Columns (if we need to audit specific properties only):
+
+@Entity
+@Audited
+public class Bar { ... }
+Copy
+Note that Bar has a one-to-many relationship with Foo. In this case, we either need to audit Foo as well by adding @Audited on Foo, or set @NotAudited on the relationship’s property in Bar:
+
+@OneToMany(mappedBy = "bar")
+@NotAudited
+private Set<Foo> fooSet;
+Copy
+3.2. Creating Audit Log Tables
+There are several ways to create audit tables:
+
+set hibernate.hbm2ddl.auto to create, create-drop, or update, so Envers can create them automatically
+use org.hibernate.tool.EnversSchemaGenerator to export the complete database schema programmatically
+set up an Ant task to generate appropriate DDL statements
+use a Maven plugin for generating a database schema from our mappings (such as Juplo) to export Envers schema (works with Hibernate 4 and higher)
+We’ll go the first route, as it’s the most straightforward, but be aware that using hibernate.hbm2ddl.auto isn’t safe in production.
+
+In our case, the bar_AUD and foo_AUD (if we’ve set Foo as @Audited as well) tables should be generated automatically. The audit tables copy all audited fields from the entity’s table with two fields, REVTYPE (values are: “0” for adding, “1” for updating, and “2” for removing an entity) and REV.
+
+Besides these, an extra table named REVINFO will be generated by default. It includes two important fields, REV and REVTSTMP, and records the timestamp of every revision. As we can guess, bar_AUD.REV and foo_AUD.REV are actually foreign keys to REVINFO.REV.
+
+3.3. Configuring Envers
+We can configure Envers properties just like any other Hibernate property.
+
+For example, let’s change the audit table suffix (which defaults to “_AUD“) to “_AUDIT_LOG.” Here’s how we set the value of the corresponding property org.hibernate.envers.audit_table_suffix:
+
+Properties hibernateProperties = new Properties(); 
+hibernateProperties.setProperty(
+  "org.hibernate.envers.audit_table_suffix", "_AUDIT_LOG"); 
+sessionFactory.setHibernateProperties(hibernateProperties);
+Copy
+A full listing of available properties can be found in the Envers documentation.
+
+3.4. Accessing Entity History
+We can query for historic data in a way similar to querying data via the Hibernate Criteria API.  We can access the audit history of an entity using the AuditReader interface, which we can obtain with an open EntityManager or Session via the AuditReaderFactory:
+
+AuditReader reader = AuditReaderFactory.get(session);
+Copy
+Envers provides AuditQueryCreator (returned by AuditReader.createQuery()) in order to create audit-specific queries. The following line will return all Bar instances modified at revision #2 (where bar_AUDIT_LOG.REV = 2):
+
+AuditQuery query = reader.createQuery()
+  .forEntitiesAtRevision(Bar.class, 2)
+Copy
+Here’s how we can query for Bar‘s revisions. It’ll result in getting a list of all audited Bar instances in all their states:
+
+AuditQuery query = reader.createQuery()
+  .forRevisionsOfEntity(Bar.class, true, true);
+Copy
+If the second parameter is false, the result is joined with the REVINFO table. Otherwise, only entity instances are returned. The last parameter specifies whether to return deleted Bar instances.
+
+Then we can specify constraints using the AuditEntity factory class:
+
+query.addOrder(AuditEntity.revisionNumber().desc());
+Copy
+4. Spring Data JPA
+Spring Data JPA is a framework that extends JPA by adding an extra layer of abstraction on the top of the JPA provider. This layer supports creating JPA repositories by extending Spring JPA repository interfaces.
+
+For our purposes, we can extend CrudRepository<T, ID extends Serializable>, the interface for generic CRUD operations. As soon as we’ve created and injected our repository to another component, Spring Data will provide the implementation automatically, and we’re ready to add auditing functionality.
+
+4.1. Enabling JPA Auditing
+To start, we want to enable auditing via annotation configuration. In order to do that, we add @EnableJpaAuditing on our @Configuration class:
+
+@Configuration
+@EnableTransactionManagement
+@EnableJpaRepositories
+@EnableJpaAuditing
+public class PersistenceConfig { ... }
+Copy
+4.2. Adding Spring’s Entity Callback Listener
+As we already know, JPA provides the @EntityListeners annotation to specify callback listener classes. Spring Data provides its own JPA entity listener class, AuditingEntityListener. So let’s specify the listener for the Bar entity:
+
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+public class Bar { ... }
+Copy
+Now we can capture auditing information by the listener upon persisting and updating the Bar entity.
+
+4.3. Tracking Created and Last Modified Dates
+Next, we’ll add two new properties for storing the created and last modified dates to our Bar entity. The properties are annotated by the @CreatedDate and @LastModifiedDate annotations accordingly, and their values are set automatically:
+
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+public class Bar {
+    
+    //...
+    
+    @Column(name = "created_date", nullable = false, updatable = false)
+    @CreatedDate
+    private long createdDate;
+
+    @Column(name = "modified_date")
+    @LastModifiedDate
+    private long modifiedDate;
+    
+    //...
+    
+}
+Copy
+Generally, we move the properties to a base class (annotated by @MappedSuperClass), which all of our audited entities would extend. In our example, we add them directly to Bar for the sake of simplicity.
+
+4.4. Auditing the Author of Changes With Spring Security
+If our app uses Spring Security, we can track when changes are made and who made them:
+
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+public class Bar {
+    
+    //...
+        @Column(name = "created_by")
+    @CreatedBy
+    private String createdBy;
+
+    @Column(name = "modified_by")
+    @LastModifiedBy
+    private String modifiedBy;
+    
+    //...
+    
+}
+Copy
+The columns annotated with @CreatedBy and @LastModifiedBy are populated with the name of the principal that created or last modified the entity. The information comes from SecurityContext‘s Authentication instance. If we want to customize values that are set to the annotated fields, we can implement the AuditorAware<T> interface:
+
+public class AuditorAwareImpl implements AuditorAware<String> {
+ 
+    @Override
+    public String getCurrentAuditor() {
+        // your custom logic
+    }
+
+}
+Copy
+In order to configure the app to use AuditorAwareImpl to look up the current principal, we declare a bean of AuditorAware type, initialized with an instance of AuditorAwareImpl, and specify the bean’s name as the auditorAwareRef parameter’s value in @EnableJpaAuditing:
+
+@EnableJpaAuditing(auditorAwareRef="auditorProvider")
+public class PersistenceConfig {
+    
+    //...
+    
+    @Bean
+    AuditorAware<String> auditorProvider() {
+        return new AuditorAwareImpl();
+    }
+    
+    //...
+    
+}
+Copy
+5. Conclusion
+In this article, we considered three approaches to implementing auditing functionality:
+
+The pure JPA approach is the most basic and consists of using lifecycle callbacks. However, we’re only allowed to modify the non-relationship state of an entity. 
+
+This makes the @PreRemove callback useless for our purposes, as any settings we made in the method will be deleted along with the entity.
+
+Envers is a mature auditing module provided by Hibernate. It’s highly configurable and lacks the flaws of the pure JPA implementation. Thus, it allows us to audit the delete operation, as it logs into tables other than the entity’s table.
+
+The Spring Data JPA approach abstracts working with JPA callbacks and provides handy annotations for auditing properties. It’s also ready for integration with Spring Security.
+
+ The disadvantage is that it inherits the same flaws of the JPA approach, so the delete operation can’t be audited.
+
+===== Medium====
+
+In any business application auditing simply means tracking and logging every change we do in the persisted records which simply means tracking every insert, update and delete operation and storing it.
+
+Auditing helps us in maintaining history records which can later help us in tracking user activities. If implemented properly auditing can also provide us with similar functionality like version control systems.
+
+I have seen projects storing these things manually and doing so become very complex because you will need to write it completely on your own which will require lots of code and lots of code means less maintainability and less focus on writing business logic.
+
+But why should someone need to go to this path when both JPA and Hibernate provide Automatic Auditing which we can be easily configured in your project.
+
+And here in this article, I will discuss how we can configure JPA to persist CreatedBy, CreatedDate, LastModifiedBy, LastModifiedDate columns automatically for any entity.
+
+Press enter or click to view image in full size
+
+I will walk you through to the necessary steps and code portions you will need to include in your project to automatically update these properties. We will use Spring Boot, Spring Data JPA, MySql to demonstrate this. We will need to add below parent and dependencies to our pom file
+
+
+Let’s suppose we have a File entity and a single record in file table stores name and content of the file and we also want to store who created and modified any file at what time. So we can keep track like when the file was created by whom and when it was last modified by whom.
+
+So we will need to add name, content, createdBy, createdDate, lastModifiedBy, lastModifiedDate properties to our File entity and to make it more appropriate we can move createdBy, createdDate, lastModifiedBy, lastModifiedDate properties to a base class Auditable and annotate this base class by @MappedSuperClass and later we can use the Auditable class in other audited entities.
+
+You will also need to write getters, setters, constructors, toString, equals along with these fields. However, you should take a look at Project Lombok: The Boilerplate Code Extractor, if you want to auto-generate these things.
+
+Both classes will look like
+
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+public abstract class Auditable<U> {
+@CreatedBy
+    protected U createdBy;
+@CreatedDate
+    @Temporal(TIMESTAMP)
+    protected Date creationDate;
+@LastModifiedBy
+    protected U lastModifiedBy;
+@LastModifiedDate
+    @Temporal(TIMESTAMP)
+    protected Date lastModifiedDate;
+// Getters and Setters
+}
+@Entity
+public class File extends Auditable<String> {
+    @Id
+    @GeneratedValue
+    private int id;
+    private String name;
+    private String content;
+// Getters and Setters
+}
+As you can see above I have used @CreatedBy, @CreatedDate, @LastModifiedBy and @LastModifiedDate annotation on respective fields.
+
+
+Spring Data JPA approach abstracts working with JPA callbacks and provides us these fancy annotations to automatically save and update auditing entities.
+
+Using AuditingEntityListener class with @EntityListeners
+
+Spring Data JPA provides a JPA entity listener class AuditingEntityListener which contains the callback methods (annotated with @PrePersist and @PreUpdate annotation) which will be used to persist and update these properties when we will persist or update our entity.
+
+JPA provides the @EntityListeners annotation to specify callback listener classes which we use to register our AuditingEntityListener class.
+
+However, We can also define our own callback listener classes if we want to and specify them using @EntityListeners annotation. In my next article, I will demonstrate how we can use @EntityListeners to store audit logs.
+
+Auditing Author using AuditorAware and Spring Security
+JPA can analyze createdDate and lastModifiedDate using current system time but what about the createdBy and lastModifiedBy fields, how JPA will recognize what to store in these fields?
+
+To tell JPA about currently logged in user we will need to provide an implementation of AuditorAware and override getCurrentAuditor() method. And inside getCurrentAuditor() we will need to fetch currently logged in user.
+As of now, I have provided a hard-coded user but you are using Spring security then you use it find currently logged in user same as I have mentioned in the comment.
+
+public class AuditorAwareImpl implements AuditorAware<String> {
+@Override
+    public String getCurrentAuditor() {
+        return "Naresh";
+        // Can use Spring Security to return currently logged in user
+        // return ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()
+    }
+}
+Enable JPA Auditing by using @EnableJpaAuditing
+We will need to create a bean of type AuditorAware and will also need to enable JPA auditing by specifying @EnableJpaAuditing on one of our configuration class. @EnableJpaAuditing accepts one argument auditorAwareRef where we need to pass the name of the AuditorAware bean.
+
+@Configuration
+@EnableJpaAuditing(auditorAwareRef = "auditorAware")
+public class JpaConfig {
+    @Bean
+    public AuditorAware<String> auditorAware() {
+        return new AuditorAwareImpl();
+    }
+}
+And now if we will try to persist or update and file object CreatedBy, CreatedDate, LastModifiedBy, LastModifiedDate properties will automatically get saved.
+
+In the next article JPA Auditing: Persisting Audit Logs Automatically using EntityListeners, I have discussed how we can use JPA EntityListeners to create audit logs and generate history records for every insert, update and delete operation.
+
+You can find complete code on this Github Repository and please feel free to give your valuable feedback
+
+======.   =====
+JPA Auditing: Persisting Audit Logs Automatically using EntityListeners
+
+In my previous article Spring Data JPA Auditing: Saving CreatedBy, CreatedDate, LastModifiedBy, LastModifiedDate automatically, I have discussed why Auditing is important for any business application and how we can use Spring Data JPA automate it.
+
+I have also discussed how Spring Data uses JPA’s EntityListeners and callback methods to automatically update CreatedBy, CreatedDate, LastModifiedBy, LastModifiedDate properties.
+
+Well, here in this article I am going dig a little bit more and discuss how we can use JPA EntityListeners to create audit logs and keep information of every insert, update and delete operation on our data.
+
+I will take the File entity example from the previous article and walk you through the necessary steps and code portions you will need to include in our project to automate the Auditing process.
+
+We will use Spring Boot, Spring Data JPA (Because it gives us complete JPA functionality plus some nice customization by Spring), MySql to demonstrate this.
+
+We will need to add below parent and dependencies to our pom file
+
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>1.5.1.RELEASE</version>
+    <relativePath/>
+</parent>
+
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+</dependencies>
+Implementing JPA Callback Methods using annotations @PrePersist, @PreUpdate, @PreRemove
+
+JPA provides us the functionality to define callback methods for any entity using annotations @PrePersist, @PreUpdate, @PreRemove and these methods will get invoked before their respective life cycle event.
+
+Similar to pre-annotations, JPA also provides post annotations like @PostPersist, @PostUpdate, @PostRemove, and @PostLoad. We can use them to define callback methods which will get triggered after the event.
+
+JPA-Automatic-Auditing-Saving-Audit-Logs
+
+Name of the annotation can tell you their respective event e.g @PrePersist - Before entity persists and @PostUpdate - After entity gets updated and this is same for other annotations as well.
+Defining callback methods inside entity
+
+We can define callback methods inside our entity class but we need to follow some rules like internal callback methods should always return void and take no argument. They can have any name and any access level and can also be static.
+
+@Entity
+public class File {
+
+    @PrePersist
+    public void prePersist() { // Persistence logic }
+
+    @PreUpdate
+    public void preUpdate() { //Updation logic }
+
+    @PreRemove
+    public void preRemove() { //Removal logic }
+
+}
+Defining callback methods in an external class and use @EntityListeners
+
+We can also define our callback methods in an external listener class in a manner that they should always return void and accepts target object as the argument. However, they can have any name and any access level and can also be static.
+
+public class FileEntityListener {
+    @PrePersist
+    public void prePersist(File target) { // Persistence logic }
+
+    @PreUpdate
+    public void preUpdate(File target) { //Updation logic }
+
+    @PreRemove
+    public void preRemove(File target) { //Removal logic }
+}
+
+
+And we will need to register this FileEntityListener class on File entity or its superclass by using @EntityListeners annotation
+
+@Entity
+@EntityListeners(FileEntityListener.class)
+class File extends Auditable<String> {
+
+    @Id
+    @GeneratedValue
+    private Integer id;
+    private String name;
+    private String content;
+
+    // Fields, Getters and Setters
+}
+Advantages of using @EntityListeners
+
+First of all, We should not write any kind of business logic in our entity classes and follow Single Responsibility Principle. Every entity class should be POJO (Plain Old Java Object).
+We can have only one callback method for a particular event in a single class e.g. only one callback method with @PrePresist is allowed in a class. While we can define more than one listener class in @EntityListeners and every listener class can have a @PrePersist.
+
+For example, I have used @EntityListeners on File and provided FileEntityListener class to it and I have also extended an Auditable class in File class.
+
+The Auditable class itself have a @EntityListeners on it with AuditingEntityListener class because I am using this class to persist createdBy and other above-mentioned properties, You can check my previous article Spring Data JPA Auditing: Saving CreatedBy, CreatedDate, LastModifiedBy, LastModifiedDate automatically for more details.
+
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+public abstract class Auditable<U> {
+
+    @CreatedBy
+    protected U createdBy;
+
+    @CreatedDate
+    @Temporal(TIMESTAMP)
+    protected Date createdDate;
+
+    @LastModifiedBy
+    protected U lastModifiedBy;
+
+    @LastModifiedDate
+    @Temporal(TIMESTAMP)
+    protected Date lastModifiedDate;
+
+    // Getters and Setters
+}
+
+We will also need to provide getters, setters, constructors, toString and equals methods to all the entities. However, you may like to look Project Lombok: The Boilerplate Code Extractor if you want to auto-generate these things.
+
+Now we are all set and we need to implement our logging strategy, we can store history logs of the File in a separate history table FileHistory.
+
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+public class FileHistory {
+
+    @Id
+    @GeneratedValue
+    private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "file_id", foreignKey = @ForeignKey(name = "FK_file_history_file"))
+    private File file;
+
+    private String fileContent;
+
+    @CreatedBy
+    private String modifiedBy;
+
+    @CreatedDate
+    @Temporal(TIMESTAMP)
+    private Date modifiedDate;
+
+    @Enumerated(STRING)
+    private Action action;
+
+    public FileHistory() {
+    }
+
+    public FileHistory(File file, Action action) {
+        this.file = file;
+        this.fileContent = file.toString();
+        this.action = action;
+    }
+
+    // Getters, Setters
+}
+
+Here Action is an enum
+
+public enum Action {
+
+    INSERTED("INSERTED"),
+    UPDATED("UPDATED"),
+    DELETED("DELETED");
+
+    private final String name;
+
+    private Action(String value) {
+        this.name = value;
+    }
+
+    public String value() {
+        return this.name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}
+
+And we will need to insert an entry in FileHistory for every insert, update, delete operation and we need to write that logic inside our FileEntityListener class. For this purpose, we will need to inject either repository class or EntityManager in FileEntityListener class.
+
+Injecting Spring Managed Beans like EntityManager in EntityListeners
+
+But here we have a problem, EntityListeners are instantiated by JPA not Spring, So Spring cannot inject any Spring-managed bean e.g. EntityManager in any EntityListeners.
+
+So if you try to auto-wire EntityManager inside FileEntityListener class, it will not work
+
+@Autowired EntityManager entityManager; //Will not work and entityManager will be null always
+
+I have also written a separate article on how to AutoWire Spring Beans Into Classes Not Managed By Spring Like JPA Entity Listeners, you can read it if you want to know more.
+
+And I am using the same idea here to make it work, we will create a utility class to fetch Spring managed beans for us
+
+@Service
+public class BeanUtil implements ApplicationContextAware {
+
+    private static ApplicationContext context;
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        context = applicationContext;
+    }
+
+    public static <T> T getBean(Class<T> beanClass) {
+        return context.getBean(beanClass);
+    }
+
+}
+
+And now we will write history record creation logic inside FileEntityListener
+
+public class FileEntityListener {
+
+    @PrePersist
+    public void prePersist(File target) {
+        perform(target, INSERTED);
+    }
+
+    @PreUpdate
+    public void preUpdate(File target) {
+        perform(target, UPDATED);
+    }
+
+    @PreRemove
+    public void preRemove(File target) {
+        perform(target, DELETED);
+    }
+
+    @Transactional(MANDATORY)
+    private void perform(File target, Action action) {
+        EntityManager entityManager = BeanUtil.getBean(EntityManager.class);
+        entityManager.persist(new FileHistory(target, action));
+    }
+
+}
+
+And now if we will try to persist or update and file object these auditing properties will automatically get saved.
+
+https://github.com/njnareshjoshi/articles/tree/master/spring-data-jpa-auditing
+============
+
+Spring Data Jpa Audit Example
+Enable auditing with Spring Data Jpa’s @CreatedDate and @LastModified
+
+Background
+Spring Data Jpa provides auditing feature which includes @CreateDate, @CreatedBy, @LastModifiedDate, and @LastModifiedBy. In this example we will see how it can be implemented with very little configurations.
+
+Entity Class
+In this example we have an entity class, User which contains information about the table structure. Initial structure is as follows:
+
+@Entity
+@Table
+public class User {
+    
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(nullable = false)
+    @NotBlank(message = "name is required")
+    private String name;
+
+    @Column(nullable = false)
+    @NotBlank(message = "username is required")
+    private String username;
+
+    @CreatedBy
+    @Column(nullable = false, updatable = false)
+    private String createdBy;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime created;
+
+    @LastModifiedBy
+    @Column(nullable = false)
+    private String modifiedBy;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private LocalDateTime modified;
+    
+    // omitted getter / setter
+}
+As you can see it is a standard implementation of @Entity JPA class. We would like to keep track when an entry is created with created column and when it is modified with modified column.
+
+Enable JpaAudit
+In order to enable JPA Auditing for this project will need to apply three annotations and a configuration class. Those annotations are; @EntityListener, @CreatedDate, and @LastModifiedDate.
+
+@EntityListener will be the one that is responsible to listen to any create or update activity. It requires Listeners to be defined. In this example we will use the default class, EntityListeners.
+
+By annotating a column with @CreatedDate we will inform Spring that we need this column to have information on when the entity is created. While @LastModifiedDate column will be defaulted to @CreatedDate and will be updated to the current time when the entry is updated.
+
+The final look of User class:
+
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+@Table
+public class User {
+    
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(nullable = false)
+    @NotBlank(message = "name is required")
+    private String name;
+
+    @Column(nullable = false)
+    @NotBlank(message = "username is required")
+    private String username;
+
+    @CreatedBy
+    @Column(nullable = false, updatable = false)
+    private String createdBy;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime created;
+
+    @LastModifiedBy
+    @Column(nullable = false)
+    private String modifiedBy;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private LocalDateTime modified;
+    
+    // omitted getter / setter
+}
+As you can see User is now annotated with @EntityListeners while created, createdBy, modified, and modifiedBy columns are annotated with @CreatedDate, @CreatedBy, @LastModifiedDate, and @LastModifiedBy. createdBy and modifiedBy fields will be automatically populated if Spring Security is available in the project path. Alternatively we wil implement our own AuditorAware in order to inform Spring who is the current auditor.
+
+In AuditorAwareImpl we can see that current implementation Mr. Auditor is hardcoded as the current auditor. You can replace the implementation to assign the current auditor.
+
+public class AuditorAwareImpl implements AuditorAware<String> {
+
+    @Override
+    public Optional<String> getCurrentAuditor() {
+        return Optional.of("Mr. Auditor");
+    }
+
+}
+Next we will need to create a Configuration class to enable JpaAuditing. In this project we have AuditConfiguration class which is responsible to inform Spring Data that we would like to enable Auditing and to use our own AuditorAware implementation. This can be achieved by registering AuditorAware @Bean and @EnableJpaAuditing annotation along with auditorAwareRef configuration.
+
+@Configuration
+@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
+public class AuditConfiguration {
+    
+        @Bean
+        public AuditorAware<String> auditorProvider() {
+            return new AuditorAwareImpl();
+        }
+        
+}
+That’s it! Our application has JPA Auditing feature enabled. The result can be seen in SpringDataAuditApplicationTests.
+
+Verify Audit Implementation
+There is no better way to verify an implementation other than running some tests. In our test class we have to scenario:
+
+Create an entity which will have created and modified fields has values without us assigning them
+Update created entity and created field will remain to have the same value while modified values will be updated
+Create an entity
+In the following test we will see that values for created and modified are assigned by Spring itself:
+
+@SpringBootTest
+public class SpringDataAuditApplicationTests {
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    private User user;
+    
+    @Before
+    public void create() {
+        user = userRepository.save(
+            new User().setName("Rashidi Zin").setUsername("rashidi.zin")
+        );
+        
+        assertThat(user.getCreated())
+            .isNotNull();
+        
+        assertThat(user.getModified())
+            .isNotNull();
+        
+        assertThat(user.getCreatedBy())
+                .isEqualTo("Mr. Auditor");
+
+        assertThat(user.getModifiedBy())
+                .isEqualTo("Mr. Auditor");        
+    }
+    
+    // rest of the content is omitted
+}
+As mentioned earlier, we did not assign values for created and modified fields but Spring will assign them for us. Same goes with when we are updating an entry.
+
+Update an entity
+In the following test we will change the username without changing modified field. We will expect that modified field will have a recent time as compare to when it was created:
+
+@SpringBootTest
+public class SpringDataAuditApplicationTests {
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    private User user;
+    
+    @Test
+    public void update() {
+        LocalDateTime created = user.getCreated();
+        LocalDateTime modified = user.getModified();
+
+        userRepository.save(
+                user.setUsername("rashidi")
+        );
+
+        userRepository.findById(user.getId())
+                .ifPresent(updatedUser -> {
+
+                    assertThat(updatedUser.getUsername())
+                            .isEqualTo("rashidi");
+
+                    assertThat(updatedUser.getCreated())
+                            .isEqualToIgnoringNanos(created);
+
+                    assertThat(updatedUser.getModified())
+                            .isAfter(modified);
+                });
+    }
+}
+As you can see at our final verification we assert that modified field should have a greater value than it previously had.
+
+Conclusion
+To recap. All we need in order to enable JPA auditing feature in this project are:
+
+@EnableJpaAuditing
+@EntityListeners
+@CreatedBy
+@CreatedDate
+@LastModifiedBy
+@LastModifiedDate
+Project maintained by rashidi
+
+Hosted on GitHub Pages — Theme by orderedlist

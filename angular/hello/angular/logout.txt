@@ -1,0 +1,266 @@
+Implementing logout functionality in an Angular application typically involves the following steps:
+Authentication Service:
+Create or modify an existing authentication service (e.g., AuthService) to include a logout() method. This service manages the user's authentication state.
+Clear Authentication Data:
+Inside the logout() method of your AuthService, perform the necessary actions to clear the user's authentication data. This commonly includes:
+Removing any stored tokens (e.g., JWT) from localStorage or sessionStorage.
+Resetting any in-memory user data or authentication state within the service (e.g., setting a currentUser subject to null).
+Redirection:
+After clearing the authentication data, redirect the user to a public route, such as the login page. This can be achieved by injecting the Router service into your AuthService and using its navigate() method.
+TypeScript
+
+    // Inside AuthService
+    import { Injectable } from '@angular/core';
+    import { Router } from '@angular/router';
+
+    @Injectable({
+      providedIn: 'root'
+    })
+    export class AuthService {
+      constructor(private router: Router) {}
+
+      logout(): void {
+        localStorage.removeItem('jwt_token'); // Example: remove JWT token
+        // Clear other authentication-related data if necessary
+        this.router.navigate(['/login']); // Redirect to login page
+      }
+    }
+Trigger Logout: In your component (e.g., a header or navigation component) where the logout button or link resides, create a method that calls the logout() method of your AuthService.
+TypeScript
+
+    // Inside HeaderComponent
+    import { Component } from '@angular/core';
+    import { AuthService } from '../services/auth.service'; // Adjust path
+
+    @Component({
+      selector: 'app-header',
+      template: `
+        <button (click)="onLogout()">Logout</button>
+      `
+    })
+    export class HeaderComponent {
+      constructor(private authService: AuthService) {}
+
+      onLogout(): void {
+        this.authService.logout();
+      }
+    }
+Route Guards (Optional but Recommended): For protected routes, ensure that your authentication guards (e.g., AuthGuard) prevent access to authenticated-only content after logout. These guards should check the authentication state managed by your AuthService. If the user is no longer authenticated, the guard should redirect them to the login page or another appropriate public route.
+
+
+
+==============
+
+Implementing an Automatic Logout Feature in Angular with "ng-idle"
+Josiah T Mahachi
+Josiah T Mahachi
+
+
+Follow
+4 min read
+·
+Nov 21, 2023
+
+Listen
+
+
+Share
+
+Press enter or click to view image in full size
+
+Implementing an Automatic Logout Feature in Angular with ng-idle
+In today’s digital landscape, ensuring the security of user sessions in web applications is paramount, and this has been the case for some projects I worked on. A crucial aspect of this security is the ability to automatically log out users after a period of inactivity.
+
+This blog post will guide you through implementing an automatic logout feature in an Angular application using ng-idle.
+
+Getting Started
+To begin, we need to import necessary modules and services in our Angular component. We will use Idle and Keepalive from @ng-idle/core, and Swal from sweetalert2 for user notifications. Additionally, I assume that you already utilize an AuthenticationService for handling user authentication and an EventService for managing events. The later is not absolutely necessary.
+
+import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core';
+import { Keepalive } from '@ng-idle/keepalive';
+import Swal from 'sweetalert2';
+import { AuthenticationService } from './core/services/auth.service';
+import { EventService } from './core/services/event.service';
+Setting Up the Component
+Our AppComponent implements OnInit and OnDestroy to manage the lifecycle of the component. We declare variables for tracking the idle state and timeout status.
+
+export class AppComponent implements OnInit, OnDestroy {
+  idleState = 'Not started.';
+  timedOut = false;
+  // ... other variables
+}
+Configuring Idle Service
+The key to implementing the automatic logout is configuring the Idle service correctly. We set up the idle and timeout durations and define what should happen when these events are triggered.
+
+constructor(private idle: Idle, private keepalive: Keepalive, /* other services */) {
+  // Set idle and timeout values
+  idle.setIdle(systemIdleTimeout); // in seconds
+  idle.setTimeout(15); // in seconds
+
+  // Define responses to idle events
+  idle.onIdleEnd.subscribe(() => this.handleIdleEnd());
+  idle.onTimeout.subscribe(() => this.handleTimeout());
+  idle.onIdleStart.subscribe(() => this.handleIdleStart());
+  idle.onTimeoutWarning.subscribe((countdown) => this.handleTimeoutWarning(countdown));
+}
+Handling Events
+We create methods to handle the different states of the idle service:
+
+handleIdleEnd(): Resets the state when the user becomes active again.
+handleTimeout(): Logs the user out and shows a timeout warning.
+handleIdleStart(): Warns the user that they will be logged out soon.
+handleTimeoutWarning(countdown): Updates the warning message as the timeout nears.
+handleIdleEnd() {
+  this.idleState = 'No longer idle.';
+  // Reset logic
+}
+
+handleTimeout() {
+  this.idleState = 'Timed out!';
+  this.timedOut = true;
+  // Logout logic
+}
+
+handleIdleStart() {
+  this.idleState = 'You will be logged out soon!';
+  // Show warning dialog
+}
+
+handleTimeoutWarning(countdown) {
+  this.idleState = `You will time out in ${countdown} seconds!`;
+}
+Keeping the Session Alive
+The Keepalive service pings a specified URL at regular intervals to keep the user session alive. We configure it to ping every 15 seconds.
+
+this.keepalive.interval(15);
+this.keepalive.onPing.subscribe(() => this.lastPing = new Date());
+Subscription and Cleanup
+We use a Subscription from RxJS to subscribe to relevant events and clean up in the ngOnDestroy lifecycle hook to prevent memory leaks.
+
+ngOnDestroy(): void {
+  this.subscription.unsubscribe();
+}
+Full Code
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DEFAULT_INTERRUPTSOURCES, Idle } from '@ng-idle/core';
+import { Keepalive } from '@ng-idle/keepalive';
+import Swal from 'sweetalert2';
+import { AuthenticationService } from './core/services/auth.service';
+import { Subscription } from 'rxjs';
+import { EventService } from './core/services/event.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements OnInit, OnDestroy {
+  title = 'My Web Application';
+  subscription!: Subscription;
+  lastPing?: Date = undefined;
+  idleState = 'Not started.';
+  timedOut = false;
+
+  constructor(
+    private idle: Idle,
+    private keepalive: Keepalive,
+    private eventService: EventService,
+    private authService: AuthenticationService,
+  ) {
+    let idleTimeout = localStorage.getItem('idleTimeout');
+    let defaultTimeout = 15 * 60; //minutes
+    let systemIdleTimeout = defaultTimeout;
+
+    if (idleTimeout) systemIdleTimeout = +idleTimeout * 60;
+
+    idle.setIdle(systemIdleTimeout);
+    idle.setTimeout(15); //seconds
+    idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
+
+    idle.onIdleEnd.subscribe(() => {
+      this.idleState = 'No longer idle.';
+      this.reset();
+
+      Swal.close();
+    });
+
+    idle.onTimeout.subscribe(() => {
+      this.idleState = 'Timed out!';
+      this.timedOut = true;
+      this.authService.logout();
+
+      Swal.close();
+      Swal.fire('Timed Out!', 'Your session has timed out and you need to log in again!', 'warning');
+    });
+
+    idle.onIdleStart.subscribe(() => {
+      this.idleState = 'You\'ll be logged out in 15 seconds!';
+
+      Swal.fire({
+        title: 'Session Timing Out',
+        text: this.idleState,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#5890a3',
+        cancelButtonColor: '#d22329',
+        confirmButtonText: 'Keep me logged in!'
+      }).then((result) => {
+        if (result.value) {
+          this.stay();
+        }
+      });
+    });
+
+    idle.onTimeoutWarning.subscribe((countdown) => {
+      this.idleState = 'You will time out in ' + countdown + ' seconds!';
+    });
+
+    // sets the ping interval to 15 seconds
+    this.keepalive.interval(15);
+
+    this.keepalive.onPing.subscribe(() => this.lastPing = new Date());
+
+    this.authService.user
+      ?.subscribe((user) => {
+        if (user) {
+          idle.watch();
+          this.timedOut = false;
+        } else {
+          idle.stop();
+        }
+      });
+
+    this.subscription = this.eventService.subscribe('idleTimeout', (payload) => {
+      let idleTimeout = payload.idleTimeout;
+      let defaultTimeout = 15;
+      let systemIdleTimeout = defaultTimeout;
+  
+      if (idleTimeout) systemIdleTimeout = +idleTimeout * 60;
+  
+      idle.setIdle(systemIdleTimeout);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  ngOnInit() { }
+
+  reset() {
+    this.idle.watch();
+    this.timedOut = false;
+  }
+
+  stay() {
+    this.reset();
+  }
+}
+Conclusion
+I hope you enjoyed and found this short article useful because implementing an automatic logout feature is essential for maintaining the security and integrity of user sessions in web applications. Using ng-idle in Angular makes this task straightforward and effective. By configuring idle and timeout settings, responding to idle events, and ensuring session keep-alive, you can enhance the security of your application significantly.
+
+Oh yeah, one last thing. Don’t forget to add `NgIdleKeepaliveModule.forRoot()` to the imports array in app.module.ts
+
+Happy coding.
+
+

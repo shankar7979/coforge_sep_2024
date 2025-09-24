@@ -1,0 +1,30 @@
+Hibernate "entity" and "Hibernate Core" in Java relate to different aspects of the Hibernate framework and the Jakarta Persistence API (JPA).
+
+Hibernate Core:
+
+Foundation: Hibernate Core is the fundamental, native implementation of the Hibernate Object-Relational Mapping (ORM) framework. It provides the core functionality for mapping Java objects to relational database tables, managing persistence, and handling data retrieval and manipulation.
+
+Native API: It offers its own set of APIs, including SessionFactory and Session, for interacting with the database.
+
+Flexibility: While it can integrate with JPA, it also allows for direct use of Hibernate's native features and configurations, providing greater control over the ORM process.
+Hibernate Entity (in the context of JPA):
+
+JPA Standard: When referring to "Hibernate Entity," it typically implies using Hibernate as the underlying provider for the Jakarta Persistence API (JPA).
+
+JPA is a standard API for object-relational mapping in Java.
+
+@Entity Annotation: In this context, "entity" refers to a plain old Java object (POJO) annotated with @jakarta.persistence.Entity, which marks it as a persistent class that can be stored in a database.
+
+EntityManager: JPA utilizes the EntityManager API for performing CRUD operations, transaction management, and querying entities. Hibernate, when used as a JPA provider, implements this EntityManager behind the scenes.
+
+Portability: Using JPA with Hibernate offers the advantage of code portability, as applications written against the JPA API can theoretically switch to a different JPA provider without significant code changes.
+Relationship and Key Differences:
+Implementation vs. Standard: Hibernate Core is the concrete implementation of the ORM framework, while Hibernate Entity (as part of JPA) represents the use of Hibernate to adhere to the JPA standard.
+
+API: Hibernate Core uses Session and SessionFactory, while JPA uses EntityManager and EntityManagerFactory. When Hibernate is the JPA provider, EntityManager essentially wraps a Hibernate Session.
+
+Level of Abstraction: JPA provides a higher level of abstraction through its standard API, while Hibernate Core offers more direct access to its native features.
+
+Deprecation: The hibernate-entitymanager artifact, which provided the JPA implementation for older Hibernate versions, is now deprecated. Its functionality has been integrated directly into hibernate-core, meaning that hibernate-core now includes the necessary components to act as a JPA provider.
+
+In essence, you can use Hibernate either through its native Core API or by leveraging it as the underlying implementation for the JPA standard, which defines how you interact with persistent "entities." The trend is towards using JPA for better portability and standardization.

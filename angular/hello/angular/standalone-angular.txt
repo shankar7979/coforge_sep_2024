@@ -1,0 +1,141 @@
+To create a non-standalone Angular project, which means a project that utilizes NgModules for organizing components, directives, and pipes, the --no-standalone flag must be used when generating a new project with the Angular CLI.
+The command to achieve this is:
+Code
+
+ng new your-project-name --no-standalone
+
+Replacing your-project-name with the desired name for the new project.
+This command will generate an Angular project that includes an app.module.ts file, which serves as the root module for the application, and components created within this project will default to being non-standalone (i.e., standalone: false in their @Component decorator). This contrasts with the default behavior in Angular v17 and later, where ng new creates standalone projects by default.
+
+
+==============
+In Angular 19, standalone components, directives, and pipes are the default. This means that when generating new components using the Angular CLI, they are automatically created as standalone, eliminating the need to explicitly add standalone: true in their respective decorators. 
+For example, when creating a new component:
+Code
+
+ng generate component my-new-component
+
+The generated component will be standalone by default, and its @Component decorator will not include standalone: true.
+Conversely, if you need to create a component that is not standalone (i.e., it will be declared within an NgModule), you now need to explicitly set standalone: false:
+
+
+the --no-standalone flag must be used when generating a new project with the Angular CLI.
+The command to achieve this is:
+Code
+
+ng new your-project-name --no-standalone
+TypeScript
+
+@Component({
+  standalone: false, // This is now required when using NgModules
+  selector: 'app-my-legacy-component',
+  templateUrl: './my-legacy-component.html',
+  styleUrls: ['./my-legacy-component.css'],
+})
+export class MyLegacyComponent {}
+
+When upgrading an existing Angular application to version 19, the ng update command automatically handles the migration of existing standalone components by removing the redundant standalone: true property and adding standalone: false to components declared within NgModules to ensure compatibility.
+====.====
+
+In Angular 19, standalone components are now the default. To create a non-standalone component, directive, or pipe, which means it belongs to an NgModule, you must explicitly set the standalone property to false in its decorator.
+
+
+Creating a Non-Standalone Component:
+TypeScript
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-my-component',
+  templateUrl: './my-component.component.html',
+  styleUrls: ['./my-component.component.css'],
+  standalone: false // Explicitly set to false for non-standalone
+})
+export class MyComponent {
+  // Component logic
+}
+
+Declaring it in an NgModule:
+For a non-standalone component to be used, it must be declared within an NgModule.
+TypeScript
+
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MyComponent } from './my-component.component'; // Import the non-standalone component
+
+@NgModule({
+  declarations: [
+    MyComponent // Declare the non-standalone component here
+  ],
+  imports: [
+    CommonModule
+  ],
+  exports: [
+    MyComponent // Optionally export if needed by other modules
+  ]
+})
+export class MyModule { }
+
+Important Considerations:
+
+    Existing Projects:
+    If you are upgrading an existing Angular project to version 19, ng update will automatically handle most of the changes, including adding standalone: false where necessary for components declared in NgModules.
+    Strict Standalone Mode:
+    Angular 19 introduces a strictStandalone option in angularCompilerOptions. If enabled, it enforces that only standalone components, directives, and pipes are allowed, and you will receive an error if you try to create a non-standalone one without explicitly disabling this option.
+    Third-Party Libraries:
+    NgModules from third-party libraries will continue to function as before and can be imported into standalone components or other NgModules as needed.
+
+======
+
+
+===
+
+What is the difference between standalone and no standalone in Angular?
+Traditionally, Angular necessitated defining components within modules. However, the introduction of standalone components in Angular 15 revolutionised this approach. Standalone components operate autonomously, eliminating the requirement for modules. Now, components solely necessitate the essential inputs to function.
+, ====
+Basically, standalone components are not mandatory. Recommended yes, but not mandatory. However, Angular recommends always using Standalone components, at least for new components you create. They are simply more treeshakeable and less boiler.
+========
+Standalone components provide a simplified way to build Angular applications. Standalone components, directives, and pipes aim to streamline the authoring experience by reducing the need for NgModule s.
+
+Standalone technology works by incorporating all the necessary components and resources within a single device. This eliminates the need for external connections or dependencies to perform its functions. Standalone devices are self-sufficient and can operate in isolation.
+
+What is the difference between standalone and no standalone in Angular?
+Traditionally, Angular necessitated defining components within modules. However, the introduction of standalone components in Angular 15 revolutionised this approach. Standalone components operate autonomously, eliminating the requirement for modules. Now, components solely necessitate the essential inputs to function.
+
+
+
+
+
+========
+Angular provides two primary ways to structure and organize components: using standalone components or the traditional NgModule-based approach.
+Creating Standalone Components:
+Standalone components, introduced in Angular 14, offer a simplified way to build applications by reducing the reliance on NgModules. To create a standalone component using the Angular CLI, use the --standalone flag: 
+Code
+
+ng generate component MyStandaloneComponent --standalone
+
+This command generates a component where its dependencies (other components, directives, pipes) are directly imported within its @Component decorator's imports array, rather than being declared in an NgModule. Standalone components also have a standalone: true property in their decorator.
+Creating Components Without Standalone (NgModule-based):
+Prior to Angular 14, and still available as an option, components were typically declared within an NgModule. To create a component without the standalone flag (i.e., for an NgModule-based project), simply omit the --standalone flag:
+Code
+
+ng generate component MyNgModuleComponent
+
+This component will then need to be declared in the declarations array of an NgModule (e.g., AppModule) to be recognized and used within the application.
+Key Differences:
+
+    Module Declaration:
+    Standalone components declare their dependencies directly, while NgModule-based components are declared within a containing NgModule.
+    Simplicity:
+    Standalone components aim to reduce boilerplate and simplify project structure by minimizing the need for NgModules.
+    Reusability:
+    Standalone components can be more easily reused across different parts of an application or even in different projects without carrying NgModule dependencies.
+    Migration:
+    Existing NgModule-based applications can incrementally adopt standalone components.
+
+Choosing the Approach:
+
+    New Projects:
+    For new Angular projects, using standalone components is generally recommended due to their simplicity and improved modularity.
+    Existing Projects:
+    For existing NgModule-based projects, you can gradually migrate components to standalone or continue using the NgModule approach. Both can coexist within the same application.

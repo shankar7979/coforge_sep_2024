@@ -1,0 +1,168 @@
+JSON Server provides a simple way to implement search functionality using query parameters. This allows you to filter data based on specific criteria or perform full-text searches.
+1. Full-Text Search:
+To perform a full-text search across all fields in your JSON Server data, use the q query parameter:
+Code
+
+GET /posts?q=searchterm
+This will return all posts that contain "searchterm" in any of their fields.
+2. Field-Specific Search:
+To search within a specific field, use the field name as a query parameter:
+Code
+
+GET /posts?title=searchterm
+This will return posts where the title field exactly matches "searchterm".
+3. Case-Insensitive Search (with _like):
+For case-insensitive search or partial matches within a specific field, use the _like operator:
+Code
+
+GET /posts?title_like=searchterm
+This will return posts where the title field contains "searchterm", regardless of case.
+Example in Angular:
+In your Angular service, you would construct the URL with the appropriate query parameters and use HttpClient to make the request:
+TypeScript
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataService {
+  private apiUrl = 'http://localhost:3000/posts'; // Your JSON Server URL
+
+  constructor(private http: HttpClient) { }
+
+  searchPosts(searchTerm: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}?q=${searchTerm}`);
+  }
+
+  searchPostsByTitle(title: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}?title_like=${title}`);
+  }
+}
+Then, in your component, you would call these methods to retrieve the filtered data:
+TypeScript
+
+import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
+
+@Component({
+  selector: 'app-post-list',
+  templateUrl: './post-list.component.html',
+  styleUrls: ['./post-list.component.css']
+})
+export class PostListComponent implements OnInit {
+  posts: any[] = [];
+
+  constructor(private dataService: DataService) { }
+
+  ngOnInit(): void {
+    // Example: Search for posts containing "Angular"
+    this.dataService.searchPosts('Angular').subscribe(data => {
+      this.posts = data;
+    });
+
+    // Example: Search for posts with a title like "Introduction"
+    // this.dataService.searchPostsByTitle('Introduction').subscribe(data => {
+    //   this.posts = data;
+    // });
+  }
+}
+
+=====
+
+This might give you the idea for the search using filter
+
+var searchText = "three";
+    var data = [
+      {
+        name: "example one three",
+        source: "",
+        source_type: "",
+        text: "A bumblebee in the field"
+      },
+      {
+        name: "example two",
+        source: "",
+        source_type: "",
+        text: "Two flowers with red petals"
+      },
+      {
+        name: "example three",
+        source: "",
+        source_type: "",
+        text: "Two flowers with red petals"
+      }
+    ];
+
+    let newObj = data.filter((value)=>{
+      return value.name.indexOf(searchText) != -1 ? value : null
+    });
+    console.log(newObj);
+
+Where your defined newObj and where you accessing the newObj? Is it AJAX call to get JSON first? – 
+Ali Shahbaz
+ CommentedOct 8, 2018 at 17:25
+I defined it at the top of export class AppComponent as newObj:Obj[]; and then access it in a function searchObject(text:string) { this.newObj = this.originals.filter((original) – 
+K Kiek
+ CommentedOct 8, 2018 at 17:48
+Add a comment
+0
+
+Well, you could do this using a Pipe. But using Filter Pipes is not really recommended by the Angular Team. So you can essentially listen to the keyup event on your input field and then call a function to filter the data.
+
+Now, since this is a strict filter object by a key, you can simply use the filter method on Array and check if the indexOf the searchInput in the name or text is >-1
+
+Here's how:
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'my-app',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  filterText;
+
+  data = [{
+    "name": "example one",
+    "source": "",
+    "source_type": "",
+    "text": "A bumblebee in the field"
+  },
+  {
+    "name": "example two",
+    "source": "",
+    "source_type": "",
+    "text": "Two flowers with red petals"
+  }];
+
+  filteredData = [];
+
+  ngOnInit() {
+    this.filteredData = [...this.data];
+  }
+
+  onChange() {
+    console.log('ran');
+    this.filteredData = this.data.filter(
+      datum => (datum.name.indexOf(this.filterText) > -1 || datum.text.indexOf(this.filterText) > -1));
+
+    console.log(this.filteredData);
+
+  }
+
+
+}
+And in the template:
+
+<input type="text" [(ngModel)]="filterText" (keyup)="onChange()">
+
+<ul>
+  <li *ngFor="let datum of filteredData">
+    {{ datum.name }}
+  </li>
+</ul>
+Here's a Sample StackBlitz for your ref.

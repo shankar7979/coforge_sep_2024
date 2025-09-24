@@ -1,0 +1,49 @@
+Spring, the terms "Web Client" (referring to WebClient) and "WebSocket" (referring to the underlying WebSocket protocol and Spring's WebSocketClient or STOMP over WebSocket support) represent distinct approaches to client-server communication with different use cases and characteristics.
+WebClient:
+Protocol: Primarily used for making HTTP requests (GET, POST, PUT, DELETE, etc.) to RESTful or other HTTP-based services.
+Communication Model: Request-response. The client sends a request, and the server sends a response, after which the connection can be closed (though persistent connections are common for efficiency).
+API: Reactive and non-blocking, built on Project Reactor. It's designed for efficient handling of asynchronous operations and streams of data.
+Use Cases: Consuming REST APIs, fetching data from traditional web services, interacting with microservices, and general HTTP communication where a persistent, bidirectional connection is not required.
+WebSocket:
+Protocol: A distinct protocol that provides full-duplex, bidirectional communication over a single, persistent TCP connection.
+Communication Model: Persistent, bidirectional. Once the connection is established via an HTTP handshake, both the client and server can send messages to each other at any time without initiating new requests.
+API: In Spring, you might use WebSocketClient for low-level WebSocket interactions or leverage STOMP (Simple Text Oriented Messaging Protocol) over WebSocket for higher-level messaging patterns, often with WebSocketStompClient and SockJsClient.
+Use Cases: Real-time applications like chat, live data updates (e.g., stock tickers, sports scores), multiplayer online games, notifications, and any scenario requiring low-latency, continuous communication between client and server.
+Key Differences Summarized:
+Feature
+WebClient (HTTP)
+WebSocket
+Protocol
+HTTP (request-response)
+WebSocket (persistent, bidirectional)
+Communication
+Client initiates, server responds
+Both client and server can initiate communication
+Connection
+Typically short-lived (though can be persistent)
+Long-lived, persistent connection
+Latency
+Higher due to request/response overhead
+Lower due to persistent connection and reduced overhead
+Use Cases
+REST APIs, data fetching, general HTTP interaction
+Real-time applications, chat, live updates, gaming
+Dive deeper in AI Mode
+AI responses may include mistakes. Learn more
+
+Stack Overflow
+1 answer · 7 years ago
+spring - WebClient vs WebSocketClient
+WebSocketClient has two major differences compared to WebClient. it does not offer a reactive but an async API.
+Differences between TCP sockets and web sockets, one more time
+2 answers
+·
+12y
+What are the pitfalls of using Websockets in place of RESTful ...
+3 answers
+·
+10y
+More results from Stack Overflow
+People also ask
+What is the difference between Spring WebClient and WebTestClient?
+WebTestClient is an HTTP client designed for testing server applications. It wraps Spring's WebClient and uses it to perform requests but exposes a testing facade for verifying responses. WebTestClient can be used to perform end-to-end HTTP tests.

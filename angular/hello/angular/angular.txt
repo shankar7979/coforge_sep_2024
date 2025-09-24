@@ -1,0 +1,33 @@
+getHeroes(): Observable<Hero[]> {
+  return this.http.get<Hero[]>(this.heroesUrl)
+    .pipe(
+      catchError(this.handleError('getHeroes', []))
+    );
+}
+
+you can use catchError in rxjs/operators for this. Try it as follows.
+
+import { catchError } from 'rxjs/operators';
+
+export class DemoService {
+
+    getuserdetails(): Observable<user[]> {
+        return this.http.get<user[]>(this.url)
+            .pipe(catchError(this.errorHandler))
+    }
+    errorHandler(error: HttpErrorResponse) {
+        return Observable.throw(error.message || "server error.");
+    }
+}
+ 
+
+
+the last version of rxjs you should use:
+
+return return this.http.get<user[]>(this.url)
+                  .subscribe((r:Author) => console.l
+4
+Hi there. I have about the same code that you posted in this answer, but the catchError() won't work. It simply doesnt throw anything even if the return from server is code 500. – 
+WitnessTruth
+ CommentedMay 21, 2020 at 22:29
+Add a comment

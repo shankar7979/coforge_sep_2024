@@ -1,0 +1,88 @@
+The @ViewChild decorator in Angular provides a way to query and get a reference to a child component, directive, or a DOM element from within a parent component's template. This allows for interaction with the child's properties, methods, or the native DOM element. 
+Here's an example demonstrating its usage:
+TypeScript
+
+// child.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `
+    <h2>Child Component</h2>
+    <button (click)="greet()">Say Hello</button>
+  `,
+})
+export class ChildComponent {
+  message: string = 'Hello from Child!';
+
+  greet() {
+    console.log(this.message);
+  }
+}
+TypeScript
+
+// parent.component.ts
+import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { ChildComponent } from './child.component';
+
+@Component({
+  selector: 'app-parent',
+  template: `
+    <h1>Parent Component</h1>
+    <app-child></app-child>
+    <div #myDiv>This is a div in the parent.</div>
+    <button (click)="callChildGreet()">Call Child's Greet</button>
+    <button (click)="changeDivContent()">Change Div Content</button>
+  `,
+})
+export class ParentComponent implements AfterViewInit {
+  @ViewChild(ChildComponent) childComponent!: ChildComponent;
+  @ViewChild('myDiv', { static: false }) myDivElement!: ElementRef;
+
+  ngAfterViewInit() {
+    // Accessing child component's property and method
+    console.log('Child message:', this.childComponent.message);
+    this.childComponent.message = 'New message from Parent!';
+
+    // Accessing native DOM element
+    console.log('Div content:', this.myDivElement.nativeElement.textContent);
+  }
+
+  callChildGreet() {
+    this.childComponent.greet(); // Calling a method on the child component
+  }
+
+  changeDivContent() {
+    this.myDivElement.nativeElement.textContent = 'Content changed by Parent!';
+  }
+}
+
+Explanation:
+Accessing a Child Component:
+
+In ParentComponent,
+ @ViewChild(ChildComponent) childComponent!: ChildComponent; queries for the first instance of ChildComponent within ParentComponent's template and assigns its reference to the childComponent property.
+
+This allows the ParentComponent to access childComponent's properties (like message) and methods (like greet()).
+
+Accessing a DOM Element:
+In ParentComponent's template, <div #myDiv>...</div> defines a template reference variable
+
+#myDiv.
+@ViewChild('myDiv', { static: false }) myDivElement!: ElementRef;
+
+queries for the element with the template reference variable myDiv and provides access to its native DOM element through nativeElement.
+
+The static: false option indicates that the query should be resolved after the view has been initialized, allowing for dynamic changes to the view (e.g., if the div is inside an *ngIf).
+
+ngAfterViewInit Lifecycle Hook:
+
+The results of @ViewChild queries are available in the ngAfterViewInit lifecycle hook, as the view must be fully initialized before these references can be obtained. Attempting to access them before this hook will result in undefined.
+Dive deeper in AI Mode
+AI responses may include mistakes. Learn more
+
+Angular
+https://angular.io
+ViewChild
+
+Property decorator that configures a view query. The change detector looks for the first element or the directive matching the selector in the view DOM.

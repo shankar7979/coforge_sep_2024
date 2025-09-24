@@ -1,0 +1,315 @@
+
+·
+WebSocket + Spring Boot: Build a 
+
+Enhance your web applications with real-time, event-driven communication between clients and servers.
+
+
+Real-time communication is a key feature for many web applications, whether it’s for live chat, online gaming, or instant notifications. One of the most effective technologies for implementing this is WebSocket, a protocol that enables full-duplex communication over a single TCP connection.
+
+In this blog post, we will explore how to leverage WebSocket with Spring Boot to build robust, real-time applications. By incorporating the STOMP messaging protocol, we can create interactive web applications beyond the limitations of traditional HTTP connections.
+
+What is a WebSocket?
+WebSocket is a computer communications protocol that provides full-duplex communication channels over a single TCP connection.
+
+WebSockets are used for real-time, event-driven communication between clients and servers. They are particularly useful for building software applications requiring instant updates, such as real-time chat, messaging, and multiplayer games.
+
+
+WebSocket Communication Protocol
+WebSocket Communication Protocol
+WebSocket is bi-directional — Both client and server can initiate sending a message.
+WebSocket is Full Duplex — The client and server communication is independent of each other.
+Single TCP connection —The initial connection uses HTTP and then upgrades to a socket-based connection, used for all future communication.
+Light — The WebSocket message data exchange is much lighter compared to HTTP.
+What is STOMP?
+For this tutorial, we will use the STOMP protocol.
+
+STOMP is a simple text-oriented messaging protocol that our UI client (browser) uses to connect to enterprise message brokers. Clients can use the SEND or SUBSCRIBE commands to send or subscribe to messages and a “destination” header describing the message and the intended recipient.
+
+STOMP defines a protocol for clients and servers to communicate with messaging semantics. The protocol is broadly like HTTP and works over TCP using the following commands:
+
+CONNECT, SEND, SUBSCRIBE, UNSUBSCRIBE, BEGIN, COMMIT, ABORT, ACK, NACK, DISCONNECT
+
+
+STOMP Broker
+When using Spring’s STOMP support, the Spring WebSocket application acts as the STOMP broker to clients. Messages are routed to @Controller message-handling methods or a simple, in-memory broker that keeps track of subscriptions and broadcasts messages to subscribed users.
+
+You can also configure Spring to work with a dedicated STOMP broker (e.g., RabbitMQ, ActiveMQ, etc.) for broadcasting messages. In this case, Spring maintains TCP connections to the broker, relays messages to it, and passes messages from it to connected WebSocket clients.
+
+Creating the Spring Boot WebSocket Application
+Prerequisites:
+Java 17 or later
+Gradle 7.5+ or Maven 3.5+
+An integrated development environment (IDE) such as IntelliJ IDEA or Eclipse
+Setting Up a Java Spring Boot Project:
+Open your preferred IDE and create a new Maven project.
+2. Configure the project’s GroupId, ArtifactId, and other details.
+
+3. Open the ‘pom.xml’ file and add the WebSocket library dependency.
+
+<dependency> 
+ <groupId>org.springframework.boot</groupId> 
+ <artifactId>spring-boot-starter-websocket</artifactId> 
+</dependency>
+Define the Domain Class ‘ChatMessage’
+
+@Getter 
+@Setter 
+@AllArgsConstructor 
+@NoArgsConstructor 
+@Builder 
+public class ChatMessage { 
+   private MessageType type; 
+   private String content; 
+   private String sender; 
+}
+Define the Enum ‘MessageType’
+public enum MessageType { 
+ CHAT, 
+ JOIN, 
+ LEAVE 
+}
+Define the WebSocket Configuration class
+
+@Configuration 
+@EnableWebSocketMessageBroker 
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer { 
+ 
+ @Override 
+ public void registerStompEndpoints(StompEndpointRegistry registry) { 
+   registry.addEndpoint("/ws").withSockJS(); 
+ } 
+ 
+ @Override 
+ public void configureMessageBroker(MessageBrokerRegistry registry) { 
+   registry.setApplicationDestinationPrefixes("/app"); 
+   registry.enableSimpleBroker("/topic"); 
+ } 
+}
+@ Configuration indicates that it is a Spring configuration class.
+
+@ EnableWebSocketMessageBroker enables WebSocket message handling, backed by a message broker. Here we are using STOMP as a message broker.
+
+The method configureMessageBroker does two things:
+
+configureMessageBroker sets up an in-memory message broker with one or more destinations for sending and receiving messages. The destination prefix /topic is used for messages to be carried to all subscribed clients via the pub-sub model.
+Defines the prefix /app that is used to filter destinations handled by methods annotated with @MessageMapping, which you will implement in a controller. After processing the message, the controller will send it to the broker.
+The method withSockJS() enables SockJS fallback options, allowing our WebSocket to work even if the browser does not support the WebSocket protocol.
+
+Define the WebSocket Listener class
+This class listens to events such as a new user joining the chat or a user leaving the chat.
+
+ 
+@Component
+@Slf4j
+@RequiredArgsConstructor
+public class WebSocketEventListener {
+
+    private final SimpMessageSendingOperations messagingTemplate;
+
+    @EventListener
+    public void handleWebSocketConnectListener(SessionConnectedEvent event) {
+        log.info("Received a new web socket connection");
+    }
+    
+    @EventListener
+    public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        String username = (String) headerAccessor.getSessionAttributes().get("username");
+        
+        if (username != null) {
+            log.info("user disconnected: {}", username);
+            
+            var chatMessage = ChatMessage.builder()
+                    .type(MessageType.LEAVE)
+                    .sender(username)
+                    .build();
+            
+            messagingTemplate.convertAndSend("/topic/public", chatMessage);
+        }
+    }
+}
+Define the Controller class
+The WebSocket configuration routes all messages from clients with the prefix “/app” to appropriate message handling methods annotated with @MessageMapping. For example, a message with destination /app/addUser will be routed to the addUser() method, and a message with destination /app/sendMessage will be routed to the sendMessage() method.
+
+@Controller
+public class ChatController {
+
+    @MessageMapping("/sendMessage")
+    @SendTo("/topic/public")
+    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
+        
+        return chatMessage;
+        
+    }
+
+    @MessageMapping("/addUser")
+    @SendTo("/topic/public")
+    public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+        
+        // Add username in web socket session
+        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        return chatMessage;
+        
+    }
+}
+Define the Index.html
+This HTML file defines the UI for the chat application and includes the SockJS and STOMP JavaScript libraries.
+
+SockJS is a browser JavaScript library that provides a WebSocket-like object. It gives you a coherent, cross-browser Javascript API that creates a low-latency, full-duplex, cross-domain communication channel between the browser and the web server. STOMP JS is the stomp client for JavaScript.
+
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"> 
+    <title>Spring Boot WebSocket Chat Application</title> 
+    <link rel="stylesheet" href="/css/main.css" /> 
+</head> 
+<body> 
+<noscript> 
+    <h2>Sorry! Your browser doesn't support Javascript</h2> 
+</noscript> 
+ 
+<div id="username-page"> 
+    <div class="username-page-container"> 
+        <h1 class="title">Type your username to enter the Chatroom</h1> 
+        <form id="usernameForm" name="usernameForm"> 
+            <div class="form-group"> 
+                <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" /> 
+            </div> 
+            <div class="form-group"> 
+                <button type="submit" class="accent username-submit">Start Chatting</button> 
+            </div> 
+        </form> 
+    </div> 
+</div> 
+ 
+<div id="chat-page" class="hidden"> 
+    <div class="chat-container"> 
+        <div class="chat-header"> 
+            <h2>Spring WebSocket Chat Demo</h2> 
+        </div> 
+        <div class="connecting"> 
+            Connecting... 
+        </div> 
+        <ul id="messageArea"> 
+ 
+        </ul> 
+        <form id="messageForm" name="messageForm"> 
+            <div class="form-group"> 
+                <div class="input-group clearfix"> 
+                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/> 
+                    <button type="submit" class="primary">Send</button> 
+                </div> 
+            </div> 
+        </form> 
+    </div> 
+</div> 
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script> 
+<script src="/js/main.js"></script> 
+</body> 
+</html>
+Define the JavaScript File
+The stompClient.subscribe() function takes a callback method called whenever a message arrives on the subscribed topic. The connect() function uses the SockJS and STOMP client to establish a connection to the /ws endpoint configured in the Spring Boot application. The client subscribes to the /topic/public destination.
+
+function connect(event) { 
+    username = document.querySelector('#name').value.trim(); 
+ 
+    if(username) { 
+        usernamePage.classList.add('hidden'); 
+        chatPage.classList.remove('hidden'); 
+ 
+        var socket = new SockJS('/ws'); 
+        stompClient = Stomp.over(socket); 
+ 
+        stompClient.connect({}, onConnected, onError); 
+    } 
+    event.preventDefault(); 
+} 
+
+ 
+
+function onConnected() { 
+    // Subscribe to the Public Topic 
+    stompClient.subscribe('/topic/public', onMessageReceived); 
+ 
+    // Tell your username to the server 
+    stompClient.send("/app/addUser", 
+        {}, 
+        JSON.stringify({sender: username, type: 'JOIN'}) 
+    ) 
+ 
+    connectingElement.classList.add('hidden'); 
+} 
+ 
+ 
+function onError(error) { 
+    connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!'; 
+    connectingElement.style.color = 'red'; 
+} 
+ 
+ 
+function sendMessage(event) { 
+    var messageContent = messageInput.value.trim(); 
+    if(messageContent && stompClient) { 
+        var chatMessage = { 
+            sender: username, 
+            content: messageInput.value, 
+            type: 'CHAT' 
+        }; 
+        stompClient.send("/app/sendMessage", {}, JSON.stringify(chatMessage)); 
+        messageInput.value = ''; 
+    } 
+    event.preventDefault(); 
+} 
+Start the application — go to http://localhost:8080. Click ‘Start a new chat’, and it opens the WebSocket connection.
+
+Enter your name, and click on the button to set the connection.
+
+Press enter or click to view image in full size
+
+As displayed below snap 3 users joined and 3 connections were established in the chat room. We can create connections using the same URL hit on different pages.
+
+Press enter or click to view image in full size
+
+When the user closes the browser tab, the WebSocket disconnects the user and the user leaves the chatroom.
+
+Press enter or click to view image in full size
+
+Conclusion
+Implementing these protocols and frameworks allows developers to establish robust, bidirectional, real-time communication between the client and the server. This enables instant data exchange without requiring continuous polling or long-lived connections.
+
+Happy learning!
+
+For more updates on the latest tools and technologies, follow the Simform Engineering blog.
+
+Follow Us: Twitter | LinkedIn
+
+Websocket
+Spring Boot
+Real Time Application
+Web Applications
+--
+
+
+4
+
+
+Simform Engineering
+Published in Simform Engineering
+1.4K followers
+·
+Last published 5 days ago
+Our Engineering blog gives an inside look at our technologies from the perspective of our engineers.
+
+Dipali Ambaliya
+Written by Dipali Ambaliya
+39 followers
+·
+3 following
+I have been working as Java developer for 7 years. I have strong experience with Java and it's technologies. I love to explore Tech and learning things.
+
+Responses (4)
+See all responses

@@ -1,0 +1,1132 @@
+Spring DTO
+
+In Spring Boot, Request and Response DTOs (Data Transfer Objects) are simple classes that define the structure of data sent to and received from your REST API. This approach separates your public API contract from your internal domain models (JPA entities), which offers significant benefits for security, maintainability, and versioning. 
+
+Why use Request and Response DTOs?
+
+Security and data hiding: You can prevent sensitive data, like a user's password hash, from being exposed to the client by simply omitting that field from the response DTO.
+
+Separation of concerns 
+
+(decoupling): DTOs prevent your persistence layer (JPA entities) from being directly tied to your API's presentation layer. This means you can change your database schema without forcing a breaking change on your API consumers.
+
+Preventing over-fetching: You can design your DTOs to include only the fields a specific client needs, reducing the payload size and improving performance.
+
+API versioning: If you need to add or remove fields for a new version of your API, you only need to create a new DTO without changing your core application logic. 
+
+Example: A Product resource
+To demonstrate, consider a simple application with a Product entity. We will create separate DTOs for creating a product via a POST request and for retrieving product details via a GET request. 
+
+1. Define the JPA Entity
+This is your internal domain model that represents your database table. 
+src/main/java/com/example/dto/entity/Product.java
+java
+package com.example.dto.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Entity
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private String description;
+    private BigDecimal price;
+    private int stock;
+    private LocalDateTime createdAt;
+
+    // Getters and setters (or use a library like Lombok)
+}
+Use code with caution.
+
+2. Create the Request DTO
+This DTO defines the data expected from the client for creating a new Product. It does not include the auto-generated id or createdAt fields.
+
+src/main/java/com/example/dto/request/ProductCreateRequest.java
+java
+package com.example.dto.request;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import java.math.BigDecimal;
+
+public class ProductCreateRequest {
+
+    @NotBlank(message = "Name is required")
+    private String name;
+
+    private String description;
+
+    @NotNull(message = "Price is required")
+    @Positive(message = "Price must be positive")
+    private BigDecimal price;
+
+    @NotNull(message = "Stock is required")
+    @Positive(message = "Stock must be positive")
+    private int stock;
+
+    // Getters and setters (or use a library like Lombok)
+}
+Use code with caution.
+
+3. Create the Response DTO
+This DTO defines the data sent back to the client. It includes the id and createdAt fields but may exclude sensitive or internal fields if necessary. 
+src/main/java/com/example/dto/response/ProductResponse.java
+package com.example.dto.response;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+public class ProductResponse {
+
+    private Long id;
+    private String name;
+    private String description;
+    private BigDecimal price;
+    private LocalDateTime createdAt;
+
+    // Getters and setters (or use a library like Lombok)
+}
+Use code with caution.
+
+4. Map DTOs to Entities
+You need a mapper to convert between your DTOs and entities. While you can write manual mappers, using a library like MapStruct or ModelMapper reduces boilerplate code significantly. 
+Add the dependency to your pom.xml: 
+xml
+<dependency>
+    <groupId>org.mapstruct</groupId>
+    <artifactId>mapstruct</artifactId>
+    <version>1.5.5.Final</version>
+</dependency>
+<dependency>
+    <groupId>org.mapstruct</groupId>
+    <artifactId>mapstruct-processor</artifactId>
+    <version>1.5.5.Final</version>
+    <scope>provided</scope>
+</dependency>
+Use code with caution.
+
+Then create a MapStruct mapper interface. MapStruct will generate the implementation at compile-time. 
+src/main/java/com/example/dto/mapper/ProductMapper.java
+java
+package com.example.dto.mapper;
+
+import com.example.dto.entity.Product;
+import com.example.dto.request.ProductCreateRequest;
+import com.example.dto.response.ProductResponse;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+
+@Mapper(componentModel = "spring")
+public interface ProductMapper {
+
+    ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
+
+    Product toEntity(ProductCreateRequest request);
+    ProductResponse toResponse(Product entity);
+}
+Use code with caution.
+
+5. Use DTOs in your Controller
+Your controller receives the request DTO and returns the response DTO, performing all entity mapping within the controller or service layer. 
+src/main/java/com/example/dto/controller/ProductController.java 
+java
+package com.example.dto.controller;
+
+import com.example.dto.entity.Product;
+import com.example.dto.mapper.ProductMapper;
+import com.example.dto.request.ProductCreateRequest;
+import com.example.dto.response.ProductResponse;
+import com.example.dto.service.ProductService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/api/products")
+public class ProductController {
+
+    private final ProductService productService;
+    private final ProductMapper productMapper;
+
+    public ProductController(ProductService productService, ProductMapper productMapper) {
+        this.productService = productService;
+        this.productMapper = productMapper;
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductCreateRequest request) {
+        Product newProduct = productMapper.toEntity(request);
+        Product savedProduct = productService.saveProduct(newProduct);
+        return new ResponseEntity<>(productMapper.toResponse(savedProduct), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long id) {
+        return productService.findById(id)
+                .map(productMapper::toResponse)
+                .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+        List<ProductResponse> products = productService.findAll()
+                .stream()
+                .map(productMapper::toResponse)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+}
+Use code with caution.
+
+6. Add Service and Repository
+Complete the example with a basic service and repository layer to handle the business logic and database interactions. 
+src/main/java/com/example/dto/repository/ProductRepository.java
+java
+package com.example.dto.repository;
+
+import com.example.dto.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository<Product, Long> {
+}
+Use code with caution.
+
+src/main/java/com/example/dto/service/ProductService.java
+java
+package com.example.dto.service;
+
+import com.example.dto.entity.Product;
+import com.example.dto.repository.ProductRepository;
+import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ProductService {
+
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    public Product saveProduct(Product product) {
+        product.setCreatedAt(LocalDateTime.now());
+        return productRepository.save(product);
+    }
+
+    public Optional<Product> findById(Long id) {
+        return productRepository.findById(id);
+    }
+
+    public List<Product> findAll() {
+        return productRepository.findAll();
+    }
+}
+Use code with caution.
+
+==  ===medium===
+https://medium.com/@mariorodrguezgalicia/what-is-a-dto-in-spring-boot-and-why-should-you-use-it-97651506e516
+
+
+What is it?
+A DTO is simply an object that carries data between the layers of an application. It has no business logic or behavior; it only structures and organizes data for transfer. It prevents exposing unnecessary details of the database or the internal logic of the application to other layers.
+
+Why divide DTOs into request and response?
+DTOs are usually divided into two parts: Request and Response.
+
+Request DTO: These are objects that represent the data sent by the client to the backend, usually in JSON format. The framework automatically converts (deserializes) the JSON into instances of these classes so the controller can use them. They contain only the information needed to perform a specific action, such as creating or updating an entity.
+Response DTO: These are the objects that the controller sends to the client. They return the resulting data from the operation, such as the result of a database query, but without exposing internal details of the entity that may be unnecessary or irrelevant to the client.
+Let’s address those two ‘definitions’.
+
+DTORequest: This is the DTO that the service receives. It is used when the controller sends data to the service to perform an action, such as creating, updating, or querying data.
+
+Example: If the client is creating a new user, the DTORequest might contain only the fields necessary to create that user, such as the name and email address.
+Usage: The client sends the data in JSON format, and the framework automatically converts it into a DTO. The controller receives this already constructed DTO and passes it to the service to perform the necessary operations (e.g., creating a new record in the database).
+
+DTOResponse: This is the DTO that the service sends back to the controller or client. It is used when the service has completed an operation (such as retrieving, creating, or updating a resource) and needs to send data back to the client.
+
+Example: If the client makes a request to get details of a user, the DTOResponse could contain the user’s data, such as the name, email, and any other relevant data, but not necessarily all the details of the entity.
+
+Usage: The service processes the operation and returns the DTOResponse to the controller, which then sends it to the client as a response.
+
+The conversion between DTOs and entities.
+
+When converting a DTO to an entity or vice versa, it’s crucial to consider a key component called the “mapper” (which is usually a class or an interface). This component facilitates the transformation between different types of objects.
+
+To create our mapper, there are two approaches, although one is much more efficient than the other. The first involves implementing it manually, meaning writing a class with the necessary code to convert one object to another. This option is perfectly valid, and we will use it in the next example for educational purposes, to understand how the mapper works internally.
+
+However, we can also opt for a more practical alternative: using specialized libraries that automate this process. In Java, one of the most recommended is MapStruct, a powerful tool that allows us to reduce manual code and perform this task more efficiently.
+
+Example to implement DTOs in a REST API
+Press enter or click to view image in full size
+
+Figure 1. Hexagonal Architecture Diagram — Data Flow Between Layers.
+
+What I’m showing you next is a possible way to structure your project. Keep in mind that it’s a brief example, as the modules you’ll have depend on the complexity of your project. You could add authentication, exception handling, etc. By doing it this way, you follow best practices, and the code is better structured and organized (“or well, so far, this is the best I’ve learned about how to structure it, lol”).
+
+src/main/java/com/yourproject/
+│
+├── entity/                   // Database entities
+│   ├── User.java
+│   ├── Product.java
+│   └── Order.java
+│
+├── dto/                       // DTOs organized by type
+│   ├── request/               // DTOs to receive data
+│   │   ├── user/
+│   │   │   ├── CreateUserDTO.java
+│   │   │   └── UpdateUserDTO.java
+│   │   ├── product/
+│   │   │   ├── CreateProductDTO.java
+│   │   │   └── UpdateProductDTO.java
+│   │   └── order/
+│   │       ├── CreateOrderDTO.java
+│   │       └── UpdateOrderDTO.java
+│   │
+│   └── response/              // DTOs to send data
+│       ├── user/
+│       │   └── UserResponseDTO.java
+│       ├── product/
+│       │   └── ProductResponseDTO.java
+│       └── order/
+│           └── OrderResponseDTO.java
+│
+├── mapper/                    // Converters between Entity and DTOs
+│   ├── UserMapper.java
+│   ├── ProductMapper.java
+│   └── OrderMapper.java
+│
+├── repository/                // Data access interfaces
+│   ├── UserRepository.java
+│   ├── ProductRepository.java
+│   └── OrderRepository.java
+│
+├── service/                   // Business logic
+│   ├── UserService.java       // Interface
+│   ├── ProductService.java    // Interface
+│   ├── OrderService.java      // Interface
+│   └── impl/
+│       ├── UserServiceImpl.java
+│       ├── ProductServiceImpl.java
+│       └── OrderServiceImpl.java
+│
+└── controller/                // REST Controllers
+    ├── UserController.java
+    ├── ProductController.java
+    └── OrderController.java
+
+It’s important to consider two key things: first, whether you’re starting from scratch with DTOs, or if you’re implementing this design pattern in an existing project with business logic. In the second case, you only need to refactor the controllers and services (or the layers handling the data), which means adapting them to work with DTOs instead of directly with entities.
+
+One of the main considerations is that when you refactor the service, it should return DTOs instead of entities. The service will still contain the business logic, but the data it sends and receives will be structured in DTOs, making it easier to transfer between layers or to the client. However, in the repository, the return type does not change, as it continues to interact with the database, and databases are designed to work with entities, not with DTOs.
+
+Well, let’s take one of these entities as an example, since by using this as a reference, a similar logic can be applied to other entities.
+
+Entity Product
+
+package medium.articleDto.entity;
+
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "products")
+public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private String description;
+    private BigDecimal price;
+    private boolean inStock;
+    private String category;
+    private String createdBy;
+
+    // or any fields you can think of
+
+
+    // Getters y Setters
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {this.id = id;}
+
+    public String getName() {return name;}
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public BigDecimal getPrice() {
+        return price;
+    }
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+    public boolean isInStock() {
+        return inStock;
+    }
+    public void setInStock(boolean inStock) {
+        this.inStock = inStock;
+    }
+    public String getCategory() {
+        return category;
+    }
+    public void setCategory(String category) { this.category = category;}
+    public String getCreatedBy() {
+        return createdBy;
+    }
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+}
+Before anyone can object, let me clarify: I know that, according to best practices, an entity shouldn’t be anemic (like in the case shown, I admit it!). That is, it should contain its own business rules. In this case, we’re working with a simple example for educational purposes, but I recommend that if you want to do it in a more appropriate way, you should include business rules within your entities and not just getters and setters. That said, let’s continue with the example :)
+
+Request DTO CreateProductDTO
+
+Purpose: This DTO is used to receive data from the client. The client will send a JSON that represents a product, and this DTO will be responsible for capturing it.
+
+CreateProductDTO.java (Input DTO to receive product data):
+
+package medium.articleDto.dto.request;
+
+import java.math.BigDecimal;
+
+
+public record CreateProductDTO(
+        String name,
+        String description,
+        BigDecimal price,
+        String category
+
+) {}
+Explanation:
+
+The client will send a JSON with the product information, which will be automatically deserialized into an instance of this DTO thanks to the @RequestBody annotation.
+
+You can see that a special type of Java class called a record is being used. This is mainly used to store and transfer data between layers. Using a record is helpful because it makes the class immutable, which means that once the DTO is created, its fields cannot be modified.
+
+Additionally, it’s important to mention that you can also add Jakarta validations to the fields of the record. For example, you can use annotations like @NotNull, @Size, among others, which act as an initial filter before the data reaches the deeper layers of the code. This helps you prevent errors and ensure that the received information meets certain minimum requirements.
+
+Response DTO ProductResponseDTO
+
+Purpose: This DTO is used to send product data back to the client. After processing the request, the service will return the product data, but only the necessary details (name, price, and availability).
+
+Get Mario Rodríguez’s stories in your inbox
+Join Medium for free to get updates from this writer.
+
+Enter your email
+Subscribe
+ProductResponseDTO.java (Output DTO to send data to the client):
+
+package medium.articleDto.dto.response;
+
+import java.math.BigDecimal;
+public record ProductResponseDTO(
+
+      
+        String name,
+        String description,
+        BigDecimal price,
+        boolean inStock
+
+) {}
+Explanation:
+
+This DTO contains only the data we want to send to the client, excluding the description, which may not be necessary in the response.
+
+Just like the previous DTO, this one is also a record, and you can add any necessary validations to it if needed. Remember that a record makes your class immutable and is designed specifically for storing and transferring data between layers.
+
+Mapper ProductMapper
+
+Purpose: The mapper is a class responsible for converting between Entity and DTO and vice versa.
+
+In the same way, this example shows a single Mapper, but keep in mind that you can have one Mapper focused on converting DTO to entity, and then another Mapper focused on converting entity to DTO. This way, you have two separate Mappers: ProductRequestMapper and ProductResponseMapper.
+
+Remember that in this case, we will do it manually, even though it’s not the most efficient option. We’re doing this in order to show what a library could automatically do for us.
+
+ProductMapper.java:
+
+package medium.articleDto.mapper;
+
+import medium.articleDto.dto.request.CreateProductDTO;
+import medium.articleDto.dto.response.ProductResponseDTO;
+import medium.articleDto.entity.Product;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Component
+public class ProductMapper {
+
+  
+    public Product toEntity(CreateProductDTO createProductDTO) {
+
+        
+        Product product = new Product();
+
+
+        product.setName(createProductDTO.name());
+        product.setDescription(createProductDTO.description());
+        product.setPrice(createProductDTO.price());
+        product.setCategory(createProductDTO.category());
+
+        return product;
+
+    }
+
+    
+    public ProductResponseDTO toResponseDTO(Product product) {
+
+        
+        String name = null;
+        String description= null;
+        BigDecimal price = null;
+        Boolean inStock = null;
+
+        name = product.getName();
+        description= product.getDescription();
+        price = product.getPrice();
+        inStock = product.isInStock();
+
+
+        //DTO
+        ProductResponseDTO responseDTO = new ProductResponseDTO(name,description, price, inStock);
+
+        return responseDTO;
+
+    }
+
+    public List<ProductResponseDTO> toResponseDTOList(List<Product> products) {
+        return products.stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+}
+Explanation:
+
+toEntity() converts a ProductRequestDTO to a Product entity so that we can save it to the database.
+
+toResponseDTO() converts a Product (entity) to a ProductResponseDTO to return only the necessary data to the client.
+
+Repositorio (ProductRepository):
+
+package com.yourproject.repository;
+
+import com.yourproject.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository<Product, Long> {
+    // You can add custom queries if needed
+}
+Service (ProductService and ProductServiceImpl):
+
+ProductService.java (Service interface):
+
+package medium.articleDto.service;
+
+import medium.articleDto.dto.request.CreateProductDTO;
+import medium.articleDto.dto.response.ProductResponseDTO;
+
+import java.util.List;
+
+public interface ProductService {
+
+    ProductResponseDTO createProduct(CreateProductDTO createProductDTO);
+    ProductResponseDTO getProductById(Long id);
+    List<ProductResponseDTO> getAllProducts();
+}
+While this interface isn’t strictly necessary (since in many cases we only have a single implementation of the service), I’ve implemented it this way to follow the principle of “programming to interfaces, not concrete implementations.” This practice makes it easier to extend and test the application.
+
+If you prefer to simplify the code, you can skip this interface and use the concrete implementation directly. However, to adhere to the dependency inversion principle, keeping this separation between interface and implementation offers greater flexibility in the long run.
+
+ProductServiceImpl.java (Service implementation):
+
+package medium.articleDto.service.impl;
+
+import medium.articleDto.dto.request.CreateProductDTO;
+import medium.articleDto.dto.response.ProductResponseDTO;
+import medium.articleDto.entity.Product;
+import medium.articleDto.mapper.ProductMapper;
+import medium.articleDto.repository.ProductRepository;
+import medium.articleDto.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class ProductServiceImpl implements ProductService {
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
+
+    // Constructor for dependency injection
+    @Autowired
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+        this.productRepository = productRepository;
+        this.productMapper = productMapper;
+    }
+
+
+    @Override
+    public ProductResponseDTO createProduct(CreateProductDTO createProductDTO) {
+        Product product = productMapper.toEntity(createProductDTO);
+        product = productRepository.save(product);
+        return productMapper.toResponseDTO(product);
+    }
+
+    @Override
+    public ProductResponseDTO getProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        return productMapper.toResponseDTO(product);
+    }
+
+    @Override
+    public List<ProductResponseDTO> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return productMapper.toResponseDTOList(products);
+    }
+}
+createProduct(): Converts the ProductRequestDTO to Product using the ProductMapper, saves the entity in the database, and returns a ProductResponseDTO.
+getProductById(): Retrieves a product from the database, converts it to a response DTO, and returns it.
+getAllProducts(): Retrieves all products from the database, converts them to DTOs, and returns them.
+Controlador (ProductController):
+
+package medium.articleDto.controller;
+
+import medium.articleDto.dto.request.CreateProductDTO;
+import medium.articleDto.dto.response.ProductResponseDTO;
+import medium.articleDto.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/products")
+public class ProductController {
+    private final ProductService productService;
+
+    // Constructor for dependency injection
+    @Autowired
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    // Create a product
+    @PostMapping()
+    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody CreateProductDTO createProductDTO) {
+        ProductResponseDTO response = productService.createProduct(createProductDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    // Get a product by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Long id) {
+        ProductResponseDTO response = productService.getProductById(id);
+        return ResponseEntity.ok(response);
+    }
+
+    // List all products
+    @GetMapping()
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
+        List<ProductResponseDTO> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+}
+Explanation:
+
+@PostMapping(): Receives the data from the client, checks that it matches the structure of the CreateProductDTO (deserializes), and then passes it to the service.
+
+@GetMapping("/{id}"): Receives a product ID, calls the service to retrieve the product by its ID, and returns a ProductResponseDTO.
+@GetMapping(): Returns all products in the database, mapped to ProductResponseDTO.
+
+Request Flow:
+Client → Controller: The client sends a JSON with the product data. The controller deserializes this JSON into a CreateProductDTO, verifies its validity, and then passes it to the service.
+
+Controller → Service: The controller passes the received DTO to the service.
+Service → Mapper: The service converts the CreateProductDTO to a Product entity using the ProductMapper.
+
+Service → Repository: The service saves the Product entity to the database using the repository.
+
+Repository → Service: The repository returns the saved entity to the service.
+
+Service → Mapper: The service converts the Product entity to a ProductResponseDTO using the ProductMapper.
+
+Service → Controller: The service returns the ProductResponseDTO  to the controller.
+
+Controller → Client: The controller sends the ProductResponseDTO to the client.
+
+========   ==========
+Synchronizing Spring: The Artistry of Data Transfer Objects (DTOs) for Effortless Communication
+
+Pramitha Jayasooriya
+
+
+Introduction
+In modern software development, especially in the context of building web applications with frameworks like Spring Boot, efficiently transferring data between different layers of an application is crucial for performance and maintainability. One powerful tool for achieving this is the Data Transfer Object (DTO) pattern. In this article, we’ll delve into what DTOs are, why they are important, and how to effectively use them in Spring Boot applications.
+
+What are Data Transfer Objects (DTOs)?
+Data Transfer Objects, as described by Martin Fowler in his book “Patterns of Enterprise Application Architecture,”[1] are objects used to carry data between processes or layers of an application. The primary purpose of DTOs is to reduce the number of method calls, especially in scenarios where remote interfaces are involved, thus optimizing performance by transferring more data with each call.
+
+Why are DTOs important in Spring Boot?
+In a Spring Boot application, DTOs facilitate the transfer of data between the presentation layer (such as REST controllers or web interfaces) and the business logic layer. They help in decoupling the domain model from the data exposed to clients, providing a clear separation of concerns and maintaining a clean architecture.
+
+Example Scenario — 1:
+Let’s consider a simple scenario where we have a Spring Boot application for managing user data. We want to create a RESTful API to handle user registration and retrieval. In this case, we’ll use DTOs to transfer user data between the controller and service layers.
+
+Implementation in Spring Boot:
+
+1. User Entity (User):
+The User class represents an entity that typically corresponds to a database table. It includes fields such as userId, username, and email. This class is annotated with JPA annotations to indicate that it is a persistent entity.
+
+@Entity
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String userId;
+
+    private String username;
+    private String email;
+// Getters and setters
+}
+
+2. UserDTO (UserDTO):
+
+The UserDTO class is a simplified version of the User entity, designed for transferring user data between layers. It contains only the necessary fields for data exchange, in this case, username and email. This helps in reducing unnecessary details when transferring data and improves efficiency.
+
+public class UserDTO {
+    private String username;
+    private String email;
+// Getters and setters
+}
+3. Controller (UserController):
+The controller is responsible for handling incoming HTTP requests, processing them, and returning appropriate responses. In this case:
+
+registerUser Method:
+Accepts an UserDTO object in the request body.
+Invokes the userService.registerUser(userDTO) method, passing the DTO to the service layer for user registration.
+Returns a response indicating the success of user registration.
+getUserById Method:
+Accepts a user id as a path variable.
+Invokes the userService.getUserById(id) method to fetch user data by the provided Id.
+Returns the user data as UserDTO in the response.
+@RestController
+@RequestMapping("/api/users")
+public class UserController {    
+@Autowired
+    private UserService userService;
+@PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
+        userService.registerUser(userDTO);
+        return ResponseEntity.ok("User registered successfully");
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        UserDTO userDTO = userService.getUserById(id);
+        return ResponseEntity.ok(userDTO);
+    }
+}
+4. Service (UserService):
+The service layer contains the business logic for user-related operations. It interacts with the repository (not shown in this example) for database operations. Key points:
+
+registerUser Method:
+Accepts a UserDTO object.
+Implements the logic to register a user, which may involve mapping the DTO to an entity and saving it to the database.
+getUserById Method:
+Accepts a user id.
+Implements the logic to fetch a user by id from the database, and then maps the entity to a UserDTO before returning it.
+@Service
+public class UserService {
+public void registerUser(UserDTO userDTO) {
+        // Logic to register user
+    }
+    public UserDTO getUserById(Long id) {
+        // Logic to fetch user by id and map to DTO
+        return userDTO;
+    }
+}
+Example Scenario — 2:
+1. Entity Class (Cards)
+The Cards class represents an entity that is typically persisted in a database. It includes fields like cardId, mobileNumber, cardNumber, etc.
+
+package com.pmj.cards.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+public class Cards extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long cardId;
+
+    private String mobileNumber;
+
+    private String cardNumber;
+
+    private String cardType;
+
+    private int totalLimit;
+
+    private int amountUsed;
+
+    private int availableAmount;
+    
+}
+2. DTO Class (CardsDto)
+The CardsDto class is a lightweight data container used for transferring data between the controller and service layers. It mirrors some fields of the Cards entity but is designed to carry data without unnecessary details. It is essentially a simplified representation of the Cards entity.
+
+package com.pmj.cards.dto;
+
+import lombok.*;
+
+@Data
+public class CardsDto {
+
+    private String mobileNumber;
+
+    private String cardNumber;
+
+    private String cardType;
+
+    private int totalLimit;
+    
+    private int amountUsed;
+
+    private int availableAmount;
+
+}
+3. Controller Class (CardsController)
+The controller handles incoming HTTP requests, processes them, and returns appropriate responses. In this case:
+
+createCard Method:
+Accepts a mobileNumber as a request parameter.
+Invokes the iCardsService.createCard(mobileNumber) method.
+Returns a response indicating the success or failure of the card creation operation.
+fetchCardDetails Method:
+Accepts a mobileNumber as a request parameter.
+Invokes the iCardsService.fetchCard(mobileNumber) method.
+Returns the card details as a response.
+updateCardDetails Method:
+Accepts a CardsDto object in the request body.
+Invokes the iCardsService.updateCard(cardsDto) method.
+Returns a response indicating the success or failure of the card update operation.
+deleteCardDetails Method:
+Accepts a mobileNumber as a request parameter.
+Invokes the iCardsService.deleteCard(mobileNumber) method.
+Returns a response indicating the success or failure of the card deletion operation.
+package com.pmj.cards.controller;
+
+import com.pmj.cards.constants.CardsConstants;
+import com.pmj.cards.dto.CardsDto;
+import com.pmj.cards.dto.ErrorResponseDto;
+import com.pmj.cards.dto.ResponseDto;
+import com.pmj.cards.service.ICardsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+
+@RestController
+@RequestMapping(path = "/api/v1", produces = {MediaType.APPLICATION_JSON_VALUE})
+@AllArgsConstructor
+@Validated
+public class CardsController {
+
+    private ICardsService iCardsService;
+
+    
+    @PostMapping("/create")
+    public ResponseEntity<ResponseDto> createCard(@Valid @RequestParam
+                                                      @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
+                                                      String mobileNumber) {
+        iCardsService.createCard(mobileNumber);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(new ResponseDto(CardsConstants.STATUS_201, CardsConstants.MESSAGE_201));
+    }
+
+    PutMapping("/fetch")
+    public ResponseEntity<CardsDto> fetchCardDetails(@RequestParam
+                                                               @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
+                                                               String mobileNumber) {
+        CardsDto cardsDto = iCardsService.fetchCard(mobileNumber);
+        return ResponseEntity.status(HttpStatus.OK).body(cardsDto);
+    }
+
+    
+    @PutMapping("/update")
+    public ResponseEntity<ResponseDto> updateCardDetails(@Valid @RequestBody CardsDto cardsDto) {
+        boolean isUpdated = iCardsService.updateCard(cardsDto);
+        if(isUpdated) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(CardsConstants.STATUS_200, CardsConstants.MESSAGE_200));
+        }else{
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(CardsConstants.STATUS_417, CardsConstants.MESSAGE_417_UPDATE));
+        }
+    }
+
+    
+    @DeleteMapping("/delete")
+    public ResponseEntity<ResponseDto> deleteCardDetails(@RequestParam
+                                                                @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
+                                                                String mobileNumber) {
+        boolean isDeleted = iCardsService.deleteCard(mobileNumber);
+        if(isDeleted) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(CardsConstants.STATUS_200, CardsConstants.MESSAGE_200));
+        }else{
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(CardsConstants.STATUS_417, CardsConstants.MESSAGE_417_DELETE));
+        }
+    }
+
+}
+4. Service Interface (ICardsService)
+The service interface defines methods related to card operations. The interface includes methods such as createCard, fetchCard, updateCard, and deleteCard, which are implemented by the service class.
+
+package com.pmj.cards.service;
+
+import com.pmj.cards.dto.CardsDto;
+
+public interface ICardsService {
+
+    /**
+     *
+     * @param mobileNumber - Mobile Number of the Customer
+     */
+    void createCard(String mobileNumber);
+
+    /**
+     *
+     * @param mobileNumber - Input mobile Number
+     *  @return Card Details based on a given mobileNumber
+     */
+    CardsDto fetchCard(String mobileNumber);
+
+    /**
+     *
+     * @param cardsDto - CardsDto Object
+     * @return boolean indicating if the update of card details is successful or not
+     */
+    boolean updateCard(CardsDto cardsDto);
+
+    /**
+     *
+     * @param mobileNumber - Input Mobile Number
+     * @return boolean indicating if the delete of card details is successful or not
+     */
+    boolean deleteCard(String mobileNumber);
+
+}
+5. Service Implementation (CardsServiceImpl)
+The service implementation contains the actual logic for card-related operations. It interacts with the repository (CardsRepository) for database operations and utilizes the CardsDto for data transfer between the controller and service layers.
+
+package com.pmj.cards.service.impl;
+
+import com.pmj.cards.constants.CardsConstants;
+import com.pmj.cards.dto.CardsDto;
+import com.pmj.cards.entity.Cards;
+import com.pmj.cards.exception.CardAlreadyExistsException;
+import com.pmj.cards.exception.ResourceNotFoundException;
+import com.pmj.cards.mapper.CardsMapper;
+import com.pmj.cards.repository.CardsRepository;
+import com.pmj.cards.service.ICardsService;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.Random;
+
+@Service
+@AllArgsConstructor
+public class CardsServiceImpl implements ICardsService {
+
+    private CardsRepository cardsRepository;
+
+    /**
+     * @param mobileNumber - Mobile Number of the Customer
+     */
+    @Override
+    public void createCard(String mobileNumber) {
+        Optional<Cards> optionalCards= cardsRepository.findByMobileNumber(mobileNumber);
+        if(optionalCards.isPresent()){
+            throw new CardAlreadyExistsException("Card already registered with given mobileNumber "+mobileNumber);
+        }
+        cardsRepository.save(createNewCard(mobileNumber));
+    }
+
+    /**
+     * @param mobileNumber - Mobile Number of the Customer
+     * @return the new card details
+     */
+    private Cards createNewCard(String mobileNumber) {
+        Cards newCard = new Cards();
+        long randomCardNumber = 100000000000L + new Random().nextInt(900000000);
+        newCard.setCardNumber(Long.toString(randomCardNumber));
+        newCard.setMobileNumber(mobileNumber);
+        newCard.setCardType(CardsConstants.CREDIT_CARD);
+        newCard.setTotalLimit(CardsConstants.NEW_CARD_LIMIT);
+        newCard.setAmountUsed(0);
+        newCard.setAvailableAmount(CardsConstants.NEW_CARD_LIMIT);
+        return newCard;
+    }
+
+    /**
+     *
+     * @param mobileNumber - Input mobile Number
+     * @return Card Details based on a given mobileNumber
+     */
+    @Override
+    public CardsDto fetchCard(String mobileNumber) {
+        Cards cards = cardsRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Card", "mobileNumber", mobileNumber)
+        );
+        return CardsMapper.mapToCardsDto(cards, new CardsDto());
+    }
+
+    /**
+     *
+     * @param cardsDto - CardsDto Object
+     * @return boolean indicating if the update of card details is successful or not
+     */
+    @Override
+    public boolean updateCard(CardsDto cardsDto) {
+        Cards cards = cardsRepository.findByCardNumber(cardsDto.getCardNumber()).orElseThrow(
+                () -> new ResourceNotFoundException("Card", "CardNumber", cardsDto.getCardNumber()));
+        CardsMapper.mapToCards(cardsDto, cards);
+        cardsRepository.save(cards);
+        return  true;
+    }
+
+    /**
+     * @param mobileNumber - Input MobileNumber
+     * @return boolean indicating if the delete of card details is successful or not
+     */
+    @Override
+    public boolean deleteCard(String mobileNumber) {
+        Cards cards = cardsRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Card", "mobileNumber", mobileNumber)
+        );
+        cardsRepository.deleteById(cards.getCardId());
+        return true;
+    }
+
+
+}
+DTO Usage:
+Create Operation (createCard):
+The controller receives an mobileNumber as a request parameter.
+The service layer uses the mobileNumber to create a new card entity and saves it to the database.
+Read Operation (fetchCardDetails):
+The controller receives an mobileNumber as a request parameter.
+The service layer fetches the card entity from the database based on the mobileNumber.
+The fetched data is then mapped to a CardsDto and returned to the controller.
+Update Operation (updateCardDetails):
+The controller receives an CardsDto object in the request body.
+The service layer fetches the existing card entity based on the cardNumber from the database.
+The data from the CardsDto is mapped to the entity, and the entity is updated in the database.
+Delete Operation (deleteCardDetails):
+The controller receives an mobileNumber as a request parameter.
+The service layer fetches the card entity based on the mobileNumber and deletes it from the database.
+The DTO (CardsDto) is used to transfer card-related data between the controller and service layers, providing a clean and standardized way to communicate without exposing unnecessary details of the underlying entity. This helps in maintaining a separation of concerns and promoting a more maintainable and scalable codebase.
+
+The Example folder structure of the DTO used inside the project,
+
+Here is the GitHub repository: Cards Service
+
+Press enter or click to view image in full size
+
+The figure of folder Structure for Springboot with DTO
+Diagram of how to involve DTO in the project:
+
+Press enter or click to view image in full size
+
+The figure of how to involve DTO in the Springboot web Application
+In this article explored the concept of Data Transfer Objects (DTOs) and their significance in Spring Boot applications. By effectively using DTOs, developers can improve the performance, maintainability, and scalability of their applications. Incorporating DTOs in your Spring Boot projects can lead to cleaner code, better separation of concerns, and enhanced overall architecture.
+
+By following the example provided and understanding the principles behind DTOs, developers can harness the power of this pattern to build robust and efficient Spring Boot applications.
+
+Role of DTOs:
+Reducing Payload Size:
+DTOs help in minimizing the data transferred between layers by including only the necessary fields, optimizing network performance.
+2. Encapsulation:
+
+DTOs encapsulate the data transfer logic, providing a clear contract between the controller and service layers without exposing the underlying entity structure.
+3. Maintaining Separation of Concerns:
+
+DTOs allow for a clean separation of concerns between the data representation in the database (entity) and the data required for communication between layers (DTO).
+4. Flexibility in Presentation:
+
+DTOs provide flexibility in presenting data to the client, allowing changes in the underlying entity structure without affecting the API contract.
+DTOs play a crucial role in simplifying and optimizing the communication between layers in a Spring Boot application, ensuring efficient and maintainable data transfer while respecting principles of encapsulation and separation of concerns.
+
+By Pramitha Jayasooriya
+
+References
+
+[1] https://martinfowler.com/books/eaa.html
+
+[2] https://github.com/PramithaMJ/Cards-Service.git
+
+Contact Details
+For further information or to discuss potential opportunities, please feel free to connect with me on my professional and social platforms:
+
+LinkedIn: https://www.linkedin.com/in/pramitha-jayasooriya/
+GitHub: https://github.com/PramithaMJ
+https://medium.com/@lpramithamj/synchronizing-spring-the-artistry-of-data-transfer-objects-dtos-for-effortless-communication-in-3b91697591fc
+====  ====== ===

@@ -1,0 +1,306 @@
+Aop
+
+
+## **Aop logging**
+
+Spring AOP (Aspect-Oriented Programming) allows you to modularize cross-cutting concerns like logging, security, or transaction management, separating them from the core business logic.
+Here's an example demonstrating logging with Spring AOP using annotations:
+1. Enable AOP in your Spring Boot Application:
+Add @EnableAspectJAutoProxy to your main application class or a configuration class.
+Java
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+
+@SpringBootApplication
+@EnableAspectJAutoProxy
+public class AopApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(AopApplication.class, args);
+    }
+}
+2. Create a Service Class (Target for AOP):
+This is the class whose methods you want to intercept.
+Java
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class MyService {
+
+    public String performOperation(String input) {
+        System.out.println("Performing operation with input: " + input);
+        return "Result for " + input;
+    }
+
+    public void anotherMethod() {
+        System.out.println("Executing another method.");
+    }
+}
+3. Create an Aspect Class:
+This class defines the cross-cutting concern (logging) and specifies where it should be applied.
+Java
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
+import org.springframework.stereotype.Component;
+
+@Aspect
+@Component
+public class LoggingAspect {
+
+    // Define a pointcut for methods in MyService
+    @Pointcut("execution(* com.example.aop.MyService.*(..))")
+    private void serviceMethods() {}
+
+    // Before advice: executed before a method in MyService
+    @Before("serviceMethods()")
+    public void logBefore(JoinPoint joinPoint) {
+        System.out.println("LOG: Before executing " + joinPoint.getSignature().getName());
+    }
+
+    // After returning advice: executed after a method in MyService returns successfully
+    @AfterReturning(pointcut = "serviceMethods()", returning = "result")
+    public void logAfterReturning(JoinPoint joinPoint, Object result) {
+        System.out.println("LOG: After executing " + joinPoint.getSignature().getName() + ", returned: " + result);
+    }
+
+    // Around advice: executed before and after a method in MyService
+    @Around("execution(* com.example.aop.MyService.performOperation(..))")
+    public Object logAroundPerformOperation(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        System.out.println("LOG: Around - Before calling " + proceedingJoinPoint.getSignature().getName());
+        Object result = proceedingJoinPoint.proceed(); // Call the actual method
+        System.out.println("LOG: Around - After calling " + proceedingJoinPoint.getSignature().getName());
+        return result;
+    }
+
+    // After throwing advice: executed if a method in MyService throws an exception
+    @AfterThrowing(pointcut = "serviceMethods()", throwing = "ex")
+    public void logAfterThrowing(JoinPoint joinPoint, Throwable ex) {
+        System.out.println("LOG: Exception in " + joinPoint.getSignature().getName() + ": " + ex.getMessage());
+    }
+}
+4. Use the Service in a Controller or another Component:
+Java
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class MyController {
+
+    @Autowired
+    private MyService myService;
+
+    @GetMapping("/test-aop")
+    public String testAop() {
+        myService.performOperation("AOP Test");
+        myService.anotherMethod();
+        return "AOP Tested!";
+    }
+}
+When you run this Spring Boot application and access /test-aop, you will observe the logging messages from the LoggingAspect appearing in the console, demonstrating how AOP intercepts and adds behavior to the MyService methods without modifying the service code itself.
+
+
+## Aop Exception  
+Spring AOP can be used to handle exceptions in a centralized manner using the @AfterThrowing advice. This allows you to perform actions like logging, sending notifications, or transforming exceptions without cluttering your business logic.
+Here's an example demonstrating how to use @AfterThrowing for exception handling:
+1. Define a Service Class (Target Object):
+Java
+
+package com.example.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class MyService {
+
+    public String performTask(boolean throwException) {
+        if (throwException) {
+            throw new RuntimeException("An error occurred during task execution.");
+        }
+        return "Task completed successfully.";
+    }
+}
+2. Create an Aspect for Exception Handling:
+Java
+
+package com.example.aspect;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.stereotype.Component;
+
+@Aspect
+@Component
+public class ExceptionHandlingAspect {
+
+    @AfterThrowing(pointcut = "execution(* com.example.service.MyService.performTask(..))", throwing = "ex")
+    public void handleServiceExceptions(JoinPoint joinPoint, Exception ex) {
+        System.err.println("Exception caught in AOP for method: " + joinPoint.getSignature().getName());
+        System.err.println("Exception type: " + ex.getClass().getSimpleName());
+        System.err.println("Exception message: " + ex.getMessage());
+
+        // You can add further logic here, e.g.,
+        // - Log the exception to a file or a logging system
+        // - Send an email notification
+        // - Translate the exception into a more user-friendly format
+    }
+}
+Explanation:
+@Aspect: Marks this class as an Aspect.
+@Component: Registers this aspect as a Spring bean.
+@AfterThrowing(pointcut = "...", throwing = "ex"):
+pointcut: Defines where this advice should be applied. In this case, it targets the performTask method within MyService.
+throwing = "ex": Specifies that the thrown exception should be passed as an argument named ex to the handleServiceExceptions method.
+handleServiceExceptions(JoinPoint joinPoint, Exception ex): This method will be executed whenever an exception is thrown from the performTask method.
+JoinPoint joinPoint: Provides information about the method execution where the exception occurred.
+Exception ex: The actual exception that was thrown.
+3. Main Application to Test:
+Java
+
+package com.example;
+
+import com.example.service.MyService;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+
+@SpringBootApplication
+public class SpringAopExceptionExampleApplication {
+
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(SpringAopExceptionExampleApplication.class, args);
+        MyService myService = context.getBean(MyService.class);
+
+        System.out.println("--- Attempting task without exception ---");
+        try {
+            System.out.println(myService.performTask(false));
+        } catch (Exception e) {
+            System.err.println("Caught exception in main: " + e.getMessage());
+        }
+
+        System.out.println("\n--- Attempting task with exception ---");
+        try {
+            System.out.println(myService.performTask(true));
+        } catch (Exception e) {
+            System.err.println("Caught exception in main: " + e.getMessage());
+        }
+    }
+}
+Output when running the application:
+Code
+
+--- Attempting task without exception ---
+Task completed successfully.
+
+--- Attempting task with exception ---
+Exception caught in AOP for method: performTask
+Exception type: RuntimeException
+Exception message: An error occurred during task execution.
+Caught exception in main: An error occurred during task execution.
+This example demonstrates how the @AfterThrowing advice intercepts the RuntimeException thrown by performTask and executes the handleServiceExceptions method within the aspect before the exception is propagated further.
+
+
+Spring AOP can be used to handle exceptions in a centralized manner using the @AfterThrowing advice. This allows you to perform actions like logging, sending notifications, or transforming exceptions without cluttering your business logic.
+Here's an example demonstrating how to use @AfterThrowing for exception handling:
+1. Define a Service Class (Target Object):
+Java
+
+package com.example.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class MyService {
+
+    public String performTask(boolean throwException) {
+        if (throwException) {
+            throw new RuntimeException("An error occurred during task execution.");
+        }
+        return "Task completed successfully.";
+    }
+}
+2. Create an Aspect for Exception Handling:
+Java
+
+package com.example.aspect;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.stereotype.Component;
+
+@Aspect
+@Component
+public class ExceptionHandlingAspect {
+
+    @AfterThrowing(pointcut = "execution(* com.example.service.MyService.performTask(..))", throwing = "ex")
+    public void handleServiceExceptions(JoinPoint joinPoint, Exception ex) {
+        System.err.println("Exception caught in AOP for method: " + joinPoint.getSignature().getName());
+        System.err.println("Exception type: " + ex.getClass().getSimpleName());
+        System.err.println("Exception message: " + ex.getMessage());
+
+        // You can add further logic here, e.g.,
+        // - Log the exception to a file or a logging system
+        // - Send an email notification
+        // - Translate the exception into a more user-friendly format
+    }
+}
+Explanation:
+@Aspect: Marks this class as an Aspect.
+@Component: Registers this aspect as a Spring bean.
+@AfterThrowing(pointcut = "...", throwing = "ex"):
+pointcut: Defines where this advice should be applied. In this case, it targets the performTask method within MyService.
+throwing = "ex": Specifies that the thrown exception should be passed as an argument named ex to the handleServiceExceptions method.
+handleServiceExceptions(JoinPoint joinPoint, Exception ex): This method will be executed whenever an exception is thrown from the performTask method.
+JoinPoint joinPoint: Provides information about the method execution where the exception occurred.
+Exception ex: The actual exception that was thrown.
+3. Main Application to Test:
+Java
+
+package com.example;
+
+import com.example.service.MyService;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+
+@SpringBootApplication
+public class SpringAopExceptionExampleApplication {
+
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(SpringAopExceptionExampleApplication.class, args);
+        MyService myService = context.getBean(MyService.class);
+
+        System.out.println("--- Attempting task without exception ---");
+        try {
+            System.out.println(myService.performTask(false));
+        } catch (Exception e) {
+            System.err.println("Caught exception in main: " + e.getMessage());
+        }
+
+        System.out.println("\n--- Attempting task with exception ---");
+        try {
+            System.out.println(myService.performTask(true));
+        } catch (Exception e) {
+            System.err.println("Caught exception in main: " + e.getMessage());
+        }
+    }
+}
+Output when running the application:
+Code
+
+--- Attempting task without exception ---
+Task completed successfully.
+
+--- Attempting task with exception ---
+Exception caught in AOP for method: performTask
+Exception type: RuntimeException
+Exception message: An error occurred during task execution.
+Caught exception in main: An error occurred during task execution.
+This example demonstrates how the @AfterThrowing advice intercepts the RuntimeException thrown by performTask and executes the handleServiceExceptions method within the aspect before the exception is propagated further.

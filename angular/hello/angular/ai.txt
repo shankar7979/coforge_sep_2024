@@ -1,0 +1,44 @@
+Debugging Angular applications involves several techniques and tools to identify and resolve issues.
+
+1. Browser Developer Tools (Chrome DevTools):
+
+Breakpoints: Set breakpoints in your TypeScript files within the "Sources" tab to pause execution at specific lines. This allows inspection of variable values and the call stack.
+
+Console: Use console.log() for outputting variable values or messages to the console.
+Elements Tab: Inspect the DOM structure and apply CSS changes to understand layout and styling issues.
+
+Network Tab: Monitor network requests and responses to identify API-related problems.
+Performance Tab: Analyze application performance and identify bottlenecks.
+
+2. Visual Studio Code (VS Code) Debugger:
+
+Launch Configurations:
+VS Code provides built-in debugging capabilities for Angular projects. The launch.json file in the .vscode folder contains configurations for running and debugging your application.
+
+Breakpoints and Stepping:
+Set breakpoints directly in your TypeScript code and use stepping controls (step over, step into, step out) to navigate through the execution flow.
+
+Variable Inspection:
+Inspect local, closure, and global variables in the debug sidebar.
+
+Call Stack:
+View the call stack to understand the sequence of function calls leading to the current execution point.
+
+3. Angular DevTools (Browser Extension): 
+
+Component Tree: Explore the hierarchy of components and directives in your application.
+State Inspection: View and edit the state of components and directives in real-time.
+
+Signal Debugging: For Angular versions supporting Signals, inspect signal dependencies and observe how changes propagate.
+
+4. Angular's Global ng Namespace (Development Mode):
+ng.getComponent($0): Retrieve the component instance associated with a selected DOM element in the console.
+
+ng.applyChanges(component): Manually trigger change detection for a component.
+ng.getContext($0): Get the context of an embedded view or the owning component instance.
+ng.getDirectiveMetadata(instance): Obtain debug metadata for a directive or component instance.
+
+5. Debugging Angular Tests:
+Utilize the browser's developer tools to debug tests by setting breakpoints in your test files and refreshing the browser.
+
+These methods provide comprehensive approaches to debugging Angular applications, catering to different aspects of the development process.

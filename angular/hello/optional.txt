@@ -1,0 +1,84 @@
+Using Java's Optional with custom classes follows the same principles as using it with built-in types like String or Integer. The Optional class acts as a container that may or may not hold a non-null instance of your custom class, helping to prevent NullPointerExceptions and improve code readability.
+1. Defining your Custom Class:
+First, define your custom class. For example:
+Java
+
+public class User {
+    private String name;
+    private int age;
+
+    public User(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+               "name='" + name + '\'' +
+               ", age=" + age +
+               '}';
+    }
+}
+2. Creating Optional instances with your Custom Class:
+You can create Optional instances of your User class using the static methods provided by Optional:
+Optional.of(T value): Use this when you are certain the value is non-null. If value is null, it will throw a NullPointerException.
+Java
+
+    User user1 = new User("Alice", 30);
+    Optional<User> optionalUser1 = Optional.of(user1);
+Optional.ofNullable(T value): Use this when the value might be null. If value is null, it returns an empty Optional; otherwise, it returns an Optional containing the value.
+Java
+
+    User user2 = null;
+    Optional<User> optionalUser2 = Optional.ofNullable(user2); // optionalUser2 will be empty
+
+    User user3 = new User("Bob", 25);
+    Optional<User> optionalUser3 = Optional.ofNullable(user3); // optionalUser3 will contain user3
+Optional.empty(): Creates an empty Optional instance.
+Java
+
+    Optional<User> emptyUser = Optional.empty();
+3. Working with Optional instances of your Custom Class:
+The Optional class provides various methods to interact with the contained value: 
+isPresent(): Checks if a value is present.
+Java
+
+    if (optionalUser1.isPresent()) {
+        System.out.println("User is present: " + optionalUser1.get());
+    }
+ifPresent(Consumer<? super T> consumer): Executes a given action if a value is present.
+Java
+
+    optionalUser3.ifPresent(user -> System.out.println("User found: " + user.getName()));
+orElse(T other): Returns the value if present, otherwise returns a default value.
+Java
+
+    User defaultUser = new User("Guest", 0);
+    User retrievedUser = optionalUser2.orElse(defaultUser); // retrievedUser will be defaultUser
+orElseGet(Supplier<? extends T> supplier): Returns the value if present, otherwise returns the result of the supplying function. This is useful for expensive default value creation.
+Java
+
+    User anotherUser = optionalUser2.orElseGet(() -> new User("Fallback", 99));
+orElseThrow(Supplier<? extends X> exceptionSupplier): Returns the value if present, otherwise throws an exception produced by the exception supplying function.
+Java
+
+    try {
+        User requiredUser = optionalUser2.orElseThrow(() -> new IllegalArgumentException("User not found!"));
+    } catch (IllegalArgumentException e) {
+        System.out.println(e.getMessage());
+    }
+map(Function<? super T, ? extends R> mapper): If a value is present, applies the mapping function to it and returns an Optional describing the result.
+Java
+
+    Optional<String> userName = optionalUser1.map(User::getName);
+    userName.ifPresent(name -> System.out.println("User name: " + name));
+By using Optional with your custom classes, you can write more robust and self-documenting code, explicitly handling the possibility of missing values.

@@ -1,0 +1,138 @@
+Java synchronous vs asynchronous
+
+Java, by its default execution model for a single thread, is synchronous. This means that tasks are executed sequentially, one after another, and each operation must complete before the next one begins.
+
+However, Java provides robust mechanisms for asynchronous programming through features like: 
+
+Multithreading: Using Thread objects or ExecutorService to run tasks concurrently in separate threads.
+
+Future and CompletableFuture: These classes allow for non-blocking, callback-driven workflows, enabling operations to be initiated and then processed later, without blocking the main execution flow.
+
+Callbacks: Implementing callback functions to be executed upon completion of an asynchronous operation.
+
+Therefore, while Java's fundamental execution is synchronous, it offers comprehensive tools and patterns to implement asynchronous behavior when required for tasks like I/O operations, network requests, or long-running computations, to improve responsiveness and efficiency. 
+
+The choice between synchronous and asynchronous programming in Java depends on the specific needs of the application. 
+
+
+=== medium=====
+
+Java Synchronous vs Asynchronous
+
+Synchronous and asynchronous programming are two fundamental concepts in Java, and they refer to how tasks are executed in a program.
+
+1. **Synchronous Programming:**
+— In synchronous programming, tasks are executed one after the other, in a sequential and blocking manner.
+— When a function or method is called, the program waits for that function to complete before moving on to the next one.
+— It follows a straightforward and predictable flow, but it may lead to inefficiencies if one operation takes a long time, as it can block the execution of subsequent tasks.
+
+Example of synchronous code:
+
+```java
+public void synchronousExample() {
+System.out.println(“Task 1”);
+System.out.println(“Task 2”);
+System.out.println(“Task 3”);
+}
+```
+
+2. **Asynchronous Programming:**
+— In asynchronous programming, tasks are executed independently, and the program doesn’t wait for a task to complete before moving on to the next one.
+— Asynchronous operations are often handled using callbacks, promises, or Java’s CompletableFuture for more modern applications.
+— This approach is particularly useful for I/O-bound operations or tasks that might take a variable amount of time to complete.
+
+Example of asynchronous code using CompletableFuture:
+
+```java
+import java.util.concurrent.CompletableFuture;
+
+public class AsynchronousExample {
+public static void main(String[] args) {
+CompletableFuture.runAsync(() -> {
+System.out.println(“Task 1”);
+});
+
+CompletableFuture.runAsync(() -> {
+System.out.println(“Task 2”);
+});
+
+CompletableFuture.runAsync(() -> {
+System.out.println(“Task 3”);
+});
+
+// The program doesn’t wait for the tasks to complete.
+}
+}
+```
+
+**When to Use Each:**
+- **Synchronous Programming:** Use when tasks are dependent on each other, and the program logic requires a step-by-step execution.
+- **Asynchronous Programming:** Use when tasks can be executed independently, and you want to avoid blocking the program while waiting for potentially time-consuming operations.
+
+**Benefits of Asynchronous Programming:**
+- Improved performance, especially in I/O-bound operations.
+- Better resource utilization as the program can continue executing other tasks while waiting for certain operations to complete.
+
+In modern Java, asynchronous programming is becoming more prevalent, especially with the advent of CompletableFuture and the increased focus on non-blocking I/O operations. It’s crucial to choose the right approach based on the nature of the tasks and the performance requirements of your application.
+
+let’s delve into an example of handling asynchronous operations in Java using `CompletableFuture`. This example will showcase how to perform asynchronous tasks and then combine their results using `CompletableFuture`.
+
+```java
+import java.util.concurrent.CompletableFuture;
+
+public class CompletableFutureExample {
+
+// Simulate an asynchronous task that fetches data from a remote service
+static CompletableFuture<String> fetchDataAsync() {
+return CompletableFuture.supplyAsync(() -> {
+// Simulating a time-consuming operation
+try {
+Thread.sleep(2000);
+} catch (InterruptedException e) {
+e.printStackTrace();
+}
+return “Data from Remote Service”;
+});
+}
+
+// Another asynchronous task that processes the fetched data
+static CompletableFuture<String> processDataAsync(String data) {
+return CompletableFuture.supplyAsync(() -> {
+// Simulating processing of data
+return “Processed: “ + data.toUpperCase();
+});
+}
+
+public static void main(String[] args) {
+// Perform the first asynchronous task to fetch data
+CompletableFuture<String> fetchDataFuture = fetchDataAsync();
+
+// When the data is fetched, perform the second asynchronous task to process it
+CompletableFuture<String> processedDataFuture = fetchDataFuture.thenCompose(data -> processDataAsync(data));
+
+// When both tasks are complete, combine their results
+CompletableFuture<Void> combinedFuture = processedDataFuture.thenAccept(combinedResult -> {
+System.out.println(“Combined Result: “ + combinedResult);
+});
+
+// Wait for the combined result
+combinedFuture.join();
+
+// Note: In a real-world scenario, you might want to handle exceptions and other edge cases.
+}
+}
+```
+
+Explanation:
+
+1. **fetchDataAsync():** Simulates an asynchronous task that fetches data from a remote service. It returns a `CompletableFuture<String>` representing the result of the operation.
+
+2. **processDataAsync(String data):** Represents another asynchronous task that processes the fetched data. It takes the fetched data as a parameter and returns a `CompletableFuture<String>`.
+
+3. **Main Method:**
+— It starts by initiating the `fetchDataAsync()` operation, which returns a `CompletableFuture<String>` named `fetchDataFuture`.
+— Then, it uses `thenCompose()` to chain the second asynchronous task (`processDataAsync`) to the completion of the first task. This ensures that the second task is executed only after the first one is complete.
+— The combined result is printed in the `thenAccept()` callback when both tasks are complete.
+— The `join()` method is used to block the main thread until the combined result is available.
+
+This example demonstrates the composition of asynchronous tasks using `CompletableFuture`. The `CompletableFuture` API provides various methods for handling asynchronous operations, combining their results, and dealing with errors in a concise and expressive manner.

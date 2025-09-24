@@ -1,0 +1,62 @@
+Here is an example demonstrating the use of @ComponentScan with @Configuration in Spring:
+1. Define a Component:
+Java
+
+// com/example/service/MyService.java
+package com.example.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class MyService {
+    public String sayHello() {
+        return "Hello from MyService!";
+    }
+}
+2. Create a Configuration Class:
+Java
+
+// com/example/config/AppConfig.java
+package com.example.config;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ComponentScan(basePackages = "com.example.service") // Scans the specified package
+public class AppConfig {
+    // You can define @Bean methods here if needed, but for component scanning,
+    // this class primarily acts as the entry point for scanning.
+}
+3. Create a Main Application Class:
+Java
+
+// com/example/Application.java
+package com.example;
+
+import com.example.config.AppConfig;
+import com.example.service.MyService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class Application {
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+        // Retrieve the MyService bean from the Spring context
+        MyService myService = context.getBean(MyService.class);
+
+        // Use the service
+        System.out.println(myService.sayHello());
+    }
+}
+Explanation:
+MyService.java: This class is annotated with @Service, a stereotype annotation that internally uses @Component. This marks it as a Spring-managed component.
+AppConfig.java:
+@Configuration: This annotation indicates that AppConfig is a Spring configuration class.
+@ComponentScan(basePackages = "com.example.service"): This is the core of component scanning. It instructs Spring to scan the com.example.service package (and its sub-packages) for classes annotated with @Component (or its specializations like @Service, @Repository, @Controller). When MyService is found, Spring registers it as a bean in the application context.
+Application.java:
+new AnnotationConfigApplicationContext(AppConfig.class): This creates a Spring application context, using AppConfig as the source of configuration. This triggers the component scanning defined in AppConfig.
+context.getBean(MyService.class): After scanning, MyService is available in the context and can be retrieved.
+This example demonstrates how @ComponentScan in conjunction with @Configuration allows Spring to automatically discover and register components within specified packages, reducing the need for explicit bean declarations in XML or @Bean methods for every component.
+Dive deeper in AI 

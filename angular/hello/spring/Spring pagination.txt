@@ -1,0 +1,277 @@
+Spring pagination 
+
+
+Spring Boot, you can easily implement pagination and sorting using the powerful features of Spring Data JPA. Instead of fetching all records from a large dataset, you can retrieve them in smaller, manageable "pages" to improve performance and user experience. 
+This is accomplished by extending JpaRepository and leveraging the Pageable and Page interfaces. 
+Core components.
+
+Pageable: An interface that defines pagination information, including the page number, page size, and sorting details. The PageRequest class is a concrete implementation used to create a Pageable instance.
+
+Page<T>: An object returned by a paginated query. It contains a list of entities (List<T>), along with valuable metadata like the total number of pages, total number of elements, and whether it is the first or last page.
+Sort: An object that defines the sorting logic, such as sorting by one or more fields in ascending or descending order. 
+
+Step-by-step example
+1. Define the JPA entity
+First, create your JPA entity, which will be mapped to a database table. 
+To define a JPA entity for a Product with fields for id, name, and price, you can use the @Entity, @Id, and @GeneratedValue annotations.
+
+You can find an example of this in the provided source. 
+
+3. Create the JPA repository
+Extend the JpaRepository interface, which includes a built-in findAll(Pageable pageable) method for pagination. An example repository for the Product entity can be found in the source.
+
+5. Implement the service layer
+The service layer contains the business logic to fetch paginated and sorted data.
+
+This typically involves using PageRequest to create a Pageable object with the desired page number, size, and sorting criteria (using Sort.by()). The Pageable object is then passed to the repository's findAll() method. An example service class is available in the source. 
+
+7. Create a REST controller
+The controller exposes an endpoint to retrieve the paginated data. This is often done using @GetMapping and accepting request parameters for page, size, sortBy, and sortDirection.
+
+These parameters are then used to call the service layer method. See the source for an example controller. 
+How to test with Postman or a web browser.
+
+You can test the implementation by accessing the endpoint with various query parameters to control pagination and sorting. 
+
+For instance, you can specify the page number, page size, the field to sort by, and the sorting direction. Examples of how to construct these URLs for different scenarios are provided in the source document. 
+
+
+=====.  =======
+
+
+Implementing pagination in Spring Boot with Spring Data JPA involves leveraging the Pageable interface and PagingAndSortingRepository (or JpaRepository, which extends it).
+Here is a basic example demonstrating pagination:
+
+1. Entity Class:
+Define your JPA entity, e.g., Product.
+Java
+
+
+
+@Entity
+public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private double price;
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
+}
+2. Repository Interface:
+Create a repository interface that extends JpaRepository (or PagingAndSortingRepository). This provides the findAll(Pageable pageable) method.
+Java
+
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long> {
+}
+3. Service Layer (Optional but Recommended):
+A service layer can encapsulate business logic and interact with the repository.
+Java
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ProductService {
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+}
+4. Controller Layer:
+In your REST controller, accept Pageable as a parameter. Spring Data automatically resolves Pageable from request parameters like page, size, and sort.
+Java
+
+
+@RestController
+@RequestMapping("/products")
+public class ProductController {
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @GetMapping
+    public Page<Product> getProducts(Pageable pageable) {
+        return productService.getAllProducts(pageable);
+    }
+}
+How to use it:
+You can now access your paginated data by making HTTP requests to /products with query parameters:
+GET /products?page=0&size=10: Retrieves the first page with 10 items per page.
+GET /products?page=1&size=5&sort=name,asc: Retrieves the second page with 5 items per page, sorted by name in ascending order.
+GET /products?page=0&size=20&sort=price,desc: Retrieves the first page with 20 items per page, sorted by price in descending order.
+The Page object returned by the controller contains not only the list of entities for the current page but also pagination metadata such as totalElements, totalPages, number (current page number), size (page size), etc.
+
+
+·
+
+======= ===
+
+package com.example.page.model;
+
+@Entity
+@Table(name = "user")
+@Getter
+@Setter
+public class User {
+  
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer id;
+
+  @Column(name = "name")
+  private String name;
+}
+
+
+JpaRepository 
+
+package com.example.page.repository;
+
+
+public interface UserRepository extends JpaRepository<User, Integer> {
+}
+
+@RestController annotate that this class is a restful web controller;@RequestMapping is used to map web request to controller methods.
+
+
+
+@GetMapping is short for @RequestMapping(method =. RequestMethod.GET) to map HTTP GET request onto specific handler method.
+
+allUsers method will return a list of user.
+
+@RequestParam will extract query parameter named page , if there is no parameter named page ,then will use defaultValue.
+
+We define Integer size = 2
+
+We use PageRequest.of() ,which take two arguments ,first is page number, second is per page contains how many items ,to create a pageable object. We pass this pageable object into userRepository.findAll() method, it will return a Page<User>. We can use getContent() method to get a List from Page.
+
+ 
+@RestController
+@RequestMapping("user")
+public class UserController {
+
+  @Autowired
+  private UserRepository userRepository;
+
+  @GetMapping("all")
+  public List<User> allUsers(@RequestParam(name = "page",defaultValue = "0") Integer page) {
+    
+    Integer size = 2;
+    Pageable pageable = PageRequest.of(page, size);
+    Page<User> pageUser = userRepository.findAll(pageable);
+
+    return pageUser.getContent();
+  }
+
+}
+When you open url http://localhost:8080/user/all?page=3 will get two items in page 4. (Note that, page number will start from 0. )
+
+Congratulations, That’s it for this tutorial.
+
+=======
+These days I created some queries in a database and create files in JSON format with the results of these queries. So far nothing complicated, right? Not. Look at this situation: What if this query returns a huge result of records? The idea is not to load all this in memory so as not to overload the machine where the application is running.
+
+But, why?
+
+The reason for this is that we are creating and executing microservices and it doesn’t make sense for a microservice to need the capacity of a server to run, that’s exactly what we are running away from here to take advantage of characteristics such as autonomy, specialization, and benefits such as agility, the flexibility of scalability, ease of deployment, technological freedom, etc.
+
+What to do to escape this situation?
+
+Paginate query results.
+
+Let’s implement an algorithm that does this. The first step is to create a repository:
+
+@Repository
+public interface PersonRepository extends PagingAndSortingRepository<PersonData, Integer> {
+
+    @Query(value = "SELECT p FROM PersonData p ")
+    Page<PersonData> getPersons(final Pageable pageable);
+    
+}
+It’s good to notice the interface being extended: PagingAndSortRepository. It has methods for paging and sorting.
+
+Get Marcos’s stories in your inbox
+Join Medium for free to get updates from this writer.
+
+Enter your email
+Subscribe
+Note: You can do this with the JpaRepository interface, as it extends PagingAndSortRepository.
+
+@Repository
+public interface PersonRepository extends JpaRepository<PersonData, Integer> {
+
+    @Query(value = "SELECT p FROM PersonData p ")
+    Page<PersonData> getPersons(final Pageable pageable);
+    
+}
+Also, note two more things:
+
+I’m not returning a List, but a Page;
+This type is right to use with paging results.
+Pageable as a parameter of the getPersons() method;
+Pageable helps when querying pages and grouping the number of records on the pages.
+
+After this, I created a simple controller with two methods:
+
+@RestController
+@RequestMapping("/persons")
+public class PersonController {
+
+    private final PersonRepository personRepository;
+
+    public PersonController(PersonRepository personRepository) {
+        this.personRepository = personRepository;
+    }
+
+    @GetMapping(value = "pageable")
+    public ResponseEntity<?> getPersonsPageable(
+            @RequestParam(defaultValue = "0") final Integer pageNumber,
+            @RequestParam(defaultValue = "5") final Integer size
+    ) {
+        return ResponseEntity.ok(personRepository.getPersons(PageRequest.of(pageNumber, size)));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getPersons() {
+        return ResponseEntity.ok(personRepository.findAll());
+    }
+}
+And the result of gets was:
+
+Press enter or click to view image in full size
+
+Didn’t like this response? No problem!
+
+We could transform this, like the example below:
+
+private Map<String, Object> convertToResponse(final Page<PersonData> pagePersons) {
+    Map<String, Object> response = new HashMap<>();
+    response.put("persons", pagePersons.getContent());
+    response.put("current-page", pagePersons.getNumber());
+    response.put("total-items", pagePersons.getTotalElements());
+    response.put("total-pages", pagePersons.getTotalPages());
+    return response;
+}
+And the response was:
+
+
+This example is here https://github.com/mmarcosab/demo-jpa
+
+That’s it for today.
+

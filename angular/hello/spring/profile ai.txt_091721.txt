@@ -1,0 +1,187 @@
+Spring Boot profiles provide a mechanism to segregate parts of your application configuration and code based on different environments (e.g., development, testing, production). This allows for environment-specific settings without modifying the core application code.
+Example Scenario: Database Configuration for Different Environments
+Imagine an application that connects to different databases in development and production environments. Default Properties (application.properties).
+This file contains common properties or default values.
+Code
+
+    # application.properties
+    app.name=MySpringBootApp
+Development Profile Properties (application-dev.properties).
+This file contains properties specific to the "dev" profile, overriding or adding to application.properties.
+Code
+
+    # application-dev.properties
+    spring.datasource.url=jdbc:h2:mem:devdb
+    spring.datasource.username=sa
+    spring.datasource.password=
+Production Profile Properties (application-prod.properties).
+This file contains properties specific to the "prod" profile.
+Code
+
+    # application-prod.properties
+    spring.datasource.url=jdbc:mysql://prod-db-server:3306/proddb
+    spring.datasource.username=produser
+    spring.datasource.password=securepass
+Activating a Profile.
+You can activate a profile using various methods: Command Line Argument.
+Code
+
+        java -jar myapp.jar --spring.profiles.active=dev
+Environment Variable.
+Code
+
+        SPRING_PROFILES_ACTIVE=prod java -jar myapp.jar
+application.properties (for default active profile).
+Code
+
+        # application.properties
+        spring.profiles.active=dev
+Profile-Specific Beans.
+You can also define beans that are only active when a specific profile is enabled using the @Profile annotation.
+Java
+
+    import org.springframework.context.annotation.Bean;
+    import org.springframework.context.annotation.Configuration;
+    import org.springframework.context.annotation.Profile;
+
+    @Configuration
+    public class AppConfig {
+
+        @Bean
+        @Profile("dev")
+        public String devMessage() {
+            return "Running in Development Environment!";
+        }
+
+        @Bean
+        @Profile("prod")
+        public String prodMessage() {
+            return "Running in Production Environment!";
+        }
+    }
+When the "dev" profile is active, Spring Boot will use the properties from application-dev.properties and the devMessage bean will be created. Similarly, with the "prod" profile, application-prod.properties and the prodMessage bean will be active.
+
+=========================
+medium
+
+Spring Boot Profiles
+Imran Khan
+Imran Khan
+
+Follow
+4 min read
+·
+Apr 4, 2025
+31
+
+
+1
+
+
+
+Spring Boot profiles allow us to configure variables or values based on different environments such as default, DEV, STAGE, and PROD.
+
+In short, it enable us to define environment-specific variable values without making any code change. For example, if our MySQL server has different ports, usernames, and passwords for DEV, QA, and STAGE environments, we can manage them using profiles.
+
+Spring boot application by default creates a file at the time of project creation named as application.properties file. This file contains both system define and custom properties.
+
+Flow link to read more about application properties and how it works.
+
+Below is an example to define property inside application.properties file.
+
+Here, # denotes for writing a comment.
+
+
+Create EmployeeService component class to read values from application properties with the help of @Value annotation as show below from application.properties by default:
+
+Zoom image will be displayed
+
+Below is the output post running spring boot application:
+
+
+Similar to application.properties, we have environment specific properties file such as application-dev.properties, application-qa.properties and
+
+application-prod.properties for DEV, QA and PROD environments respectively as shown below:
+
+Zoom image will be displayed
+
+Note: Application will fall back to application.properties if required profile not found or created.
+
+Below is an example of application-qa.properties having username and password properties:
+
+Zoom image will be displayed
+
+Declare below highlighted property spring.profiles.active=qa as part of application.properties file to consider or enable properties from given environment.
+
+
+Now, running the application will give below output reading properties from application-qa.properties file:
+
+
+There are some other below ways to set environment:
+
+Config Environment at the time of Application start as part of command
+There is one more way where we can update environment value at the time of application start as shown below.
+
+Running below command at the time of application startup will automatically start picking up properties from QA application properties file.
+
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+Note: Code will start ignoring spring.profiles.active=qa defined in application.properties file.
+
+Define Profile ID in pom.xml
+In pom.xml, we can create multiple profiles as shown below for DEV, QA and STAGE:
+
+Zoom image will be displayed
+
+Follow below syntax to run above command:
+
+mvn spring-boot:run -P<profile_id>
+
+Run below command to start application and this time it will conside DEV profile:
+
+mvn spring-boot:run -Pdev
+
+Zoom image will be displayed
+
+@Profile Annotation
+Use @Profile annotation allow us to load bean depending on the environment.
+
+For example, below EmployeeComponent will only get register / applicable only for DEV based on declared profile.
+
+Zoom image will be displayed
+
+Run below command considering dev as profile:
+
+mvn spring-boot:run -Pdev
+
+It will give below inline error as we marked EmployeeComponent only applicable for qa:
+
+Exception in thread “main” org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type ‘com.example.demo.beans.EmployeeComponent’ available
+
+Zoom image will be displayed
+
+Multiple Profiles:
+Note: In application.properties, we can declare multiple profiles as comma separated.
+
+spring.profiles.active=qa,dev
+
+Both application-dev.properties and application-qa.properties will be loading.
+If a property exists in multiple profiles, the last profile in the list takes precedence.
+Merge Profiles
+If we are loading dev and qa profile together using below command:
+
+spring.profiles.active=qa,dev
+
+
+Here, last dev profile will take the precedence.
+
+Code will consider port and username from dev as it positioned in last.
+
+For password, it will fallback to QA as it is not defined in DEV.
+
+Final Output:
+port: 1234
+mysql.username=devAdmin
+mysql.password=qaPass
+
+I hope you found out this article interesting and informative. Please share it with your friends to spread the knowledge.
+

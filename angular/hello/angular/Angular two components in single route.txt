@@ -1,0 +1,155 @@
+Angular, a single route typically corresponds to rendering a single primary component within the main <router-outlet>. However, it is possible to display multiple components on a single route by structuring your application using component composition. This involves having a "parent" or "page" component that then incorporates other "child" components within its template.
+Here's an example of how to achieve this: Create your child components.
+TypeScript
+
+    // search-bar.component.ts
+    import { Component } from '@angular/core';
+
+    @Component({
+      selector: 'app-search-bar',
+      template: `<input type="text" placeholder="Search...">`
+    })
+    export class SearchBarComponent {}
+
+    // data-table.component.ts
+    import { Component } from '@angular/core';
+
+    @Component({
+      selector: 'app-data-table',
+      template: `<table><thead><tr><th>Column 1</th><th>Column 2</th></tr></thead><tbody><tr><td>Data 1</td><td>Data 2</td></tr></tbody></table>`
+    })
+    export class DataTableComponent {}
+Create a parent/page component that hosts the child components:
+TypeScript
+
+    // home-page.component.ts
+    import { Component } from '@angular/core';
+
+    @Component({
+      selector: 'app-home-page',
+      template: `
+        <div>
+          <h1>Welcome to the Home Page</h1>
+          <app-search-bar></app-search-bar>
+          <app-data-table></app-data-table>
+        </div>
+      `
+    })
+    export class HomePageComponent {}
+Define your route in app-routing.module.ts:
+TypeScript
+
+    // app-routing.module.ts
+    import { NgModule } from '@angular/core';
+    import { RouterModule, Routes } from '@angular/router';
+    import { HomePageComponent } from './home-page/home-page.component';
+
+    const routes: Routes = [
+      { path: 'home', component: HomePageComponent },
+      { path: '', redirectTo: '/home', pathMatch: 'full' },
+      { path: '**', redirectTo: '/home' }
+    ];
+
+    @NgModule({
+      imports: [RouterModule.forRoot(routes)],
+      exports: [RouterModule]
+    })
+    export class AppRoutingModule {}
+Ensure all components are declared in your app.module.ts (or imported if using standalone components):
+TypeScript
+
+    // app.module.ts
+    import { NgModule } from '@angular/core';
+    import { BrowserModule } from '@angular/platform-browser';
+    import { AppRoutingModule } from './app-routing.module';
+    import { AppComponent } from './app.component';
+    import { HomePageComponent } from './home-page/home-page.component';
+    import { SearchBarComponent } from './search-bar/search-bar.component';
+    import { DataTableComponent } from './data-table/data-table.component';
+
+    @NgModule({
+      declarations: [
+        AppComponent,
+        HomePageComponent,
+        SearchBarComponent,
+        DataTableComponent
+      ],
+      imports: [
+        BrowserModule,
+        AppRoutingModule
+      ],
+      providers: [],
+      bootstrap: [AppComponent]
+    })
+    export class AppModule { }
+In this setup, when the /home route is activated, the HomePageComponent is rendered in the main <router-outlet>. The HomePageComponent then, in turn, renders the SearchBarComponent and DataTableComponent within its own template, effectively displaying multiple components on a single route
+=========================== ===
+
+While an Angular route definition typically maps to a single main component displayed in the primary <router-outlet>, it is possible to display multiple components on a single route by using a combination of techniques: Parent Component as a Container.
+The most common and recommended approach is to create a "parent" or "container" component that serves as the main component for the route. This parent component then includes the selectors of the other "child" components you wish to display within its template.
+TypeScript
+
+    // app-routing.module.ts
+    const routes: Routes = [
+      { path: 'dashboard', component: DashboardContainerComponent }
+    ];
+
+    // dashboard-container.component.ts
+    @Component({
+      selector: 'app-dashboard-container',
+      template: `
+        <app-search-bar></app-search-bar>
+        <app-data-table></app-data-table>
+        <app-analytics-widget></app-analytics-widget>
+      `
+    })
+    export class DashboardContainerComponent {}
+In this example, DashboardContainerComponent is the main component for the /dashboard route, and it embeds SearchBarComponent, DataTableComponent, and AnalyticsWidgetComponent directly within its template. Named Router Outlets.
+Angular allows for multiple <router-outlet> instances within your application, each with a unique name. This enables you to load different components into different outlets based on the route configuration.
+Code
+
+    <!-- app.component.html -->
+    <router-outlet></router-outlet> <!-- Primary outlet -->
+    <router-outlet name="sidebar"></router-outlet> <!-- Named outlet for sidebar -->
+TypeScript
+
+    // app-routing.module.ts
+    const routes: Routes = [
+      {
+        path: 'products',
+        component: ProductsListComponent, // Loaded in primary outlet
+        children: [
+          {
+            path: '',
+            outlet: 'sidebar', // Loaded in the 'sidebar' outlet
+            component: ProductFilterComponent
+          }
+        ]
+      }
+    ];
+This approach is suitable for displaying components in distinct, pre-defined regions of your layout that might be controlled by different parts of the URL. Dynamic Component Loading.
+For more advanced scenarios where components need to be added or removed dynamically at runtime based on user interactions or data, you can use Angular's dynamic component loading capabilities. This involves using ViewContainerRef and ComponentFactoryResolver to programmatically create and insert components into the DOM. This is typically used for highly interactive or customizable interfaces rather than static route-based layouts.
+
+
+
+=============
+
+https://stackoverflow.com/questions/48244449/multiple-components-per-route-in-angular
+
+const appRoutes: Routes = [
+  {
+    path: '', component: HomeComponent, children: [
+
+        { path: 'about', component: AboutComponent },
+        { path: 'clients', component: ClientsComponent },
+        { path: 'services', component: ServicesComponent },
+        { path: 'contact', component: ContactComponent },
+        { path: 'datatable', component: DataComponent }
+      ]
+  },
+  { path: '', component: SidebarComponent, outlet:'secondary' }
+]
+HTML:
+
+<router-outlet></router-outlet> //primary outlet
+<router-outlet name="secondary"></router-outlet>  //secondary outlet

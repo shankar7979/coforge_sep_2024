@@ -1,0 +1,261 @@
+https://www.geeksforgeeks.org/async-await-function-in-javascript/
+
+Async and Await in JavaScript
+Last Updated : 12 Dec, 2024
+Async and Await in JavaScript is used to simplify handling asynchronous operations using promises. By enabling asynchronous code to appear synchronous, they enhance code readability and make it easier to manage complex asynchronous flows.
+
+
+
+
+async function fetchData() {
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts/1");
+  const data = await response.json();
+  console.log(data);
+}
+
+fetchData();
+Output:
+
+{
+  userId: 1,
+  id: 1,
+  title: ....',
+  body: ....}
+Syntax:
+async function functionName() {
+  try {
+    const result = await someAsyncFunction();
+    console.log(result);
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+}
+Async Function
+The async function allows us to write promise-based code as if it were synchronous. This ensures that the execution thread is not blocked. Async functions always return a promise. If a value is returned that is not a promise, JavaScript automatically wraps it in a resolved promise.
+
+Syntax:
+
+async function myFunction() {
+  return "Hello";
+}
+
+
+
+const getData = async () => {
+    let data = "Hello World";
+    return data;
+}
+
+getData().then(data => console.log(data));
+
+Output
+Hello World
+Await Keyword
+The await keyword is used to wait for a promise to resolve. It can only be used within an async block. Await makes the code wait until the promise returns a result, allowing for cleaner and more manageable asynchronous code.
+
+
+
+
+const getData = async () => {
+    let y = await "Hello World";
+    console.log(y);
+}
+
+console.log(1);
+getData();
+console.log(2);
+
+Output
+1
+2
+Hello World
+The async keyword transforms a regular JavaScript function into an asynchronous function, causing it to return a Promise.
+The await keyword is used inside an async function to pause its execution and wait for a Promise to resolve before continuing.
+Error Handling in Async/Await
+JavaScript provides predefined arguments for handling promises: resolve and reject.
+
+resolve: Used when an asynchronous task is completed successfully.
+reject: Used when an asynchronous task fails, providing the reason for failure.
+
+
+
+async function fetchData() {
+  try {
+    let response = await fetch('https://api.example.com/data');
+    let data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+Advantages of Async and Await
+Improved Readability: Async and Await allow asynchronous code to be written in a synchronous style, making it easier to read and understand.
+Error Handling: Using try/catch blocks with async/await simplifies error handling.
+Avoids Callback Hell: Async and Await prevent nested callbacks and complex promise chains, making the code more linear and readable.
+Better Debugging: Debugging async/await code is more intuitive since it behaves similarly to synchronous code.
+
+======================
+https://www.w3schools.com/js/js_async.asp
+JavaScript Async
+"async and await make promises easier to write"
+
+async makes a function return a Promise
+
+await makes a function wait for a Promise
+
+Async Syntax
+The keyword async before a function makes the function return a promise:
+
+Example
+async function myFunction() {
+  return "Hello";
+}
+Is the same as:
+
+function myFunction() {
+  return Promise.resolve("Hello");
+}
+Here is how to use the Promise:
+
+myFunction().then(
+  function(value) { /* code if successful */ },
+  function(error) { /* code if some error */ }
+);
+Example
+<body>
+<h1>JavaScript async / await</h1>
+<p id="demo"></p>
+
+<script>
+function myDisplayer(some) {
+  document.getElementById("demo").innerHTML = some;
+}
+
+async function myFunction() {return "Hello";}
+
+myFunction().then(
+  function(value) {myDisplayer(value);},
+  function(error) {myDisplayer(error);}
+);</script>
+
+</body>
+
+
+Or simpler, since you expect a normal value (a normal response, not an error):
+
+Example
+<body>
+<h1>JavaScript async / await</h1>
+<p id="demo"></p>
+
+<script>
+function myDisplayer(some) {
+  document.getElementById("demo").innerHTML = some;
+}
+
+async function myFunction() {return "Hello";}
+
+myFunction().then(
+  function(value) {myDisplayer(value);}
+);
+</script>
+
+</body>
+
+
+Await Syntax
+The await keyword can only be used inside an async function.
+
+The await keyword makes the function pause the execution and wait for a resolved promise before it continues:
+
+let value = await promise;
+Example
+Let's go slowly and learn how to use it.
+
+Basic Syntax
+<body>
+<h1>JavaScript async / await</h1>
+<h2 id="demo"></h2>
+
+<script>
+async function myDisplay() {
+  let myPromise = new Promise(function(resolve, reject) {
+    resolve("I love You !!");
+  });
+  document.getElementById("demo").innerHTML = await myPromise;
+}
+
+myDisplay();
+</script>
+
+</body>
+</html>
+The two arguments (resolve and reject) are pre-defined by JavaScript.
+
+We will not create them, but call one of them when the executor function is ready.
+
+Very often we will not need a reject function.
+
+Example without reject
+<body>
+<h1>JavaScript async / await</h1>
+<h2 id="demo"></h2>
+
+<script>
+async function myDisplay() {
+  let myPromise = new Promise(function(resolve) {
+    resolve("I love You !!");
+  });
+  document.getElementById("demo").innerHTML = await myPromise;
+}
+
+myDisplay();
+</script>
+
+</body>
+</html>
+Waiting for a Timeout
+<h1>JavaScript async / await</h1>
+<h2 id="demo"></h2>
+
+<p>Wait 3 seconds (3000 milliseconds) for this page to change.</p>
+
+<script>
+async function myDisplay() {
+  let myPromise = new Promise(function(resolve) {
+    setTimeout(function() {resolve("I love You !!");}, 3000);
+  });
+  document.getElementById("demo").innerHTML = await myPromise;
+}
+
+myDisplay();
+</script>
+
+</body>
+</html
+
+myDisplay();
+
+Waiting for a File
+<h1>JavaScript async / await</h1>
+<p id="demo"></p>
+
+<script>
+async function getFile() {
+  let myPromise = new Promise(function(resolve) {
+    let req = new XMLHttpRequest();
+    req.open('GET', "mycar.html");
+    req.onload = function() {
+      if (req.status == 200) {
+        resolve(req.response);
+      } else {
+        resolve("File not Found");
+      }
+    };
+    req.send();
+  });
+  document.getElementById("demo").innerHTML = await myPromise;
+}
+
+getFile();
+</script>

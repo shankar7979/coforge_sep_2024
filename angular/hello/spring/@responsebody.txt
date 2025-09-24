@@ -1,0 +1,28 @@
+HTTP PUT method.
+•	 The @ResponseBody annotation is applied to all methods. This instructs that all the 
+return values from the methods should be written to the HTTP response stream 
+directly and not matched to a view.
+•	 For methods that accept path variables (for example, the findSingerById()
+method), the path variable is annotated with @PathVariable. This instructs 
+Spring MVC to bind the path variable within the URL (for example, http://
+localhost:8080/singer/1) into the id argument of the findSingerById() method. 
+Note that for the id argument, the type is Long, while Spring’s type conversion 
+system will automatically handle the conversion from String to Long for us.
+•	 For the create() and update() method, the Singer argument is annotated with 
+@RequestBody. This instructs Spring to automatically bind the content within the 
+HTTP request body into the Singer domain object. The conversion will be done by 
+the declared instances of the HttpMessageConverter<Object> interface (under the 
+package org.springframework.http.converter) for supporting formats, which will 
+be discussed later in this chapter.
+ Starting with Spring 4.0, a controller annotation dedicated for REST usage was introduced, the 
+@RestController. This is a convenience annotation that is itself annotated with @Controller and 
+@ResponseBody. When used on a controller class, all methods that are annotated with @RequestMapping 
+are automatically annotated with @ResponseBody. A version of the SingerController written using this 
+annotation will be covered later in the chapter.
+Configuring a Spring Web Application
+A Spring web application is needed to resolve the REST requests sent by a client, so it needs to be configured. 
+Earlier in the chapter we covered a simple web application configuration. That configuration now must be 
+enriched with HTTP message converter beans for XML and JSON.
+Spring web applications follow the Front Controller design pattern,4
+ where all requests are received by 
+a single controller, which later dispatches them to the appropriate handlers (controller classes). This

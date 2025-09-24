@@ -1,0 +1,132 @@
+Loose coupling in Java, particularly in a "shape" context, is achieved by programming to interfaces rather than concrete implementations. This allows for flexibility and easier maintenance as different shape implementations can be swapped without affecting the client code.
+Here's an example demonstrating loose coupling using a Shape interface:
+Java
+
+// 1. Define an interface for the common behavior
+interface Shape {
+    void draw();
+}
+
+// 2. Implement concrete classes that adhere to the interface
+class Circle implements Shape {
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Circle.");
+    }
+}
+
+class Square implements Shape {
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Square.");
+    }
+}
+
+class Triangle implements Shape {
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Triangle.");
+    }
+}
+
+// 3. A client class that uses the interface, not the concrete implementations
+class DrawingTool {
+    public void drawShape(Shape shape) {
+        shape.draw(); // The DrawingTool doesn't care what specific shape it is, only that it can be drawn.
+    }
+}
+
+// 4. Main class to demonstrate usage
+public class LooseCouplingShapeExample {
+    public static void main(String[] args) {
+        DrawingTool tool = new DrawingTool();
+
+        // Create different shapes
+        Shape circle = new Circle();
+        Shape square = new Square();
+        Shape triangle = new Triangle();
+
+        // Use the DrawingTool to draw various shapes without modifying DrawingTool
+        tool.drawShape(circle);
+        tool.drawShape(square);
+        tool.drawShape(triangle);
+
+        // You could easily add a new shape (e.g., Rectangle) and use it
+        // without changing the DrawingTool class.
+        Shape rectangle = new Shape() { // Anonymous inner class for demonstration
+            @Override
+            public void draw() {
+                System.out.println("Drawing a Rectangle.");
+            }
+        };
+        tool.drawShape(rectangle);
+    }
+}
+In this example:
+The DrawingTool class is loosely coupled to the specific Shape implementations (like Circle or Square). It only depends on the Shape interface.
+If a new shape type is introduced (e.g., Pentagon), the DrawingTool class does not need to be modified, as long as the new shape implements the Shape interface.
+This promotes flexibility, reusability, and easier maintenance of the codebase.
+====================
+
+
+Loose coupling in Java refers to designing classes with minimal dependencies, ensuring that changes in one class have little or no impact on others. This promotes flexibility, easier maintenance, and scalability. 
+Here's an example demonstrating loose coupling using an interface:
+Java
+
+// Interface defining the contract for a notification service
+interface NotificationService {
+    void sendNotification(String message);
+}
+
+// Concrete implementation for Email Notification
+class EmailNotificationService implements NotificationService {
+    @Override
+    public void sendNotification(String message) {
+        System.out.println("Sending email: " + message);
+    }
+}
+
+// Concrete implementation for SMS Notification
+class SmsNotificationService implements NotificationService {
+    @Override
+    public void sendNotification(String message) {
+        System.out.println("Sending SMS: " + message);
+    }
+}
+
+// Class that uses the NotificationService
+class UserNotifier {
+    private NotificationService notificationService;
+
+    // Constructor Injection for loose coupling
+    public UserNotifier(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
+
+    public void notifyUser(String message) {
+        notificationService.sendNotification(message);
+    }
+}
+
+public class LooseCouplingExample {
+    public static void main(String[] args) {
+        // Using Email Notification
+        NotificationService emailService = new EmailNotificationService();
+        UserNotifier emailNotifier = new UserNotifier(emailService);
+        emailNotifier.notifyUser("Welcome to our service!");
+
+        System.out.println("---");
+
+        // Using SMS Notification
+        NotificationService smsService = new SmsNotificationService();
+        UserNotifier smsNotifier = new UserNotifier(smsService);
+        smsNotifier.notifyUser("Your order has been shipped.");
+    }
+}
+In this example:
+NotificationService Interface: Defines a contract for sending notifications, abstracting the specific implementation.
+EmailNotificationService and SmsNotificationService: Concrete implementations of the NotificationService interface.
+UserNotifier Class:
+It depends on the NotificationService interface, not a specific concrete class like EmailNotificationService or SmsNotificationService.
+The NotificationService instance is injected through the constructor (Dependency Injection), making UserNotifier independent of how the notification is actually sent.
+This setup allows for easy switching between different notification mechanisms (e.g., adding a Push Notification Service) without modifying the UserNotifier class, demonstrating loose coupling.

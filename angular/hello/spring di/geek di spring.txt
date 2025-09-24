@@ -1,0 +1,17 @@
+import org.springframework.context.support.ClassPathXmlApplicationContext; // For XML
+// import org.springframework.context.annotation.AnnotationConfigApplicationContext; // For Java Config
+
+public class MainApp {
+    public static void main(String[] args) {
+        // For XML Configuration
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        Person person = (Person) context.getBean("personBean");
+
+        // For Java Configuration
+        // ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        // Person person = context.getBean(Person.class);
+
+        person.displayInfo();
+    }
+}
+In this example, the Person class depends on the Address class. Spring's DI mechanism handles the creation and injection of an Address instance into the Person object, either through its constructor or a setter method, as configured.

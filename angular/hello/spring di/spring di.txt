@@ -1,0 +1,64 @@
+
+Spring - Setter Injection vs Constructor Injection
+
+GeeksforGeeks
+
+Dependency Injection in Spring - 
+
+
+Spring Dependency Injection (DI)
+Spring Dependency Injection with Example - GeeksforGeeks
+
+Dependency Injection in Spring
+Java Spring Boot Dependency Injection and Conditional Beans ...
+Understanding Dependency Injection in Spring Boot - DEV Community
+Spring Setter Injection Example - Java Code Geeks
+
+Dependency Injection (DI) is a core feature of the Spring Framework, a design pattern that facilitates Inversion of Control (IoC). It's a way for Spring to automatically manage the dependencies between the components (objects or beans) in your application, rather than having them create or manage their dependencies themselves. This promotes loose coupling between classes, making your code more modular, testable, and easier to maintain. 
+
+Here's how DI works in Spring:
+Dependencies: When one class needs another class to function (e.g., a UserService needs a UserRepository to access user data), the needed class is considered a "dependency".
+IoC Container: The Spring IoC container is responsible for creating and managing objects (known as Spring beans) and their dependencies.
+
+Injection: Instead of the UserService creating a UserRepository itself, the Spring IoC container "injects" an instance of UserRepository into the UserService when it creates the UserService bean. 
+
+Benefits of DI in Spring
+Loose Coupling: Classes are less dependent on each other, as they don't need to know how to create their dependencies, increasing flexibility and maintainability.
+Easier Testing: Dependencies can be easily mocked or replaced with test versions during unit testing, leading to more effective tests.
+
+Improved Code Readability: Separating object creation from business logic makes the code cleaner and easier to understand.
+Configuration Flexibility: Dependencies can be configured centrally, making it easier to change or swap out implementations without modifying the dependent classes. 
+Types of DI in Spring
+
+Spring primarily supports two types of dependency injection: 
+
+Constructor Injection:
+
+ Dependencies are provided as arguments to the class constructor. This is often the preferred method, especially for mandatory dependencies, because it ensures that an object is created in a valid state with all its necessary dependencies present.
+
+Setter Injection:
+ Dependencies are injected through public setter methods after the object has been created. This is generally used for optional dependencies or when greater flexibility is needed in changing dependencies after object creation.
+
+Field Injection: Dependencies are directly injected into fields using the @Autowired annotation. While simpler to write, it can make testing more difficult and is generally discouraged compared to constructor or setter injection. 
+
+Using DI in Spring
+
+You can implement DI in Spring using:
+XML Configuration: Traditionally, dependencies were configured in XML files, but this method is less common now.
+
+Annotation-based Configuration: Using annotations like @Autowired, @Component, @Service, etc., simplifies dependency management and reduces boilerplate code.
+
+ The @Autowired annotation, for instance, tells Spring to automatically inject a dependency of a matching type.
+
+Java Configuration: You can also use Java code to define beans and their dependencies, often combined with component scanning. 
+Best practices for DI in Spring
+Prefer Constructor Injection for Mandatory Dependencies: This ensures immutability and valid object state.
+
+Use Setter Injection for Optional Dependencies: 
+
+Provides flexibility for dependencies that might change or are not strictly required for an object to function.
+
+Avoid Circular Dependencies: These can lead to runtime errors and should be resolved by refactoring your design.
+Inject Dependencies via Interfaces: Promotes flexibility and easier swapping of implementations, and improves testability.
+Limit the Number of Dependencies: A large number of dependencies might indicate a violation of the Single Responsibility Principle, and refactoring may be necessary. 
+Spring's Dependency Injection is a fundamental aspect of the framework that significantly contributes to building robust, maintainable, and testable applications. 

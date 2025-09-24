@@ -1,0 +1,147 @@
+Angular subscribe
+
+In Angular, the subscribe() method is how you listen for and react to values emitted by an Observable. Observables are part of the RxJS library and are used extensively in Angular to handle asynchronous operations, such as HTTP requests, user input, and other event streams. 
+How subscribe() works
+Observables are "lazy," meaning they do not begin emitting values until a consumer explicitly subscribes to them. The subscribe() method takes an observer object or up to three callback functions as arguments to define how to handle the different types of notifications an Observable can send: 
+next(): A handler for each value emitted by the Observable. It is called zero or more times and receives the emitted data as an argument.
+error(): A handler that is called if an error occurs. The error notification stops the Observable's execution and unsubscribes all observers.
+complete(): A handler that is called when the Observable finishes successfully. After this, no more values will be emitted, and the observer is automatically unsubscribed. 
+Common ways to use subscribe()
+1. With an observer object
+This approach is recommended by the RxJS documentation because it makes your code clearer, especially when handling errors and completion. 
+typescript
+// In your service (e.g., fetching data from an API)
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { User } from './user';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserService {
+  constructor(private http: HttpClient) {}
+
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>('https://api.example.com/users');
+  }
+}
+कोड का इस्तेमाल सावधानी से करें.
+
+typescript
+// In your component
+import { Component, OnInit } from '@angular/core';
+import { UserService } from './user.service';
+import { User } from './user';
+import { Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-user-list',
+  templateUrl: './user-list.component.html'
+})
+export class UserListComponent implements OnInit {
+  users: User[] = [];
+  private usersSubscription: Subscription;
+
+  constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    this.usersSubscription = this.userService.getUsers().subscribe({
+      next: (data) => {
+        this.users = data;
+        console.log('Users loaded successfully:', data);
+      },
+      error: (err) => {
+        console.error('Failed to load users:', err);
+      },
+      complete: () => {
+        console.log('User stream completed.');
+      }
+    });
+  }
+
+  // Proper cleanup is crucial to prevent memory leaks.
+  ngOnDestroy() {
+    if (this.usersSubscription) {
+      this.usersSubscription.unsubscribe();
+    }
+  }
+}
+कोड का इस्तेमाल सावधानी से करें.
+
+2. With callback arguments (less common now)
+This is a simpler syntax for the most typical case where you only need to handle the emitted value. 
+typescript
+// Example using a simple `next` handler
+this.userService.getUsers().subscribe(
+  data => this.users = data
+);
+कोड का इस्तेमाल सावधानी से करें.
+
+Modern alternatives to manual subscribe()
+Manual subscriptions can lead to memory leaks if you forget to unsubscribe from long-lived Observables (like timers or infinite event streams). Angular offers more robust, declarative options that handle unsubscription automatically. 
+Using the async pipe
+The async pipe is the most common and idiomatic way to handle Observables in Angular templates. It subscribes to an Observable, unwraps the emitted values, and automatically unsubscribes when the component is destroyed. 
+typescript
+// In your component.ts
+import { Component } from '@angular/core';
+import { UserService } from './user.service';
+import { Observable } from 'rxjs';
+import { User } from './user';
+
+@Component({
+  selector: 'app-user-list',
+  template: `
+    <ul>
+      <li *ngFor="let user of users$ | async">
+        {{ user.name }}
+      </li>
+    </ul>
+  `,
+})
+export class UserListComponent {
+  users$: Observable<User[]>;
+
+  constructor(private userService: UserService) {
+    this.users$ = this.userService.getUsers();
+  }
+}
+कोड का इस्तेमाल सावधानी से करें.
+
+Benefits:
+No manual subscription management in your component code.
+Automatically handles memory leaks by unsubscribing.
+Using takeUntilDestroyed (Angular v16+)
+For situations where you must subscribe in the component's TypeScript code, Angular provides the takeUntilDestroyed() operator. It is a cleaner, more readable alternative to manual unsubscription logic. 
+typescript
+// In your component.ts (Angular 16+)
+import { Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UserService } from './user.service';
+
+@Component({
+  selector: 'app-user-data',
+  template: `...`,
+})
+export class UserDataComponent {
+  users: any[] = [];
+  private userService = inject(UserService);
+
+  constructor() {
+    this.userService.getUsers()
+      .pipe(takeUntilDestroyed())
+      .subscribe(data => {
+        this.users = data;
+      });
+  }
+}
+कोड का इस्तेमाल सावधानी से करें.
+
+Benefits:
+Automatically unsubscribes when the component is destroyed, preventing memory leaks.
+More modern syntax than implementing ngOnDestroy.
+When should you use subscribe()?
+While the async pipe is the preferred method for displaying data in your template, you should use an explicit subscribe() when: 
+You need to perform a side-effect, such as updating the DOM manually, logging an event, or opening a modal.
+You are performing a mutation request (e.g., POST, PUT, DELETE) where you just need to know the request completed.
+You need to manipulate or combine multiple asynchronous data streams before displaying them. 
