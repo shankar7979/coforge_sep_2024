@@ -5,6 +5,8 @@ import { BookComponent } from './child-parent-bookhouse/book/book.component';
 import { CrudComponent } from './crud/crud.component';
 import { CustomerComponent } from './child-parent-bookhouse/customer/customer.component';
 import { AddbookComponent } from './crud/addbook/addbook.component';
+import { ShoppingKartComponent } from './shopping-kart/shopping-kart.component';
+import { ProductListComponent } from './shopping-kart/product-list.component';
 
 export const routes: Routes = [
    {path:'', component:Counterapp1Component},
@@ -14,5 +16,7 @@ export const routes: Routes = [
    {path:'crud-allbook', component:CrudComponent},
    {path:'crud-addbook', component:AddbookComponent},
    {path:'customer', component:CustomerComponent},
+   {path:'shoppingkart', component:ShoppingKartComponent},
+   {path:'productlist', component:ProductListComponent},
 
 ];
